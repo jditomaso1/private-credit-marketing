@@ -1,69 +1,85 @@
-// pages/index.tsx
-import Head from 'next/head';
-import Link from 'next/link';
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Private Credit AI | Orion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      header, section {
+        padding: 40px 20px;
+        text-align: center;
+      }
+      nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: #333;
+      }
+      .feature-box {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: black;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Private Credit AI</h1>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-export default function Home() {
-  return (
-    <>
-      <Head>
-        <title>Private Credit AI | Orion</title>
-        <meta name="description" content="AI-powered insights and execution for private credit markets." />
-      </Head>
-      <main className="min-h-screen bg-gray-100 text-gray-800">
-        <header className="p-6 bg-white shadow">
-          <div className="container mx-auto flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Private Credit AI</h1>
-            <nav className="space-x-4">
-              <Link href="#features">Features</Link>
-              <Link href="#about">About</Link>
-              <Link href="#contact">Contact</Link>
-            </nav>
-          </div>
-        </header>
+    <section>
+      <h2>AI for Private Credit</h2>
+      <p>Orion is an alpha-generation engine built for private credit professionals. Streamline underwriting, monitoring, and compliance with AI-driven insights.</p>
+      <a href="https://orion.private-credit.ai" class="button">Try Orion</a>
+    </section>
 
-        <section className="text-center py-20 bg-white">
-          <h2 className="text-4xl font-bold mb-4">AI for Private Credit</h2>
-          <p className="text-lg max-w-xl mx-auto">Orion is an alpha-generation engine built for private credit professionals. Streamline underwriting, monitoring, and compliance with AI-driven insights.</p>
-          <div className="mt-8">
-            <Link href="https://orion.private-credit.ai" className="bg-black text-white px-6 py-3 rounded shadow">Try Orion</Link>
-          </div>
-        </section>
+    <section id="features">
+      <h3>Core Features</h3>
+      <div class="feature-box">
+        <h4>The Distiller</h4>
+        <p>Extracts key deal terms from complex credit documents.</p>
+      </div>
+      <div class="feature-box">
+        <h4>The Bouncer</h4>
+        <p>Validates investments against portfolio rules and mandates.</p>
+      </div>
+      <div class="feature-box">
+        <h4>The Monitor</h4>
+        <p>Tracks portfolio risk, drift, and rating simulations in real time.</p>
+      </div>
+    </section>
 
-        <section id="features" className="bg-gray-50 py-20">
-          <div className="container mx-auto px-4">
-            <h3 className="text-3xl font-semibold text-center mb-8">Core Features</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 bg-white rounded shadow">
-                <h4 className="text-xl font-semibold mb-2">The Distiller</h4>
-                <p>Extracts key deal terms from complex credit documents.</p>
-              </div>
-              <div className="p-6 bg-white rounded shadow">
-                <h4 className="text-xl font-semibold mb-2">The Bouncer</h4>
-                <p>Validates investments against portfolio rules and mandates.</p>
-              </div>
-              <div className="p-6 bg-white rounded shadow">
-                <h4 className="text-xl font-semibold mb-2">The Monitor</h4>
-                <p>Tracks portfolio risk, drift, and rating simulations in real time.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+    <section id="about">
+      <h3>About the Founder</h3>
+      <p>Joseph DiTomaso has decades of experience in credit markets and AI. Orion was built to help platforms streamline execution, reduce cost, and scale intelligently.</p>
+    </section>
 
-        <section id="about" className="py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h3 className="text-3xl font-semibold mb-4">About the Founder</h3>
-            <p className="max-w-2xl mx-auto">Joseph DiTomaso has decades of experience in credit markets and AI. Orion was built to help platforms streamline execution, reduce cost, and scale intelligently.</p>
-          </div>
-        </section>
-
-        <section id="contact" className="bg-gray-100 py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h3 className="text-3xl font-semibold mb-4">Let’s Talk</h3>
-            <p className="mb-6">Looking to integrate AI into your credit platform? Reach out to explore a demo or partnership.</p>
-            <a href="mailto:joseph.ditomaso@gmail.com" className="bg-black text-white px-6 py-3 rounded">Email Joseph</a>
-          </div>
-        </section>
-      </main>
-    </>
-  );
-}
+    <section id="contact">
+      <h3>Let’s Talk</h3>
+      <p>Looking to integrate AI into your credit platform? Reach out to explore a demo or partnership.</p>
+      <a href="mailto:joseph.ditomaso@gmail.com" class="button">Email Joseph</a>
+    </section>
+  </body>
+</html>
