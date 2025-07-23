@@ -1,60 +1,59 @@
 // pages/index.tsx
-import Head from 'next/head';
-import Link from 'next/link';
+
+import Head from 'next/head'
+import Link from 'next/link'
 
 export default function Home() {
   return (
     <>
       <Head>
         <title>Private Credit AI | Orion</title>
-        <meta name="description" content="AI-powered infrastructure for underwriting, monitoring, and strategy in private credit." />
+        <meta name="description" content="AI-powered infrastructure for private credit." />
       </Head>
-      <main className="min-h-screen bg-gray-100 text-gray-800">
-        <header className="p-6 bg-white shadow">
-          <div className="container mx-auto flex justify-between items-center">
+
+      <main className="min-h-screen bg-gray-100 text-gray-900">
+        <header className="bg-white shadow-md">
+          <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
             <h1 className="text-2xl font-bold">Private Credit AI</h1>
-            <nav className="space-x-4">
-              <Link href="/orion">Orion</Link>
-              <Link href="/asset-classes">Asset Classes</Link>
-              <Link href="/ecosystem">Credit Ecosystem</Link>
-              <Link href="/about">About</Link>
-              <Link href="/contact">Contact</Link>
+            <nav className="space-x-6 text-sm">
+              <Link href="#asset-classes" className="hover:underline">Asset Classes</Link>
+              <Link href="#ecosystem" className="hover:underline">Credit Ecosystem</Link>
+              <Link href="#about" className="hover:underline">About</Link>
+              <Link href="#contact" className="hover:underline">Contact</Link>
             </nav>
           </div>
         </header>
 
-        <section className="py-16 px-6 text-center">
+        <section className="py-20 bg-white text-center">
           <h2 className="text-4xl font-bold mb-4">AI-Powered Credit Infrastructure</h2>
-          <p className="text-lg max-w-2xl mx-auto">
-            Orion delivers AI-enabled workflows for private credit: from deal underwriting and real-time monitoring to portfolio optimization and strategy.
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+            Orion delivers AI-enabled workflows for private credit — from deal underwriting and real-time monitoring to portfolio optimization and strategic allocation.
           </p>
           <div className="mt-8">
-            <Link href="/orion" className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700">
-              Explore Orion
-            </Link>
+            <Link href="#orion" className="px-6 py-3 bg-black text-white rounded hover:bg-gray-800">Explore Orion</Link>
           </div>
         </section>
 
-        <section className="bg-white py-12 px-6">
-          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-left">
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Asset Classes</h3>
-              <p>Direct Lending, Distressed, NAV Lending, ABL, Real Estate Credit, Secondary Markets, and more.</p>
-              <Link href="/asset-classes" className="text-blue-600 mt-2 inline-block">Learn more →</Link>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Credit Ecosystem</h3>
-              <p>Stakeholders from origination to allocators — Orion aligns workflows across the full private credit stack.</p>
-              <Link href="/ecosystem" className="text-blue-600 mt-2 inline-block">Explore the map →</Link>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Insights</h3>
-              <p>LinkedIn articles, field notes, and thought leadership from inside the build.</p>
-              <Link href="/insights" className="text-blue-600 mt-2 inline-block">Read the latest →</Link>
-            </div>
+        <section id="asset-classes" className="py-12 bg-gray-50">
+          <div className="max-w-5xl mx-auto text-center">
+            <h3 className="text-2xl font-semibold mb-2">Asset Classes</h3>
+            <p className="text-gray-600">Direct Lending, Distressed, NAV Lending, ABL, Real Estate, Secondary Markets, and more.</p>
+            <Link href="#" className="text-blue-600 hover:underline mt-2 inline-block">Learn more →</Link>
           </div>
         </section>
+
+        <section id="ecosystem" className="py-12 bg-white">
+          <div className="max-w-5xl mx-auto text-center">
+            <h3 className="text-2xl font-semibold mb-2">Credit Ecosystem</h3>
+            <p className="text-gray-600">From origination to LPs — Orion aligns stakeholders across the private credit stack.</p>
+            <Link href="#" className="text-blue-600 hover:underline mt-2 inline-block">Explore the map →</Link>
+          </div>
+        </section>
+
+        <footer className="bg-gray-800 text-white py-6 text-center">
+          <p>© 2025 Private Credit AI | Built by Joseph DiTomaso</p>
+        </footer>
       </main>
     </>
-  );
+  )
 }
