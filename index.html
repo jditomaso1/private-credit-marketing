@@ -1,85 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Private Credit AI | Orion</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-        color: #333;
-      }
-      header, section {
-        padding: 40px 20px;
-        text-align: center;
-      }
-      nav a {
-        margin: 0 15px;
-        text-decoration: none;
-        color: #333;
-      }
-      .feature-box {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
-      .button {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: black;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Private Credit AI</h1>
-      <nav>
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+// pages/index.tsx
+import Head from 'next/head';
+import Link from 'next/link';
 
-    <section>
-      <h2>AI for Private Credit</h2>
-      <p>Orion is an alpha-generation engine built for private credit professionals. Streamline underwriting, monitoring, and compliance with AI-driven insights.</p>
-      <a href="https://orion.private-credit.ai" class="button">Try Orion</a>
-    </section>
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>Private Credit AI | Orion</title>
+        <meta name="description" content="AI-powered infrastructure for underwriting, monitoring, and strategy in private credit." />
+      </Head>
+      <main className="min-h-screen bg-gray-100 text-gray-800">
+        <header className="p-6 bg-white shadow">
+          <div className="container mx-auto flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Private Credit AI</h1>
+            <nav className="space-x-4">
+              <Link href="/orion">Orion</Link>
+              <Link href="/asset-classes">Asset Classes</Link>
+              <Link href="/ecosystem">Credit Ecosystem</Link>
+              <Link href="/about">About</Link>
+              <Link href="/contact">Contact</Link>
+            </nav>
+          </div>
+        </header>
 
-    <section id="features">
-      <h3>Core Features</h3>
-      <div class="feature-box">
-        <h4>The Distiller</h4>
-        <p>Extracts key deal terms from complex credit documents.</p>
-      </div>
-      <div class="feature-box">
-        <h4>The Bouncer</h4>
-        <p>Validates investments against portfolio rules and mandates.</p>
-      </div>
-      <div class="feature-box">
-        <h4>The Monitor</h4>
-        <p>Tracks portfolio risk, drift, and rating simulations in real time.</p>
-      </div>
-    </section>
+        <section className="py-16 px-6 text-center">
+          <h2 className="text-4xl font-bold mb-4">AI-Powered Credit Infrastructure</h2>
+          <p className="text-lg max-w-2xl mx-auto">
+            Orion delivers AI-enabled workflows for private credit: from deal underwriting and real-time monitoring to portfolio optimization and strategy.
+          </p>
+          <div className="mt-8">
+            <Link href="/orion" className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700">
+              Explore Orion
+            </Link>
+          </div>
+        </section>
 
-    <section id="about">
-      <h3>About the Founder</h3>
-      <p>Joseph DiTomaso has decades of experience in credit markets and AI. Orion was built to help platforms streamline execution, reduce cost, and scale intelligently.</p>
-    </section>
-
-    <section id="contact">
-      <h3>Let’s Talk</h3>
-      <p>Looking to integrate AI into your credit platform? Reach out to explore a demo or partnership.</p>
-      <a href="mailto:joseph.ditomaso@gmail.com" class="button">Email Joseph</a>
-    </section>
-  </body>
-</html>
+        <section className="bg-white py-12 px-6">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-left">
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Asset Classes</h3>
+              <p>Direct Lending, Distressed, NAV Lending, ABL, Real Estate Credit, Secondary Markets, and more.</p>
+              <Link href="/asset-classes" className="text-blue-600 mt-2 inline-block">Learn more →</Link>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Credit Ecosystem</h3>
+              <p>Stakeholders from origination to allocators — Orion aligns workflows across the full private credit stack.</p>
+              <Link href="/ecosystem" className="text-blue-600 mt-2 inline-block">Explore the map →</Link>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Insights</h3>
+              <p>LinkedIn articles, field notes, and thought leadership from inside the build.</p>
+              <Link href="/insights" className="text-blue-600 mt-2 inline-block">Read the latest →</Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
