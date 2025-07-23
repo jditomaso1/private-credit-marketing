@@ -16,10 +16,30 @@
         padding: 40px 20px;
         text-align: center;
       }
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
       nav a {
-        margin: 0 15px;
         text-decoration: none;
         color: #333;
+        cursor: pointer;
+      }
+      .dropdown {
+        display: none;
+        text-align: left;
+        margin-top: 10px;
+      }
+      .dropdown ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        max-width: 600px;
+      }
+      .dropdown li {
+        margin-bottom: 8px;
       }
       .feature-box {
         background: white;
@@ -37,30 +57,22 @@
         text-decoration: none;
         border-radius: 6px;
       }
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 auto;
-        max-width: 600px;
-        text-align: left;
-      }
-      li {
-        margin-bottom: 10px;
-      }
-      h4 {
-        margin-bottom: 5px;
-      }
     </style>
+    <script>
+      function toggleDropdown(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+      }
+    </script>
   </head>
   <body>
     <header>
       <h1>Private Credit AI</h1>
       <nav>
-        <a href="#features">Features</a>
-        <a href="#asset-classes">Asset Classes</a>
-        <a href="#stakeholders">Stakeholders</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <a onclick="toggleDropdown('assetDropdown')">Asset Classes</a>
+        <a onclick="toggleDropdown('stakeholderDropdown')">Stakeholders</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
       </nav>
     </header>
 
@@ -86,7 +98,7 @@
       </div>
     </section>
 
-    <section id="asset-classes">
+    <section id="assetDropdown" class="dropdown">
       <h3>Asset Classes / Investment Strategies</h3>
       <ul>
         <li>• Direct Lending</li>
@@ -105,7 +117,7 @@
       </ul>
     </section>
 
-    <section id="stakeholders">
+    <section id="stakeholderDropdown" class="dropdown">
       <h3>Stakeholders & Participants</h3>
       <ul>
         <li>• Origination Teams</li>
@@ -114,17 +126,6 @@
         <li>• Secondary Market Investors</li>
         <li>• LPs, Allocators & Consultants</li>
       </ul>
-    </section>
-
-    <section id="about">
-      <h3>About the Founder</h3>
-      <p>Joseph DiTomaso has decades of experience in credit markets and AI. Orion was built to help platforms scale intelligently while managing risk and cost.</p>
-    </section>
-
-    <section id="contact">
-      <h3>Let’s Talk</h3>
-      <p>Looking to integrate AI into your credit platform? Reach out to explore a demo or partnership.</p>
-      <a href="mailto:joseph.ditomaso@gmail.com" class="button">Email Joseph</a>
     </section>
   </body>
 </html>
