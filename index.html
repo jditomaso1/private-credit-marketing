@@ -44,7 +44,7 @@
       }
       
       .dropdown-menu {
-        display: none;
+        display: none;  /* ✅ Hide by default */
         position: absolute;
         top: 100%;
         left: 0;
@@ -55,13 +55,13 @@
         border-radius: 10px;
         min-width: 600px;
         z-index: 1000;
-        display: grid;
+        text-align: left;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
       }
       
       .dropdown:hover .dropdown-menu {
-        display: grid;
+        display: grid;  /* ✅ Show only on hover */
       }
       
       .dropdown-item {
