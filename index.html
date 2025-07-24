@@ -23,22 +23,29 @@
       nav {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 30px;
         background-color: #1a1a2e;
         padding: 10px 0;
         position: relative;
       }
-
+      
+      nav .nav-item,
       nav a {
         color: white;
         text-decoration: none;
         font-weight: 500;
-        position: relative;
         padding: 10px 12px;
+        position: relative;
+        cursor: pointer;
       }
-
-      .dropdown-menu {
-        display: none; /* hidden by default */
+      
+      nav .dropdown {
+        position: relative;
+      }
+      
+      nav .dropdown-menu {
+        display: none;
         position: absolute;
         top: 100%;
         left: 50%;
@@ -53,12 +60,11 @@
         text-align: left;
       }
       
-      .dropdown:hover .dropdown-menu {
+      nav .dropdown:hover .dropdown-menu {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
-      }
-      
+      }      
       .dropdown:hover .dropdown-menu {
         display: grid;
       }
@@ -108,8 +114,8 @@
     <header>
       <h1>Private Credit AI</h1>
       <nav>
-        <div class="dropdown">
-          <a href="#">Asset Classes ▾</a>
+        <div class="dropdown nav-item">
+          <span>Asset Classes ▾</span>
           <div class="dropdown-menu">
             <div class="dropdown-item">
               <h4>Direct Lending</h4>
@@ -130,8 +136,8 @@
           </div>
         </div>
       
-        <div class="dropdown">
-          <a href="#">Stakeholders ▾</a>
+        <div class="dropdown nav-item">
+          <span>Stakeholders ▾</span>
           <div class="dropdown-menu">
             <div class="dropdown-item">
               <h4>Originators</h4>
@@ -152,8 +158,8 @@
           </div>
         </div>
       
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
       </nav>
     </header>
 
