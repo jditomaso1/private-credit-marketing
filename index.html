@@ -12,35 +12,76 @@
         background-color: #f4f4f4;
         color: #333;
       }
-      header, section {
-        padding: 40px 20px;
+    
+      header {
+        background-color: #1a1a2e;
+        color: white;
+        padding: 20px;
         text-align: center;
       }
+    
       nav {
         display: flex;
         justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
+        gap: 30px;
+        background-color: #1a1a2e;
+        padding: 10px 0;
+        position: relative;
       }
+    
       nav a {
+        color: white;
         text-decoration: none;
-        color: #333;
-        cursor: pointer;
+        font-weight: 500;
+        position: relative;
+        padding: 10px 12px;
       }
-      .dropdown {
+    
+      nav .dropdown-menu {
         display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        color: black;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        min-width: 600px;
+        z-index: 1000;
         text-align: left;
-        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
       }
-      .dropdown ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 auto;
-        max-width: 600px;
+    
+      nav .dropdown:hover .dropdown-menu {
+        display: grid;
       }
-      .dropdown li {
-        margin-bottom: 8px;
+    
+      .dropdown h4 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: #555;
       }
+    
+      .dropdown p {
+        margin: 0 0 20px 0;
+        font-size: 13px;
+        color: #777;
+      }
+    
+      .dropdown-item {
+        padding: 10px;
+        border-radius: 6px;
+        transition: background 0.2s;
+      }
+    
+      .dropdown-item:hover {
+        background-color: #f0f0f0;
+      }
+    
       .feature-box {
         background: white;
         border-radius: 8px;
@@ -48,6 +89,7 @@
         margin: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
+    
       .button {
         display: inline-block;
         margin-top: 20px;
