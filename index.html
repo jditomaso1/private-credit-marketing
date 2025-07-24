@@ -12,14 +12,14 @@
         background-color: #f4f4f4;
         color: #333;
       }
-    
+
       header {
         background-color: #1a1a2e;
         color: white;
         padding: 20px;
         text-align: center;
       }
-    
+
       nav {
         display: flex;
         justify-content: center;
@@ -28,7 +28,7 @@
         padding: 10px 0;
         position: relative;
       }
-    
+
       nav a {
         color: white;
         text-decoration: none;
@@ -36,8 +36,12 @@
         position: relative;
         padding: 10px 12px;
       }
-    
-      nav .dropdown-menu {
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-menu {
         display: none;
         position: absolute;
         top: 100%;
@@ -55,33 +59,33 @@
         grid-template-columns: 1fr 1fr;
         gap: 20px;
       }
-    
-      nav .dropdown:hover .dropdown-menu {
+
+      .dropdown:hover .dropdown-menu {
         display: grid;
       }
-    
+
       .dropdown h4 {
         margin: 0 0 8px 0;
         font-size: 14px;
         color: #555;
       }
-    
+
       .dropdown p {
         margin: 0 0 20px 0;
         font-size: 13px;
         color: #777;
       }
-    
+
       .dropdown-item {
         padding: 10px;
         border-radius: 6px;
         transition: background 0.2s;
       }
-    
+
       .dropdown-item:hover {
         background-color: #f0f0f0;
       }
-    
+
       .feature-box {
         background: white;
         border-radius: 8px;
@@ -89,7 +93,7 @@
         margin: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
-    
+
       .button {
         display: inline-block;
         margin-top: 20px;
@@ -100,19 +104,55 @@
         border-radius: 6px;
       }
     </style>
-    <script>
-      function toggleDropdown(id) {
-        const el = document.getElementById(id);
-        el.style.display = el.style.display === 'block' ? 'none' : 'block';
-      }
-    </script>
   </head>
   <body>
     <header>
       <h1>Private Credit AI</h1>
       <nav>
-        <a onclick="toggleDropdown('assetDropdown')">Asset Classes</a>
-        <a onclick="toggleDropdown('stakeholderDropdown')">Stakeholders</a>
+        <div class="dropdown">
+          <a href="#">Asset Classes ▾</a>
+          <div class="dropdown-menu">
+            <div class="dropdown-item">
+              <h4>Direct Lending</h4>
+              <p>Senior secured loans, sponsor finance</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Distressed & Special Sits</h4>
+              <p>Opportunistic, event-driven credit</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Real Estate Credit</h4>
+              <p>Bridge, mezz, construction debt</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Infrastructure / NAV / ABL</h4>
+              <p>Hard asset + asset-backed strategies</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <a href="#">Stakeholders ▾</a>
+          <div class="dropdown-menu">
+            <div class="dropdown-item">
+              <h4>Originators</h4>
+              <p>Deal sourcing, sponsor coverage</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Underwriters</h4>
+              <p>Structuring and risk management</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Allocators</h4>
+              <p>Family offices, pensions, insurers</p>
+            </div>
+            <div class="dropdown-item">
+              <h4>Secondary / Traders</h4>
+              <p>Active portfolio mgmt and LP trades</p>
+            </div>
+          </div>
+        </div>
+
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
       </nav>
@@ -138,36 +178,6 @@
         <h4>The Monitor</h4>
         <p>Tracks portfolio risk, drift, and rating simulations in real time.</p>
       </div>
-    </section>
-
-    <section id="assetDropdown" class="dropdown">
-      <h3>Asset Classes / Investment Strategies</h3>
-      <ul>
-        <li>• Direct Lending</li>
-        <li>• Distressed & Special Situations</li>
-        <li>• Real Estate Credit</li>
-        <li>• Asset-Based Lending (ABL)</li>
-        <li>• Second Liens & Mezzanine</li>
-        <li>• Infrastructure Credit</li>
-        <li>• Venture Debt</li>
-        <li>• NAV Lending & GP Financing</li>
-        <li>• Royalty, Sports & Film Finance</li>
-        <li>• Secondary Market Equity / LP Trades</li>
-        <li>• Credit Default Swaps (CDS)</li>
-        <li>• Credit Trading & CRT</li>
-        <li>• CLO Secondary Market</li>
-      </ul>
-    </section>
-
-    <section id="stakeholderDropdown" class="dropdown">
-      <h3>Stakeholders & Participants</h3>
-      <ul>
-        <li>• Origination Teams</li>
-        <li>• Credit Underwriting & Structuring</li>
-        <li>• Portfolio & Risk Management</li>
-        <li>• Secondary Market Investors</li>
-        <li>• LPs, Allocators & Consultants</li>
-      </ul>
     </section>
   </body>
 </html>
