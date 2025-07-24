@@ -90,7 +90,7 @@
       }
 
       .dropdown-menu {
-        display: none;
+        display: none; /* <-- Hides the menu by default */
         position: absolute;
         top: 100%;
         left: 0;
@@ -101,7 +101,7 @@
         border-radius: 10px;
         z-index: 1000;
       
-        display: grid;
+        /* grid layout and scroll settings */
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 10px 30px;
         max-width: 90vw;
@@ -115,8 +115,11 @@
       .dropdown:hover .dropdown-menu {
         display: grid;
       }
+      
+      .dropdown {
+        position: relative;
+      }
 
-      /* Fix nav position context */
       .nav-links {
         position: relative;
       }
