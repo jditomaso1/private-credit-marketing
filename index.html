@@ -58,6 +58,12 @@
         text-align: left;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
+      
+        /* ✅ Add these to handle overflow */
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #999 #eee;
       }
       
       .dropdown:hover .dropdown-menu {
