@@ -44,7 +44,7 @@
       }
       
       .dropdown-menu {
-        display: none;  /* Hidden by default */
+        display: none; /* ✅ Hide by default */
         position: absolute;
         top: 100%;
         left: 0;
@@ -55,8 +55,7 @@
         border-radius: 10px;
         min-width: 700px;
         z-index: 1000;
-        display: grid; /* ✅ this is the fix */
-        grid-template-columns: repeat(3, 1fr); /* ✅ 3-column layout */
+        grid-template-columns: repeat(3, 1fr);
         gap: 20px;
         max-height: 400px;
         overflow-y: auto;
