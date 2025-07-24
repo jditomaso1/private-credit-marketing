@@ -90,7 +90,9 @@
       }
 
       .dropdown-menu {
-        display: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        max-width: 90vw;
         position: absolute;
         top: 100%;
         right: auto;
