@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Private Credit AI | Orion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
         font-family: sans-serif;
@@ -13,18 +14,10 @@
         color: #333;
       }
 
-      header {
-        background-color: #1a1a2e;
-        color: white;
-        padding: 20px;
-        text-align: center;
-      }
-
       nav {
-        background-color: #1a1a2e;
         padding: 10px 0;
       }
-      
+
       .nav-links {
         display: flex;
         justify-content: center;
@@ -32,20 +25,20 @@
         gap: 30px;
         flex-wrap: wrap;
       }
-      
+
       .nav-item {
         position: relative;
       }
-      
+
       .nav-item a {
         color: white;
         text-decoration: none;
         font-weight: 500;
         padding: 10px 12px;
       }
-      
+
       .dropdown-menu {
-        display: none; /* Hidden by default */
+        display: none;
         position: absolute;
         top: 100%;
         left: 0;
@@ -63,14 +56,14 @@
         scrollbar-width: thin;
         scrollbar-color: #999 #eee;
       }
-      
+
       .dropdown:hover .dropdown-menu {
-        display: grid;  /* ✅ Show only on hover */
+        display: grid;
       }
-      
+
       .dropdown-item {
         padding: 4px;
-        line-height:1.4;
+        line-height: 1.4;
         transition: background 0.2s;
       }
 
@@ -79,13 +72,13 @@
         font-weight: 600;
         margin: 0 0 4px 0;
       }
-      
+
       .dropdown-item p {
         font-size: 13px;
         margin: 0;
         color: #444;
-      }      
-      
+      }
+
       .dropdown-item:hover {
         background-color: #f9f9f9;
         border-radius: 6px;
@@ -97,7 +90,7 @@
         border-radius: 8px;
         padding: 20px;
         margin: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .button {
@@ -111,138 +104,29 @@
       }
     </style>
   </head>
-  <body>
-    <header>
-      <h1>Private Credit AI</h1>
-      <nav>
-      <div class="nav-links">
-        <div class="dropdown nav-item">
-        <a href="#">Asset Classes ▾</a>
-        <div class="dropdown-menu">
-          <!-- Traditional Credit -->
-          <div class="dropdown-item">
-            <h4>Direct Lending</h4>
-            <p>Senior secured loans, sponsor finance</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Special Situations & Distressed</h4>
-            <p>Opportunistic, event-driven credit</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Real Estate Credit</h4>
-            <p>Bridge, mezz, construction debt</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Asset-Based Lending (ABL)</h4>
-            <p>Receivables, inventory, working capital</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Mezzanine & Subordinated Debt</h4>
-            <p>Hybrid capital structures, junior debt</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Infrastructure Credit</h4>
-            <p>Hard asset and long-duration debt</p>
-          </div>
-      
-          <!-- Non-Traditional Credit -->
-          <div class="dropdown-item">
-            <h4>Venture Debt</h4>
-            <p>Credit for growth-stage and venture-backed firms</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>NAV Lending & GP Financing</h4>
-            <p>Portfolio-level and sponsor leverage</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Specialty Finance</h4>
-            <p>Royalty, litigation, pharma-backed loans</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Consumer / Fintech Credit</h4>
-            <p>Installment, BNPL, marketplace lending</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Equipment Leasing & Factoring</h4>
-            <p>Lease-backed structures and receivables</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Revenue-Based Financing</h4>
-            <p>Repayment tied to company revenue</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Insurance-Linked Credit</h4>
-            <p>Cat bonds, reinsurance, regulatory arbitrage</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Trade Finance</h4>
-            <p>Supply chain, import/export receivables</p>
-          </div>
-          <div class="dropdown-item">
-            <h4>Emerging Market Private Credit</h4>
-            <p>Cross-border, FX-risk, developing market debt</p>
-          </div>
-        </div>
-      </div>      
-          <div class="dropdown nav-item">
-            <a href="#">Stakeholders ▾</a>
-            <div class="dropdown-menu">
-              <div class="dropdown-item">
-                <h4>Originators</h4>
-                <p>Deal sourcing, sponsor coverage</p>
-              </div>
-              <div class="dropdown-item">
-                <h4>Underwriters</h4>
-                <p>Structuring and risk management</p>
-              </div>
-              <div class="dropdown-item">
-                <h4>LPs and Allocators</h4>
-                <p>Family offices, pensions, insurers</p>
-              </div>
-              <div class="dropdown-item">
-                <h4>Secondary / Traders</h4>
-                <p>Active portfolio mgmt and LP trades</p>
-              </div>
-              <div class="dropdown-item">
-                <h4>Risk and Portfolio Management</h4>
-                <p>Continuous risk assessment</p>
-              </div>
-            </div>
-          </div>
-      
-          <div class="nav-item">
-            <a href="about.html">About</a>
-          </div>
-          <div class="nav-item">
-            <a href="contact.html">Contact</a>
-          </div>
-          <div class="nav-item">
-            <a href="https://orion.private-credit.ai" target="_blank">Orion</a>
-          </div>
-        </div>
-      </nav>
+  <body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Left -->
+        <h1 class="text-2xl font-bold text-black">Private Credit AI</h1>
+
+        <!-- Right Nav -->
+        <nav class="flex space-x-6 text-sm text-black">
+          <a href="#" class="hover:text-blue-600">Asset Classes</a>
+          <a href="#" class="hover:text-blue-600">Stakeholders</a>
+          <a href="#" class="hover:text-blue-600">About</a>
+          <a href="#" class="hover:text-blue-600">Contact</a>
+        </nav>
+      </div>
     </header>
 
-    <section>
-      <h2>AI for Private Credit</h2>
-      <p>Orion is an alpha-generation engine built for private credit professionals. Streamline underwriting, monitoring, and compliance with AI-driven insights.</p>
-      <a href="https://orion.private-credit.ai" class="button">Try Orion</a>
-    </section>
-
-    <section id="features">
-      <h3>Core Features</h3>
+    <!-- Main Content Placeholder -->
+    <main class="p-6">
       <div class="feature-box">
-        <h4>The Distiller</h4>
-        <p>Extracts key deal terms from credit agreements, CIMs, and financial docs.</p>
+        <h2>Welcome to Private Credit AI</h2>
+        <p>This is a placeholder for your homepage content.</p>
       </div>
-      <div class="feature-box">
-        <h4>The Bouncer</h4>
-        <p>Checks deals against investment mandates and risk limits.</p>
-      </div>
-      <div class="feature-box">
-        <h4>The Monitor</h4>
-        <p>Tracks portfolio risk, drift, and rating simulations in real time.</p>
-      </div>
-    </section>
+    </main>
   </body>
 </html>
