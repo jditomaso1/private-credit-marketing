@@ -222,24 +222,73 @@
     </section>
 
     <!-- Section 2: Use Cases -->
-    <section style="
-      background-color: #ffffff;
-      min-height: 500px;
-      max-height: 600px;
-      padding: 80px 20px;
-      color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    ">
-      <div style="max-width: 700px; margin: 0 auto;">
-        <h2 style="font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 20px;">Use Cases</h2>
-        <p style="font-size: 18px; font-weight: 400;">
-          For Originators – For Underwriters – For Risk and Portfolio Managers – For Traders – For LPs and Allocators.
-        </p>
+    <section style="background-color: #ffffff; padding: 80px 20px; color: black; text-align: center; min-height: 600px;">
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <h2 style="font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 40px;">Insights for <em>your</em> use case</h2>
+    
+        <!-- Tabs -->
+        <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; border-bottom: 2px solid #ddd;">
+          <button class="usecase-tab active" data-tab="originators" style="background: none; border: none; font-size: 18px; padding-bottom: 10px; border-bottom: 3px solid #007bff; cursor: pointer;">For Originators</button>
+          <button class="usecase-tab" data-tab="underwriters" style="background: none; border: none; font-size: 18px; padding-bottom: 10px; border-bottom: 3px solid transparent; cursor: pointer;">For Underwriters</button>
+          <button class="usecase-tab" data-tab="lps" style="background: none; border: none; font-size: 18px; padding-bottom: 10px; border-bottom: 3px solid transparent; cursor: pointer;">For LPs & Allocators</button>
+        </div>
+    
+        <!-- Tab Content -->
+        <div class="usecase-content" id="originators" style="display: flex; align-items: center; justify-content: center; gap: 40px;">
+          <img src="usecase-originators.png" alt="Originators" style="max-width: 400px;">
+          <div style="text-align: left; max-width: 450px;">
+            <h3 style="font-size: 24px; font-weight: 700;">Accelerate Deal Origination</h3>
+            <p style="font-size: 16px;">- Surface actionable targets with AI-enabled sourcing<br>
+               - Filter deals by sponsor type, industry, or size<br>
+               - Automatically prep CIMs and pipeline views</p>
+            <a href="#" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background-color: #007bff; color: white; border-radius: 6px; text-decoration: none;">Get Started</a>
+          </div>
+        </div>
+    
+        <div class="usecase-content" id="underwriters" style="display: none; align-items: center; justify-content: center; gap: 40px;">
+          <img src="usecase-underwriters.png" alt="Underwriters" style="max-width: 400px;">
+          <div style="text-align: left; max-width: 450px;">
+            <h3 style="font-size: 24px; font-weight: 700;">Streamline Underwriting</h3>
+            <p style="font-size: 16px;">- Auto-summarize credit docs & track covenant terms<br>
+               - Compare historical comps & pricing spreads<br>
+               - Reduce manual memo prep by 70%</p>
+            <a href="#" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background-color: #007bff; color: white; border-radius: 6px; text-decoration: none;">Try It Now</a>
+          </div>
+        </div>
+    
+        <div class="usecase-content" id="lps" style="display: none; align-items: center; justify-content: center; gap: 40px;">
+          <img src="usecase-lps.png" alt="LPs & Allocators" style="max-width: 400px;">
+          <div style="text-align: left; max-width: 450px;">
+            <h3 style="font-size: 24px; font-weight: 700;">Portfolio-Level Clarity</h3>
+            <p style="font-size: 16px;">- Roll up manager exposures by risk & sector<br>
+               - Simulate performance under rate scenarios<br>
+               - Monitor guideline compliance at scale</p>
+            <a href="#" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background-color: #007bff; color: white; border-radius: 6px; text-decoration: none;">Explore Dashboards</a>
+          </div>
+        </div>
       </div>
     </section>
+    
+    <script>
+      const tabs = document.querySelectorAll('.usecase-tab');
+      const contents = document.querySelectorAll('.usecase-content');
+    
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+    
+          // Show the corresponding content
+          contents.forEach(c => c.style.display = 'none');
+          document.getElementById(tab.dataset.tab).style.display = 'flex';
+    
+          // Reset border styling
+          tabs.forEach(t => t.style.borderBottom = '3px solid transparent');
+          tab.style.borderBottom = '3px solid #007bff';
+        });
+      });
+    </script>
     
     <!-- Section 3: Tailored -->
     <section style="
