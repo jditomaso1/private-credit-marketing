@@ -88,21 +88,26 @@
         font-size: 14.5px;  /* Adjust to match the reference size */
         letter-spacing: 0.25px; /* Optional: adds a bit of polish */
       }
-
+      
+      .dropdown {
+        position: relative;
+      }
+      
+      /* Style the dropdown menu */
       .dropdown-menu {
-        display: none; /* <-- Hides the menu by default */
+        display: none;
         position: absolute;
         top: 100%;
         left: 50%;
-        transform: translateX(-50%)
-        background: black;
+        transform: translateX(-50%);
+        background: white;
         color: black;
         padding: 20px 30px;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         z-index: 1000;
       
-        /* grid layout and scroll settings */
+        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 10px 30px;
         max-width: 90vw;
@@ -115,10 +120,6 @@
 
       .dropdown:hover .dropdown-menu {
         display: grid;
-      }
-      
-      .dropdown {
-        position: relative;
       }
 
       .nav-links {
