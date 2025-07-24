@@ -37,15 +37,12 @@
         padding: 10px 12px;
       }
 
-      .dropdown {
-        position: relative;
-      }
-      
       .dropdown-menu {
-        display: none;
+        display: none; /* Hidden by default */
         position: absolute;
         top: 100%;
-        left: 0;
+        left: 50%;
+        transform: translateX(-50%);
         background: white;
         color: black;
         padding: 20px;
@@ -54,6 +51,9 @@
         min-width: 600px;
         z-index: 1000;
         text-align: left;
+      
+        /* Grid layout for two columns */
+        display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
       }
