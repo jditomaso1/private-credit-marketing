@@ -91,25 +91,22 @@
 
       .dropdown-menu {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         max-width: 90vw;
+        min-width: 600px;
         position: absolute;
         top: 100%;
-        right: auto;
-        left: 0;
-        overflow-x:auto;
-        transform: translateX(0);
+        left: auto;
+        right: 0;
+        overflow-x: auto;
+        overflow-y: auto;
         background: white;
         color: black;
         padding: 20px 30px;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
-        min-width: 700px;
-        z-index: 1000;
-        grid-template-columns: repeat(3, minmax(200px, 1fr));
         gap: 10px 30px;
-        max-height: 400px;
-        overflow-y: auto;
+        z-index: 1000;
         scrollbar-width: thin;
         scrollbar-color: #999 #eee;
       }
