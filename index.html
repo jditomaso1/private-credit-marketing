@@ -21,72 +21,55 @@
       }
 
       nav {
+        background-color: #1a1a2e;
+        padding: 10px 0;
+      }
+      
+      .nav-links {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 30px;
-        background-color: #1a1a2e;
-        padding: 10px 0;
+      }
+      
+      .nav-item {
         position: relative;
       }
       
-      nav .nav-item,
-      nav a {
+      .nav-item a {
         color: white;
         text-decoration: none;
         font-weight: 500;
         padding: 10px 12px;
-        position: relative;
-        cursor: pointer;
       }
       
-      nav .dropdown {
-        position: relative;
-      }
-      
-      nav .dropdown-menu {
+      .dropdown-menu {
         display: none;
         position: absolute;
         top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
         background: white;
         color: black;
         padding: 20px;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         min-width: 600px;
         z-index: 1000;
-        text-align: left;
-      }
-      
-      nav .dropdown:hover .dropdown-menu {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
-      }      
+      }
+      
       .dropdown:hover .dropdown-menu {
         display: grid;
       }
-
-      .dropdown h4 {
-        margin: 0 0 8px 0;
-        font-size: 14px;
-        color: #555;
-      }
-
-      .dropdown p {
-        margin: 0 0 20px 0;
-        font-size: 13px;
-        color: #777;
-      }
-
+      
       .dropdown-item {
         padding: 10px;
         border-radius: 6px;
         transition: background 0.2s;
       }
-
+      
       .dropdown-item:hover {
         background-color: #f0f0f0;
       }
