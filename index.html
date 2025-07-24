@@ -40,26 +40,24 @@
       .dropdown {
         position: relative;
       }
-
+      
       .dropdown-menu {
         display: none;
         position: absolute;
         top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
         background: white;
         color: black;
         padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border-radius: 8px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        border-radius: 10px;
         min-width: 600px;
         z-index: 1000;
         text-align: left;
-        display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
       }
-
+      
       .dropdown:hover .dropdown-menu {
         display: grid;
       }
@@ -130,7 +128,7 @@
             </div>
           </div>
         </div>
-
+      
         <div class="dropdown">
           <a href="#">Stakeholders ▾</a>
           <div class="dropdown-menu">
@@ -152,7 +150,7 @@
             </div>
           </div>
         </div>
-
+      
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
       </nav>
