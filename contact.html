@@ -1,186 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Private Credit AI | Orion</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      nav, .nav-links, .nav-item a {
-        font-family: 'Poppins', sans-serif;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Us | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
 
-      .hero {
-        background-color: #3a71b0;
-        padding: 60px 20px;           /* Adds vertical breathing room */
-        text-align: center;
-        color: white;
+    header {
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
+    }
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-        min-height: 500px;
-        max-height: 600px;
-      }
-  
-      .hero-content h1 {
-        font-size: 48px;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 20px;
-      }
-  
-      .hero-content p {
-        font-size: 18px;
-        font-weight: 400;
-        max-width: 700px;
-        margin: 0 auto;
-      }        
-      
-      body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-        color: #333;
-      }
+    .site-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-      header {
-        background-color: white;
-        color: black;
-        padding: 10px 20px;
-      }
+    nav {
+      padding: 10px 0;
+    }
 
-      .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-      }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.1px;
+      flex-wrap: wrap;
+    }
 
-      .site-title {
-        font-size: 24px;
-        font-weight: bold;
-      }
+    .nav-item {
+      position: relative;
+    }
 
-      nav {
-        padding: 10px 0;
-      }
+    .nav-item a {
+      color: black;
+      text-decoration: none;
+      font-weight: 400;
+      padding: 10px 16px;
+      font-size: 14.5px;
+      letter-spacing: 0.25px;
+    }
 
-      .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 0.1px;
-        flex-wrap: wrap;
-      }
+    .dropdown {
+      position: relative;
+    }
 
-      .nav-item {
-        position: relative;
-      }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 20px 30px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      z-index: 1000;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px 30px;
+      max-width: 90vw;
+      max-height: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: #999 #eee;
+    }
 
-      .nav-item a {
-        color: black;
-        text-decoration: none;
-        font-weight: 400;
-        padding: 10px 16px; /* Slightly wider spacing */
-        font-size: 14.5px;  /* Adjust to match the reference size */
-        letter-spacing: 0.25px; /* Optional: adds a bit of polish */
-      }
-      
-      .dropdown {
-        position: relative;
-      }
-      
-      .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: white;
-        color: black;
-        padding: 20px 30px;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        z-index: 1000;
-      
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 10px 30px;
-        max-width: 90vw;
-        max-height: 400px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: thin;
-        scrollbar-color: #999 #eee;
-      }
+    .dropdown:hover .dropdown-menu {
+      display: grid;
+    }
 
-      .dropdown:hover .dropdown-menu {
-        display: grid;
-      }
+    .dropdown-item {
+      padding: 4px;
+      line-height: 1.4;
+      transition: background 0.2s;
+    }
 
-      .nav-links {
-        position: relative;
-      }
-      
-      .dropdown-item {
-        padding: 4px;
-        line-height: 1.4;
-        transition: background 0.2s;
-      }
+    .dropdown-item h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
 
-      .dropdown-item h4 {
-        font-size: 15px;
-        font-weight: 600;
-        margin: 0 0 4px 0;
-      }
+    .dropdown-item p {
+      font-size: 13px;
+      margin: 0;
+      color: #444;
+    }
 
-      .dropdown-item p {
-        font-size: 13px;
-        margin: 0;
-        color: #444;
-      }
+    .dropdown-item:hover {
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      padding: 6px;
+    }
 
-      .dropdown-item:hover {
-        background-color: #f9f9f9;
-        border-radius: 6px;
-        padding: 6px;
-      }
+    /* Contact page specific */
+    .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-radius: 8px;
+    }
 
-      .feature-box {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
+    .contact-info {
+      flex: 1;
+      min-width: 300px;
+    }
 
-      .button {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: black;
-        color: white;
-        text-decoration: white;
-        border-radius: 6px;
-      }    
-    </style>
-  </head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Contact Us | Private Credit AI</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-  
+    .contact-form {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .contact-form button {
+      padding: 14px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .contact-form button:hover {
+      background-color: #1a242f;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header section -->
+  <header>
+    <div class="header-container">
+      <div class="site-title">Private Credit AI</div>
+      <nav>
+        <div class="nav-links">
+          <div class="nav-item"><a href="/">Home</a></div>
+          <div class="nav-item"><a href="/about">About</a></div>
+          <div class="nav-item"><a href="/contact">Contact</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact form + info section -->
   <div class="contact-container">
     <div class="contact-info">
       <h2>Have a Question About Our Platform?</h2>
       <p>We’re here to help. Whether you want a demo, have a technical question, or just want to explore partnership opportunities, we’re ready to connect.</p>
       <h3>Why Private Credit AI?</h3>
       <p>We help credit professionals automate document parsing, credit risk scoring, and portfolio monitoring using cutting-edge AI. Our platform is used by managers, allocators, and institutions looking to scale smarter.</p>
-  
+
       <h3>Get in Touch</h3>
       <p><strong>Email:</strong> support@private-credit.ai</p>
       <p><strong>Phone:</strong> +1 (917) 406-1213</p>
@@ -189,7 +194,7 @@
       251 Little Falls Drive<br/>
       Wilmington, DE 19808</p>
     </div>
-  
+
     <form class="contact-form">
       <input type="text" name="first-name" placeholder="First Name *" required />
       <input type="text" name="last-name" placeholder="Last Name *" required />
@@ -197,7 +202,7 @@
       <input type="email" name="email" placeholder="Email *" required />
       <input type="text" name="country" placeholder="Country/Region *" required />
       <input type="text" name="city" placeholder="City *" required />
-  
+
       <select name="industry" required>
         <option value="" disabled selected>Industry</option>
         <option value="Private Credit">Private Credit</option>
@@ -206,7 +211,7 @@
         <option value="PE / Alternatives">PE / Alternatives</option>
         <option value="Other">Other</option>
       </select>
-  
+
       <select name="referral" required>
         <option value="" disabled selected>How did you find us?</option>
         <option value="LinkedIn">LinkedIn</option>
@@ -215,14 +220,14 @@
         <option value="Event or Webinar">Event or Webinar</option>
         <option value="Other">Other</option>
       </select>
-  
+
       <input type="text" name="company" placeholder="Company Name" />
       <input type="text" name="data-provider" placeholder="Do you currently use a data provider?" />
-  
+
       <textarea name="message" rows="5" placeholder="Your message *" required></textarea>
       <button type="submit">Send Message</button>
     </form>
   </div>
-  
-  </body>
-  </html>
+
+</body>
+</html>
