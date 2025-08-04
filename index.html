@@ -118,7 +118,7 @@
       }
       
       .dropdown-menu {
-        display: none;
+        display: grid; /* <-- You were missing this */
         position: absolute;
         top: 100%;
         left: 50%;
@@ -130,18 +130,14 @@
         border-radius: 10px;
         z-index: 1000;
       
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive */
+        max-width: 1000px; /* Optional: limits how wide the grid gets */
         gap: 10px 30px;
-        max-width: 90vw;
         max-height: 400px;
         overflow-y: auto;
         overflow-x: hidden;
         scrollbar-width: thin;
         scrollbar-color: #999 #eee;
-      }
-
-      .dropdown:hover .dropdown-menu {
-        display: grid;
       }
 
       .nav-links {
