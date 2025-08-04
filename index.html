@@ -118,7 +118,7 @@
       }
       
       .dropdown-menu {
-        display: none; /* IMPORTANT: Hidden by default */
+        display: none;
         position: absolute;
         top: 100%;
         left: 50%;
@@ -130,8 +130,9 @@
         border-radius: 10px;
         z-index: 1000;
       
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        max-width: 1000px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        max-width: 1000px; /* limits to 4 columns */
         gap: 10px 30px;
         max-height: 400px;
         overflow-y: auto;
@@ -140,9 +141,8 @@
         scrollbar-color: #999 #eee;
       }
       
-      /* When triggered, switch to grid display */
       .dropdown-menu.open {
-        display: grid;
+        display: grid; /* shown when toggle class is added */
       }
 
       .nav-links {
