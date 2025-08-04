@@ -117,6 +117,7 @@
         position: relative;
       }
       
+      /* Hide dropdowns by default */
       .dropdown-menu {
         display: none;
         position: absolute;
@@ -130,8 +131,9 @@
         border-radius: 10px;
         z-index: 1000;
       
+        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        max-width: 1000px; /* limits to 4 columns */
+        max-width: 1000px;
         gap: 10px 30px;
         max-height: 400px;
         overflow-y: auto;
@@ -140,8 +142,9 @@
         scrollbar-color: #999 #eee;
       }
       
-      .dropdown-menu.open {
-        display: grid; /* shown when toggle class is added */
+      /* Show dropdown on hover */
+      .dropdown:hover .dropdown-menu {
+        display: grid;
       }
 
       .nav-links {
@@ -228,7 +231,7 @@
         <nav>
           <div class="nav-links">
             <div class="dropdown nav-item">
-              <a href="#" class="dropdown-toggle">Asset Classes ▾</a>
+              <a class="dropdown-toggle">Asset Classes ▾</a>
               <div class="dropdown-menu">
                 <div class="dropdown-item"><h4><img src="icons/amphora.svg" class="icon" alt="amphora icon"> Direct Lending</h4><p>Senior secured loans, sponsor finance</p></div>
                 <div class="dropdown-item"><h4><img src="icons/anchor.svg" class="icon" alt="anchor icon"> Special Situations & Distressed</h4><p>Opportunistic, event-driven credit</p></div>
@@ -249,7 +252,7 @@
             </div>
 
             <div class="dropdown nav-item">
-              <a href="#" class="dropdown-toggle">Stakeholders ▾</a>
+              <a class="dropdown-toggle">Stakeholders ▾</a>
               <div class="dropdown-menu">
                 <div class="dropdown-item"><h4>Originators</h4><p>Deal sourcing, sponsor coverage</p></div>
                 <div class="dropdown-item"><h4>Underwriters</h4><p>Structuring and risk management</p></div>
@@ -596,11 +599,14 @@
     </footer>
     <!-- Then your script -->
     <script>
+      // Keeps your existing card toggle functionality
       function toggleCard(card) {
         card.classList.toggle('expanded');
       }
     
-      // DROPDOWN CLICK HANDLER
+      // REMOVE this entire block if you are switching to hover-only dropdowns
+      // This was the click-based dropdown toggle
+      /*
       document.addEventListener('DOMContentLoaded', function () {
         const toggles = document.querySelectorAll('.dropdown-toggle');
     
@@ -612,6 +618,7 @@
           });
         });
       });
+      */
     </script>
   </body>
 </html>
