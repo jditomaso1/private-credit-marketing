@@ -118,7 +118,7 @@
       }
       
       .dropdown-menu {
-        display: none; /* Hidden by default */
+        display: none; /* IMPORTANT: Hidden by default */
         position: absolute;
         top: 100%;
         left: 50%;
@@ -140,8 +140,9 @@
         scrollbar-color: #999 #eee;
       }
       
+      /* When triggered, switch to grid display */
       .dropdown-menu.open {
-        display: grid; /* Show when active */
+        display: grid;
       }
 
       .nav-links {
