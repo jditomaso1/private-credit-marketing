@@ -118,7 +118,7 @@
       }
       
       .dropdown-menu {
-        display: grid; /* <-- You were missing this */
+        display: none; /* hidden by default */
         position: absolute;
         top: 100%;
         left: 50%;
@@ -130,14 +130,18 @@
         border-radius: 10px;
         z-index: 1000;
       
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive */
-        max-width: 1000px; /* Optional: limits how wide the grid gets */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        max-width: 1000px;
         gap: 10px 30px;
         max-height: 400px;
         overflow-y: auto;
         overflow-x: hidden;
         scrollbar-width: thin;
         scrollbar-color: #999 #eee;
+      }
+      
+      .dropdown-menu.open {
+        display: grid; /* shown when 'open' class is toggled */
       }
 
       .nav-links {
@@ -187,31 +191,31 @@
       }    
 
       .card {
-      background-color: white;
-      padding: 16px 20px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+        background-color: white;
+        padding: 16px 20px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 600;
-    }
-
-    .card-content {
-      margin-top: 12px;
-      display: none;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .card.expanded .card-content {
-      display: block;
-    }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+      }
+  
+      .card-content {
+        margin-top: 12px;
+        display: none;
+        font-size: 14px;
+        color: #333;
+      }
+  
+      .card.expanded .card-content {
+        display: block;
+      }
     </style>
   </head>
   <body>
