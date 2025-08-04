@@ -599,6 +599,19 @@
       function toggleCard(card) {
         card.classList.toggle('expanded');
       }
+    
+      // DROPDOWN CLICK HANDLER
+      document.addEventListener('DOMContentLoaded', function () {
+        const toggles = document.querySelectorAll('.dropdown-toggle');
+    
+        toggles.forEach(toggle => {
+          toggle.addEventListener('click', function (e) {
+            e.preventDefault(); // stops page jump
+            const menu = this.nextElementSibling;
+            menu.classList.toggle('open');
+          });
+        });
+      });
     </script>
   </body>
 </html>
