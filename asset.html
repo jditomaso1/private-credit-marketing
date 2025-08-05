@@ -393,7 +393,6 @@
     </section>
   
     
-    
     <!-- Section 3: Use Cases -->
     <section style="background-color: #ffffff; padding: 80px 20px; color: black; text-align: center; min-height: 600px;">
       <div style="max-width: 1000px; margin: 0 auto;">
@@ -758,6 +757,24 @@
       </div>
     </section>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const headers = document.querySelectorAll('.accordion-header');
+    
+        headers.forEach(button => {
+          button.addEventListener('click', () => {
+            const item = button.parentElement;
+            const isOpen = item.classList.contains('active');
+    
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+    
+            if (!isOpen) {
+              item.classList.add('active');
+            }
+          });
+        });
+      });
+    </script>
   
 
   <!-- Footer -->
