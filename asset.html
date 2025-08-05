@@ -248,7 +248,66 @@
       object-fit: contain;
       filter: brightness(0) invert(1); /* Ensures white logos if needed */
     }
-
+    
+    .how-we-help {
+      padding: 80px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .how-we-help h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+    
+    .accordion {
+      text-align: left;
+    }
+    
+    .accordion-item {
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .accordion-header {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .accordion-header::after {
+      content: "⌄";
+      position: absolute;
+      right: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    .accordion-item.active .accordion-header::after {
+      transform: rotate(180deg);
+    }
+    
+    .accordion-body {
+      background-color: #f9fbff;
+      padding: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .accordion-item.active .accordion-body {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
 
     
@@ -302,6 +361,39 @@
       </div>
     </section>
 
+    <!-- Section 3: How we help -->
+    <section class="how-we-help">
+      <h2>How we can help</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">Loan Screening Automation</button>
+          <div class="accordion-body">
+            <p>Summarize borrower financials and key credit agreement terms in seconds, reducing diligence time by up to 70% and accelerating decision cycles.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Real-Time Covenant Monitoring</button>
+          <div class="accordion-body">
+            <p>Track performance metrics against financial covenants and receive automated alerts when thresholds approach, helping you manage downside risk proactively.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Shadow Credit Scoring</button>
+          <div class="accordion-body">
+            <p>Assign dynamic internal credit scores using AI-powered models based on historical performance, capital structure, and peer comps — even when agencies don’t rate them.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">AI-Powered Compliance Checks</button>
+          <div class="accordion-body">
+            <p>Automatically detect document conflicts and non-compliant structures in your deal pipeline before they hit the portfolio — saving legal hours and capital.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    
+    
     <!-- Section 3: Use Cases -->
     <section style="background-color: #ffffff; padding: 80px 20px; color: black; text-align: center; min-height: 600px;">
       <div style="max-width: 1000px; margin: 0 auto;">
