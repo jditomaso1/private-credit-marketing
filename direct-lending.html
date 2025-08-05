@@ -543,7 +543,30 @@
       color: #0070f3;
       text-decoration: underline;
     }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #1E90FF; /* same blue */
+      font-weight: 600;
+      text-decoration: none;
+    }
     
+    .cta-button {
+      display: inline-block;
+      padding: 12px 28px;
+      background-color: #1E90FF;
+      color: white;
+      font-weight: 600;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      margin-bottom: 16px;
+    }
+    
+    .cta-button:hover {
+      background-color: #187bcd;
+    }
     
   </style>
 </head>
@@ -568,12 +591,15 @@
     <section class="hero">
       <div class="hero-content">
         <div class="hero-text">
+          <a href="/assets" class="back-link">&lt; ASSET CLASS</a>
           <span class="label">ASSET CLASS</span>
           <h1>Direct Lending</h1>
           <p>Make faster, smarter credit decisions across sponsor-backed and non-sponsored deals. Extract key loan terms, assess borrower financials, and monitor portfolio performance with precision.</p>
-          <button class="cta">[Book a demo]</button>
+          <a href="/contact" class="cta-button">Book a Demo</a>
           <br>
-          <a href="#" class="link">Get our Direct Lending One pager</a>
+          <a href="/downloads/direct-lending-one-pager.pdf" target="_blank">
+          Get our Direct Lending One pager
+          </a>
         </div>
         <div class="hero-image">
           <img src="img/tablet.png" alt="Financial Services Tablet">
