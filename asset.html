@@ -214,6 +214,44 @@
     .card.expanded .card-content {
       display: block;
     }  
+
+    .trusted-by {
+      background-color: #3478C0; /* Replace with your exact blue later */
+      padding: 30px 0;
+      text-align: center;
+    }
+    
+    .trusted-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .trusted-by h3 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .trusted-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .trusted-logos img {
+      max-height: 40px; /* Adjust as needed */
+      max-width: 140px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* Ensures white logos if needed */
+    }
+
+
+
+    
   </style>
 </head>
 <body>
@@ -250,7 +288,21 @@
       </div>
     </section>
 
-    <!-- Section 2: Use Cases -->
+    <!-- Section 2: Logos / Social Proof -->
+    <section class="trusted-by">
+      <div class="trusted-container">
+        <h3>Trusted by Industry Leaders</h3>
+        <div class="trusted-logos">
+          <img src="img/hanyc-logo.png" alt="HANYC">
+          <img src="img/ahlai-logo.png" alt="AHLAI">
+          <img src="img/best-western-logo.png" alt="Best Western">
+          <img src="img/horwath-logo.png" alt="Horwath HTL">
+          <img src="img/zmc-logo.png" alt="ZMC Hotels">
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Use Cases -->
     <section style="background-color: #ffffff; padding: 80px 20px; color: black; text-align: center; min-height: 600px;">
       <div style="max-width: 1000px; margin: 0 auto;">
         <h2 style="font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 40px;">Alpha for <u><em>every</em></u> Stakeholder</h2>
