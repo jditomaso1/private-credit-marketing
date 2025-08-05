@@ -309,8 +309,59 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-
+    .reports-tools {
+      background-color: #f9f9f9;
+      padding: 80px 20px;
+      text-align: center;
+    }
     
+    .reports-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .reports-tools h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+    
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+    
+    .report-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+    
+    .report-card:hover {
+      transform: translateY(-4px);
+    }
+    
+    .report-card h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .report-card p {
+      font-size: 15px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    
+    .report-link {
+      font-size: 14px;
+      color: #0070f3;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -390,9 +441,43 @@
           </div>
         </div>
       </div>
-    </section>
-  
+    </section>     
     
+    <!-- Section 4: Available Reports / Tools -->
+    <section class="reports-tools">
+      <div class="reports-container">
+        <h2>Available Reports & Tools</h2>
+        <div class="reports-grid">
+    
+          <div class="report-card">
+            <h4>Credit Agreement Summary</h4>
+            <p>Concise extraction of key legal terms, borrower structure, and covenant package from complex docs.</p>
+            <a href="#" class="report-link">Request Sample</a>
+          </div>
+    
+          <div class="report-card">
+            <h4>Shadow Credit Rating</h4>
+            <p>Internal credit score generated using AI and financial benchmarks — ideal for unrated borrowers.</p>
+            <a href="#" class="report-link">Request Sample</a>
+          </div>
+    
+          <div class="report-card">
+            <h4>Financial Health Report</h4>
+            <p>Tracks leverage, interest coverage, free cash flow trends, and covenant proximity in one snapshot.</p>
+            <a href="#" class="report-link">Request Sample</a>
+          </div>
+    
+          <div class="report-card">
+            <h4>Compliance Checklist</h4>
+            <p>Auto-detected structural red flags and compliance conflicts before closing or investment.</p>
+            <a href="#" class="report-link">Request Sample</a>
+          </div>
+    
+        </div>
+      </div>
+    </section>
+
+  
     <!-- Section 3: Use Cases -->
     <section style="background-color: #ffffff; padding: 80px 20px; color: black; text-align: center; min-height: 600px;">
       <div style="max-width: 1000px; margin: 0 auto;">
