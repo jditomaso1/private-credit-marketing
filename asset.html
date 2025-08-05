@@ -8,30 +8,20 @@
   <style>
       .hero {
         background: white;
-        padding: 60px 20px;
-        text-align: center;
-        color: black;
-      
+        padding: 80px 40px;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-      
-        min-height: 500px;
-        max-height: 600px;
-      
-        position: relative;
-      }
-      
-      .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(58,113,176,0.6));
-        z-index: 1;
+        color: black;
       }
       
       .hero-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        width: 100%;
+        gap: 40px;
         position: relative;
         z-index: 2;
       }
@@ -50,6 +40,36 @@
         margin: 0 auto;
       }
       
+      .hero-text {
+        flex: 1;
+        max-width: 600px;
+      }
+      
+      .hero-text h1 {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+      
+      .hero-text p {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-bottom: 24px;
+      }
+      
+      .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .hero-image img {
+        max-width: 100%;
+        height: auto;
+      }
+    
       .icon {
         width: 24px;
         height: 24px;
@@ -216,14 +236,15 @@
    <!-- Section 1: Hero Header -->
     <section class="hero">
       <div class="hero-content">
-        <div class="text">
+        <div class="hero-text">
           <span class="label">ENTERPRISE</span>
           <h1>Financial Services</h1>
           <p>Make smart investment decisions with accurate short-term rental insights. Understand properties performance and analyze individual listings.</p>
           <button class="cta">Book a demo</button>
+          <br>
           <a href="#" class="link">Get our Financial Services One pager</a>
         </div>
-        <div class="image">
+        <div class="hero-image">
           <img src="img/tablet.png" alt="Financial Services Tablet">
         </div>
       </div>
