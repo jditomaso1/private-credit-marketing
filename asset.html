@@ -168,6 +168,32 @@
       height: 48px;
       filter: brightness(0) invert(1); /* simulates white */
     }
+    .card {
+      background-color: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+  
+    .card-content {
+      margin-top: 12px;
+      display: none;
+      font-size: 14px;
+      color: #333;
+    }
+  
+    .card.expanded .card-content {
+      display: block;
+    }  
   </style>
 </head>
 <body>
