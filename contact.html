@@ -272,7 +272,7 @@ headers:<!DOCTYPE html>
   
       fetch(scriptURL, {
         method: "POST",
-        body: new URLSearchParams(formData)
+        body: new URLSearchParams(formData)  // 🔥 THIS is the fix
       })
       .then(response => {
         alert("✅ Message sent! We’ll be in touch shortly.");
@@ -283,6 +283,6 @@ headers:<!DOCTYPE html>
         console.error("Error!", error.message);
       });
     });
-  </script>  
+  </script>
 </body>
 </html>
