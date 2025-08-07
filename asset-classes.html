@@ -52,16 +52,30 @@
       }
       
       .feature-list {
-        font-size: 18px;        /* More readable list */
+        font-size: 18px;
         line-height: 1.7;
         color: #333;
-        list-style-type: disc;
-        padding-left: 20px;
+        list-style: none;              /* Remove default bullets */
+        padding-left: 0;               /* Reset padding */
         margin-bottom: 40px;
       }
       
       .feature-list li {
         margin-bottom: 14px;
+        position: relative;
+        padding-left: 32px;            /* Space for the icon */
+      }
+      
+      .feature-list li::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background-image: url("icons/check.svg"); /* ✅ Your custom checkmark path */
+        background-size: contain;
+        background-repeat: no-repeat;
       }
       
       .cta-group {
@@ -634,7 +648,7 @@
           <p class="hero-subtitle">Purpose-built for every credit asset class</p>
     
           <ul class="feature-list">
-            <li><img src="icons/check.svg" class="icon" alt="check">Extract key terms and pricing directly from loan documents</li>
+            <li>Extract key terms and pricing directly from loan documents</li>
             <li>Analyze borrower financials and sponsor behavior in seconds</li>
             <li>Automate portfolio monitoring and compliance tracking</li>
             <li>Deliver smarter recommendations based on deal structure</li>
