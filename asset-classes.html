@@ -36,7 +36,15 @@
         margin-bottom: 10px;
         line-height: 1.2;
       }
-      
+
+      .hero-subtitle {
+        color: #3b82f6; /* Tailwind's blue-500 */
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+    
       .subheading {
         font-size: 20px;
         font-weight: 600;
@@ -45,17 +53,16 @@
       }
       
       .feature-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 40px 0;
+        list-style-type: disc;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
       }
       
       .feature-list li {
-        font-size: 18px;
-        line-height: 1.6;
-        padding: 10px 0;
-        display: flex;
-        align-items: flex-start;
+        margin-bottom: 12px;
       }
       
       .cta-group {
@@ -73,12 +80,19 @@
       }
       
       .cta-button {
-        background-color: #2573ff;
-        color: #fff;
+        display: inline-block;
+        background-color: #3b82f6;
+        color: white;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
       }
       
       .cta-button:hover {
-        background-color: #1b5edb;
+        background-color: #2563eb; /* darker blue */
       }
       
       .one-pager-link {
@@ -91,8 +105,8 @@
       }
       
       .hero-image img {
-        max-width: 500px;
         width: 100%;
+        max-width: 600px;
         height: auto;
       }
     
@@ -618,24 +632,21 @@
       <div class="hero-content">
         <div class="hero-text">
           <h1>Comprehensive insights and powerful AI credit solutions</h1>
-          <h3 class="subheading">Purpose-built for every credit asset class</h3>
+          <p class="hero-subtitle">Purpose-built for every credit asset class</p>
     
           <ul class="feature-list">
-            <li>✅ Extract key terms and pricing directly from loan documents</li>
-            <li>✅ Analyze borrower financials and sponsor behavior in seconds</li>
-            <li>✅ Automate portfolio monitoring and compliance tracking</li>
-            <li>✅ Deliver smarter recommendations based on deal structure</li>
-            <li>✅ AI-enhanced insights for Direct Lending, CLOs, BDCs, and more</li>
+            <li>Extract key terms and pricing directly from loan documents</li>
+            <li>Analyze borrower financials and sponsor behavior in seconds</li>
+            <li>Automate portfolio monitoring and compliance tracking</li>
+            <li>Deliver smarter recommendations based on deal structure</li>
+            <li>AI-enhanced insights for Direct Lending, CLOs, BDCs, and more</li>
           </ul>
     
-          <div class="cta-group">
-            <a href="/contact" class="cta-button">📞 Contact our team</a>
-            <a href="/downloads/direct-lending-one-pager.pdf" target="_blank" class="one-pager-link">📄 Download one-pager</a>
-          </div>
+          <a href="/contact" class="cta-button">Contact our team</a>
         </div>
     
         <div class="hero-image">
-          <img src="img/asset-classes.png" alt="Direct Lending Tablet">
+          <img src="img/tablet.png" alt="AI Credit Insights">
         </div>
       </div>
     </section>
