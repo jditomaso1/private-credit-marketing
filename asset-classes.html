@@ -1009,34 +1009,56 @@
     </section>
 
     <!-- Section 6: Demo Request Form  -->
-    <section class="demo-request">
-      <div class="demo-container">
-        <h2>Request a Demo</h2>
-        <p>See how our platform can streamline your underwriting, diligence, and portfolio monitoring.</p>
-    
-        <form class="demo-form" action="#" method="POST">
-          <div class="form-grid">
-            <input type="text" name="firstName" placeholder="First Name" required>
-            <input type="text" name="lastName" placeholder="Last Name" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="text" name="company" placeholder="Firm / Company Name" required>
-            <input type="text" name="role" placeholder="Your Title / Role">
-            <select name="assetClass" required>
-              <option value="">Asset Class of Interest</option>
-              <option value="Private Lending">Private Lending</option>
-              <option value="Syndicated Loans">Syndicated Loans</option>
-              <option value="Royalty Finance">Royalty Finance</option>
-              <option value="NAV Lending">NAV Lending</option>
-              <option value="Litigation Finance">Litigation Finance</option>
-              <option value="Other">Other</option>
-            </select>
-            <textarea name="message" placeholder="Tell us about your use case (optional)"></textarea>
-          </div>
-    
-          <button type="submit" class="submit-btn">Submit Request</button>
-        </form>
+    <!-- Contact form + info section -->
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2>Have a Question About Our Platform?</h2>
+        <p>We’re here to help. Whether you want a demo, have a technical question, or just want to explore partnership opportunities, we’re ready to connect.</p>
+        <h3>Why Private Credit AI?</h3>
+        <p>We help credit professionals automate document parsing, credit risk scoring, and portfolio monitoring using cutting-edge AI. Our platform is used by managers, allocators, and institutions looking to scale smarter.</p>
+  
+        <h3>Get in Touch</h3>
+        <p><strong>Email:</strong> support@private-credit.ai</p>
+        <p><strong>Phone:</strong> +1 (917) 444-4444</p>
+        <p><strong>Address:</strong><br/>
+        Private Credit AI<br/>
+        111 Park Ave<br/>
+        New York, NY 11366</p>
       </div>
-    </section>
+  
+      <form id="contact-form" class="contact-form">
+        <input type="text" name="firstName" id="firstName" placeholder="First Name *" required />
+        <input type="text" name="lastName" id="lastName" placeholder="Last Name *" required />
+        <input type="text" name="phone" id="phone" placeholder="Phone Number or WhatsApp *" required />
+        <input type="email" name="email" id="email" placeholder="Email *" required />
+        <input type="text" name="country" id="country" placeholder="Country/Region *" required />
+        <input type="text" name="city" id="city" placeholder="City *" required />
+      
+        <select name="industry" id="industry" required>
+          <option value="" disabled selected>Industry</option>
+          <option value="Private Credit">Private Credit</option>
+          <option value="Direct Lending">Direct Lending</option>
+          <option value="Structured Credit">Structured Credit</option>
+          <option value="PE / Alternatives">PE / Alternatives</option>
+          <option value="Other">Other</option>
+        </select>
+      
+        <select name="referral" id="referral" required>
+          <option value="" disabled selected>How did you find us?</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Referral">Referral</option>
+          <option value="Google Search">Google Search</option>
+          <option value="Event or Webinar">Event or Webinar</option>
+          <option value="Other">Other</option>
+        </select>
+      
+        <input type="text" name="company" id="company" placeholder="Company Name" />
+        <input type="text" name="dataProvider" id="dataProvider" placeholder="Do you currently use a data provider?" />
+      
+        <textarea name="message" id="message" rows="5" placeholder="Your message *" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
 
     <script>
       const tabs = document.querySelectorAll('.usecase-tab');
