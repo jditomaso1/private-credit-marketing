@@ -250,7 +250,7 @@ headers:<!DOCTYPE html>
     </div>
   </footer>
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxHvy05kxB3nmSKv8eZUuReA1JyIoVud1_oSqTB9d7hor_S04k2oxH8tgr0ek0t0oLTtg/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz5_NVluA-BQ6hKOszC3ogrpxuE8G89T89AMwI3oC1SVACRLCzNBqWQoqFfgYHPPyRFGA/exec";
     const form = document.getElementById("contact-form");
   
     form.addEventListener("submit", e => {
@@ -272,7 +272,7 @@ headers:<!DOCTYPE html>
   
       fetch(scriptURL, {
         method: "POST",
-        body: new URLSearchParams(formData)  // 🔥 THIS is the fix
+        body: new URLSearchParams(formData)  // ✅ DO NOT REMOVE THIS
       })
       .then(response => {
         alert("✅ Message sent! We’ll be in touch shortly.");
