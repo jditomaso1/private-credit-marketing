@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+headers:<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -272,10 +272,7 @@
   
       fetch(scriptURL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
+        body: new URLSearchParams(formData)
       })
       .then(response => {
         alert("✅ Message sent! We’ll be in touch shortly.");
