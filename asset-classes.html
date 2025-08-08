@@ -1167,6 +1167,40 @@
       </div>
     </div>
   </footer>
-
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz5_NVluA-BQ6hKOszC3ogrpxuE8G89T89AMwI3oC1SVACRLCzNBqWQoqFfgYHPPyRFGA/exec";
+    const form = document.getElementById("contact-form");
+  
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+  
+      const formData = {
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        phone: form.phone.value,
+        email: form.email.value,
+        country: form.country.value,
+        city: form.city.value,
+        industry: form.industry.value,
+        referral: form.referral.value,
+        company: form.company.value,
+        dataProvider: form.dataProvider.value,
+        message: form.message.value
+      };
+  
+      fetch(scriptURL, {
+        method: "POST",
+        body: new URLSearchParams(formData)  // ✅ DO NOT REMOVE THIS
+      })
+      .then(response => {
+        alert("✅ Message sent! We’ll be in touch shortly.");
+        form.reset();
+      })
+      .catch(error => {
+        alert("⚠️ Error sending message. Please try again.");
+        console.error("Error!", error.message);
+      });
+    });
+  </script>
 </body>
 </html>
