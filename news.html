@@ -93,6 +93,8 @@ function renderFeed(items){
   `).join('');
 }
 
+// --- Smart tag filtering ---
+
 // Map common synonyms/abbreviations to canonical labels used by your pills
 const TAG_ALIASES = {
   "pe": "Private Equity",
@@ -119,7 +121,16 @@ const TAG_ALIASES = {
 
 function normalizeTag(s="") {
   const k = String(s).trim().toLowerCase();
-  return TAG_ALIASES[k] || s; // fall back to original if no alias
+  return TAG_ALIASES[k] || s;
+}
+
+// Ensure tags is always an array of strings
+function toTagArray(t){
+  if (Array.isArray(t)) return t;
+  if (typeof t === 'string') {
+    return t.split(',').map(x => x.trim()).filter(Boolean);
+  }
+  return [];
 }
 
 function applyFilter(tag='All'){
@@ -127,13 +138,15 @@ function applyFilter(tag='All'){
   const filtered = selected==='All'
     ? _items
     : _items.filter(i => {
-        const tags = (i.tags || []).map(t => normalizeTag(t));
+        const tags = toTagArray(i.tags).map(t => normalizeTag(t));
         return tags.includes(selected);
       });
 
   renderTop10(filtered);
   renderFeed(filtered.slice(10, 260));
 }
+
+// --- Data load + wiring ---
 
 async function loadFeed(){
   try{
@@ -161,8 +174,6 @@ function updateLastUpdated() {
   if (el) el.textContent = `Last updated: ${formatted}`;
 }
 
-// ✅ Single DOMContentLoaded: wire filters + load feed + stamp time
-<script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#filters .pill').forEach(btn=>{
     btn.addEventListener('click', () => {
