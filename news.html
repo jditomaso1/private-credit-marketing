@@ -21,6 +21,10 @@
     <button data-tag="NAV" class="pill">NAV</button>
     <button data-tag="BDC" class="pill">BDC</button>
     <button data-tag="ABS" class="pill">ABS</button>
+    <button data-tag="Private Equity" class="pill">Private Equity</button>
+    <button data-tag="Real Estate" class="pill">Real Estate</button>
+    <button data-tag="Infrastructure" class="pill">Infrastructure</button>
+    <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
   </nav>
 
   <!-- Top 10 -->
@@ -89,8 +93,44 @@ function renderFeed(items){
   `).join('');
 }
 
+// Map common synonyms/abbreviations to canonical labels used by your pills
+const TAG_ALIASES = {
+  "pe": "Private Equity",
+  "private-equity": "Private Equity",
+  "private equity": "Private Equity",
+
+  "re": "Real Estate",
+  "real-estate": "Real Estate",
+  "real estate": "Real Estate",
+
+  "infra": "Infrastructure",
+  "infrastructure": "Infrastructure",
+
+  "em": "Emerging Markets",
+  "emerging-markets": "Emerging Markets",
+  "emerging markets": "Emerging Markets",
+
+  "direct lending": "Direct Lending",
+  "clo": "CLO",
+  "nav": "NAV",
+  "bdc": "BDC",
+  "abs": "ABS"
+};
+
+function normalizeTag(s="") {
+  const k = String(s).trim().toLowerCase();
+  return TAG_ALIASES[k] || s; // fall back to original if no alias
+}
+
 function applyFilter(tag='All'){
-  const filtered = tag==='All' ? _items : _items.filter(i => (i.tags||[]).includes(tag));
+  const selected = normalizeTag(tag);
+  const filtered = selected==='All'
+    ? _items
+    : _items.filter(i => {
+        const tags = (i.tags || []).map(t => normalizeTag(t));
+        return tags.includes(selected);
+      });
+
   renderTop10(filtered);
   renderFeed(filtered.slice(10, 260));
 }
@@ -122,6 +162,7 @@ function updateLastUpdated() {
 }
 
 // ✅ Single DOMContentLoaded: wire filters + load feed + stamp time
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#filters .pill').forEach(btn=>{
     btn.addEventListener('click', () => {
