@@ -8,30 +8,61 @@
 
   <!-- Header / Nav styles (scoped) -->
   <style>
-    body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:0; }
-    /* scope only the top site header */
-    .site-header { background:#fff; color:#000; padding:10px 20px; border-bottom:1px solid #eee; }
-    .site-header .header-container { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .site-header .site-title { font-size:24px; font-weight:700; display:flex; align-items:center; gap:10px; }
-    .site-header nav { padding:10px 0; }
-    .site-header .nav-links { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .site-header .nav-item a, .site-header .nav-item a:visited { color:#000; text-decoration:none; font-weight:400; padding:10px 12px; font-size:14.5px; letter-spacing:.25px; }
-    .site-header .nav-item a:hover { color:#2c7cf1; }
-
-    /* Media Hub styles */
-    .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
-    .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    @media (max-width: 820px){ .grid{grid-template-columns:1fr} }
-    .card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px;display:block;text-decoration:none;color:#111}
-    .card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-1px);transition:all .15s}
-    .card-title{font-weight:600;margin:0 0 6px 0;line-height:1.3}
-    .card-meta{font-size:12px;color:#666;margin:0 0 6px 0}
-    .card-tags{font-size:12px;color:#666}
-    .list a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;border-bottom:1px solid #eee;padding:10px 0;color:#111}
-    .list a:hover{background:#fafbfc}
-    .list .right{white-space:nowrap;color:#666;font-size:12px}
-    #refresh-btn{display:inline-block !important;}
+    /* === Site header / nav (copied to match Contact page) === */
+    .site-header {
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
+    }
+    .site-header .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .site-header .site-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .site-header nav {
+      padding: 10px 0;
+    }
+    .site-header .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.1px; /* keep the quirky value to match exactly */
+      flex-wrap: wrap;
+    }
+    .site-header .nav-item { position: relative; }
+    .site-header .nav-item a {
+      color: black;
+      text-decoration: none;
+      font-weight: 400;
+      padding: 10px 16px;
+      font-size: 14.5px;
+      letter-spacing: 0.25px;
+    }
+  
+    /* Optional: keep dropdown styles in case you add them later */
+    .site-header .dropdown { position: relative; }
+    .site-header .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%; left: 50%; transform: translateX(-50%);
+      background: white; color: black;
+      padding: 20px 30px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      border-radius: 10px; z-index: 1000;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px 30px; max-width: 90vw; max-height: 400px;
+      overflow-y: auto; overflow-x: hidden;
+      scrollbar-width: thin; scrollbar-color: #999 #eee;
+    }
+    .site-header .dropdown:hover .dropdown-menu { display: grid; }
+    .site-header .dropdown-item { padding: 4px; line-height: 1.4; transition: background 0.2s; }
+    .site-header .dropdown-item h4 { font-size: 15px; font-weight: 600; margin: 0 0 4px 0; }
+    .site-header .dropdown-item p { font-size: 13px; margin: 0; color: #444; }
+    .site-header .dropdown-item:hover { background-color: #f9f9f9; border-radius: 6px; padding: 6px; }
   </style>
 </head>
 <body>
