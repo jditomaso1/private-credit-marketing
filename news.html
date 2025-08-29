@@ -1,255 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>News | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ✅ Add your header/nav styles here -->
+  <!-- Header / Nav styles (scoped) -->
   <style>
     body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:0; }
-    header { background:#fff; color:#000; padding:10px 20px; border-bottom:1px solid #eee; }
-    .header-container { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .site-title { font-size:24px; font-weight:700; display:flex; align-items:center; gap:10px; }
-    nav { padding:10px 0; }
-    .nav-links { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .nav-item a, .nav-item a:visited { color:#000; text-decoration:none; font-weight:400; padding:10px 12px; font-size:14.5px; letter-spacing:.25px; }
-    .nav-item a:hover { color:#2c7cf1; }
+    /* scope only the top site header */
+    .site-header { background:#fff; color:#000; padding:10px 20px; border-bottom:1px solid #eee; }
+    .site-header .header-container { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .site-header .site-title { font-size:24px; font-weight:700; display:flex; align-items:center; gap:10px; }
+    .site-header nav { padding:10px 0; }
+    .site-header .nav-links { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .site-header .nav-item a, .site-header .nav-item a:visited { color:#000; text-decoration:none; font-weight:400; padding:10px 12px; font-size:14.5px; letter-spacing:.25px; }
+    .site-header .nav-item a:hover { color:#2c7cf1; }
+
+    /* Media Hub styles */
+    .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
+    .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    @media (max-width: 820px){ .grid{grid-template-columns:1fr} }
+    .card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px;display:block;text-decoration:none;color:#111}
+    .card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-1px);transition:all .15s}
+    .card-title{font-weight:600;margin:0 0 6px 0;line-height:1.3}
+    .card-meta{font-size:12px;color:#666;margin:0 0 6px 0}
+    .card-tags{font-size:12px;color:#666}
+    .list a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;border-bottom:1px solid #eee;padding:10px 0;color:#111}
+    .list a:hover{background:#fafbfc}
+    .list .right{white-space:nowrap;color:#666;font-size:12px}
+    #refresh-btn{display:inline-block !important;}
   </style>
 </head>
+<body>
 
-
-<!-- Header section -->
-<header>
-  <div class="header-container">
-    <a href="https://private-credit.ai" style="text-decoration: none; color: inherit;">
-      <div class="site-title" style="display: flex; align-items: center; gap: 10px;">
-        <img src="img/favicon.png" alt="Private Credit AI logo" style="height: 28px;">
-        <span>Private Credit AI</span>
-      </div>
-    </a>
-    <nav>
-      <div class="nav-links">
-        <div class="nav-item"><a href="/index.html">Home</a></div>
-        <div class="nav-item"><a href="/about.html">About</a></div>
-        <div class="nav-item"><a href="/contact.html">Contact</a></div>
-        <div class="nav-item"><a href="/news.html">News</a></div> <!-- ✅ new tab -->
-      </div>
-    </nav>
-  </div>
-</header>
-
-<!--Media Hub-->
-<section id="media-hub" style="max-width:1100px;margin:0 auto;padding:40px 20px;font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial;">
-  <header style="margin-bottom:16px;">
-    <h1 style="margin:0 0 6px 0;font-size:32px;font-weight:700;">Media Hub</h1>
-    <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
-    
-    <!-- Refresh Button -->
-    <button id="refresh-btn" onclick="location.reload()"
-            style="padding:6px 12px;background:#2c7cf1;color:#fff;border:none;border-radius:4px;cursor:pointer;margin-top:12px;">
-      🔄 Refresh News
-    </button>
-
-    <!-- Last Updated Placeholder -->
-    <p id="last-updated" style="margin-top:8px; color:#666; font-size:13px;"></p>
+  <!-- Header section -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" style="text-decoration: none; color: inherit;">
+        <div class="site-title">
+          <img src="img/favicon.png" alt="Private Credit AI logo" style="height: 28px;">
+          <span>Private Credit AI</span>
+        </div>
+      </a>
+      <nav>
+        <div class="nav-links">
+          <div class="nav-item"><a href="/index.html">Home</a></div>
+          <div class="nav-item"><a href="/about.html">About</a></div>
+          <div class="nav-item"><a href="/contact.html">Contact</a></div>
+          <div class="nav-item"><a href="/news.html">News</a></div>
+        </div>
+      </nav>
+    </div>
   </header>
 
-  <!-- Filters -->
-  <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
-    <button data-tag="All" class="pill pill--active">All</button>
-    <button data-tag="Direct Lending" class="pill">Direct Lending</button>
-    <button data-tag="CLO" class="pill">CLO</button>
-    <button data-tag="NAV" class="pill">NAV</button>
-    <button data-tag="BDC" class="pill">BDC</button>
-    <button data-tag="ABS" class="pill">ABS</button>
-    <button data-tag="Private Equity" class="pill">Private Equity</button>
-    <button data-tag="Real Estate" class="pill">Real Estate</button>
-    <button data-tag="Infrastructure" class="pill">Infrastructure</button>
-    <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
-  </nav>
+  <!-- Media Hub -->
+  <section id="media-hub" style="max-width:1100px;margin:0 auto;padding:40px 20px;">
+    <!-- This header is just for the section; won't inherit the site-header styles -->
+    <header style="margin-bottom:16px;">
+      <h1 style="margin:0 0 6px 0;font-size:32px;font-weight:700;">Media Hub</h1>
+      <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
 
-  <!-- Top 10 -->
-  <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
-  <div id="top10" class="grid"></div>
+      <button id="refresh-btn" onclick="location.reload()"
+              style="padding:6px 12px;background:#2c7cf1;color:#fff;border:none;border-radius:4px;cursor:pointer;margin-top:12px;">
+        🔄 Refresh News
+      </button>
 
-  <!-- All Stories -->
-  <h3 style="margin:28px 0 12px;font-size:20px;">All Stories</h3>
-  <div id="feed" class="list"></div>
-</section>
+      <p id="last-updated" style="margin-top:8px; color:#666; font-size:13px;"></p>
+    </header>
 
-<style>
-  .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
-  .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
-  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-  @media (max-width: 820px){ .grid{grid-template-columns:1fr} }
-  .card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px;display:block;text-decoration:none;color:#111}
-  .card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-1px);transition:all .15s}
-  .card-title{font-weight:600;margin:0 0 6px 0;line-height:1.3}
-  .card-meta{font-size:12px;color:#666;margin:0 0 6px 0}
-  .card-tags{font-size:12px;color:#666}
-  .list a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;border-bottom:1px solid #eee;padding:10px 0;color:#111}
-  .list a:hover{background:#fafbfc}
-  .list .right{white-space:nowrap;color:#666;font-size:12px}
-  #refresh-btn{display:inline-block !important;}
-</style>
+    <!-- Filters -->
+    <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
+      <button data-tag="All" class="pill pill--active">All</button>
+      <button data-tag="Direct Lending" class="pill">Direct Lending</button>
+      <button data-tag="CLO" class="pill">CLO</button>
+      <button data-tag="NAV" class="pill">NAV</button>
+      <button data-tag="BDC" class="pill">BDC</button>
+      <button data-tag="ABS" class="pill">ABS</button>
+      <button data-tag="Private Equity" class="pill">Private Equity</button>
+      <button data-tag="Real Estate" class="pill">Real Estate</button>
+      <button data-tag="Infrastructure" class="pill">Infrastructure</button>
+      <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
+    </nav>
 
-<script>
-// Fetch + render
-const API = '/api/media-feed';
-let _items = [];
+    <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
+    <div id="top10" class="grid"></div>
 
-function timeAgo(iso){
-  const d = new Date(iso);
-  const diffMs = Date.now() - d.getTime();
-  const m = Math.round(diffMs/60000);
-  if (m < 60) return `${m}m`;
-  const h = Math.round(m/60);
-  if (h < 24) return `${h}h`;
-  return `${Math.round(h/24)}d`;
-}
+    <h3 style="margin:28px 0 12px;font-size:20px;">All Stories</h3>
+    <div id="feed" class="list"></div>
+  </section>
 
-function tagPills(tags=[]){
-  if (!tags.length) return '';
-  return `<span class="card-tags">${tags.join(' · ')}</span>`;
-}
+  <script>
+  // Fetch + render
+  const API = '/api/media-feed';
+  let _items = [];
 
-function renderTop10(items){
-  const el = document.getElementById('top10');
-  el.innerHTML = items.slice(0,10).map(i => `
-    <a class="card" href="${i.url}" target="_blank" rel="noopener">
-      <div class="card-title">${i.title}</div>
-      <div class="card-meta">${(i.source||'').replace(/^www\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
-      ${tagPills(i.tags)}
-    </a>
-  `).join('');
-}
-
-function renderFeed(items){
-  const el = document.getElementById('feed');
-  el.innerHTML = items.map(i => `
-    <a href="${i.url}" target="_blank" rel="noopener">
-      <span>${i.title}</span>
-      <span class="right">${(i.source||'').replace(/^www\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
-    </a>
-  `).join('');
-}
-
-/* ---------- Smart tag filtering ---------- */
-
-const TAG_ALIASES = {
-  "pe": "Private Equity",
-  "private-equity": "Private Equity",
-  "private equity": "Private Equity",
-  "re": "Real Estate",
-  "real-estate": "Real Estate",
-  "real estate": "Real Estate",
-  "infra": "Infrastructure",
-  "infrastructure": "Infrastructure",
-  "em": "Emerging Markets",
-  "emerging-markets": "Emerging Markets",
-  "emerging markets": "Emerging Markets",
-  "direct lending": "Direct Lending",
-  "clo": "CLO",
-  "nav": "NAV",
-  "bdc": "BDC",
-  "abs": "ABS"
-};
-
-function normalizeTag(s="") {
-  const k = String(s).trim().toLowerCase();
-  return TAG_ALIASES[k] || s;
-}
-
-// Ensure tags is always an array of strings
-function toTagArray(t){
-  if (Array.isArray(t)) return t;
-  if (typeof t === 'string') return t.split(',').map(x => x.trim()).filter(Boolean);
-  return [];
-}
-
-// Infer tags from title/summary when feed doesn't supply them
-function inferTagsFromText(text="") {
-  const t = text.toLowerCase();
-  const out = new Set();
-
-  if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
-  if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
-  if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
-  if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
-
-  if (/(direct lending)/.test(t)) out.add("Direct Lending");
-  if (/\bclo\b/.test(t)) out.add("CLO");
-  if (/\bnav\b/.test(t)) out.add("NAV");
-  if (/\bbdc\b/.test(t)) out.add("BDC");
-  if (/\babs\b/.test(t)) out.add("ABS");
-
-  return Array.from(out);
-}
-
-function applyFilter(tag='All'){
-  const selected = normalizeTag(tag);
-  const filtered = selected==='All'
-    ? _items
-    : _items.filter(i => {
-        const tags = toTagArray(i.tags).map(t => normalizeTag(t));
-        return tags.includes(selected);
-      });
-
-  renderTop10(filtered);
-  renderFeed(filtered.slice(10, 260));
-}
-
-/* ---------- Data load + wiring ---------- */
-
-async function loadFeed(){
-  try{
-    const res = await fetch(API, { cache: 'no-store' });
-    const data = await res.json();
-
-    _items = (data.items || []).map(i => {
-      const baseTags = toTagArray(i.tags);
-      const inferred = inferTagsFromText(
-        [i.title, i.summary, i.description].filter(Boolean).join(' ')
-      );
-      const merged = Array.from(new Set([...baseTags, ...inferred]));
-      return { ...i, tags: merged };
-    }).sort(
-      (a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate)
-    );
-
-    applyFilter('All');
-  }catch(e){
-    console.error('Feed load error', e);
+  function timeAgo(iso){
+    const d = new Date(iso);
+    const diffMs = Date.now() - d.getTime();
+    const m = Math.round(diffMs/60000);
+    if (m < 60) return `${m}m`;
+    const h = Math.round(m/60);
+    if (h < 24) return `${h}h`;
+    return `${Math.round(h/24)}d`;
   }
-}
 
-function updateLastUpdated() {
-  const now = new Date();
-  const formatted = now.toLocaleString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-    month: 'short',
-    day: 'numeric'
-  });
-  const el = document.getElementById('last-updated');
-  if (el) el.textContent = `Last updated: ${formatted}`;
-}
+  function tagPills(tags=[]){
+    if (!tags.length) return '';
+    return `<span class="card-tags">${tags.join(' · ')}</span>`;
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('#filters .pill').forEach(btn=>{
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
-      btn.classList.add('pill--active');
-      applyFilter(btn.dataset.tag);
+  function renderTop10(items){
+    const el = document.getElementById('top10');
+    el.innerHTML = items.slice(0,10).map(i => `
+      <a class="card" href="${i.url}" target="_blank" rel="noopener">
+        <div class="card-title">${i.title}</div>
+        <div class="card-meta">${(i.source||'').replace(/^www\\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
+        ${tagPills(i.tags)}
+      </a>
+    `).join('');
+  }
+
+  function renderFeed(items){
+    const el = document.getElementById('feed');
+    el.innerHTML = items.map(i => `
+      <a href="${i.url}" target="_blank" rel="noopener">
+        <span>${i.title}</span>
+        <span class="right">${(i.source||'').replace(/^www\\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
+      </a>
+    `).join('');
+  }
+
+  const TAG_ALIASES = {
+    "pe": "Private Equity","private-equity": "Private Equity","private equity": "Private Equity",
+    "re": "Real Estate","real-estate": "Real Estate","real estate": "Real Estate",
+    "infra": "Infrastructure","infrastructure": "Infrastructure",
+    "em": "Emerging Markets","emerging-markets": "Emerging Markets","emerging markets": "Emerging Markets",
+    "direct lending": "Direct Lending","clo": "CLO","nav": "NAV","bdc": "BDC","abs": "ABS"
+  };
+
+  function normalizeTag(s="") {
+    const k = String(s).trim().toLowerCase();
+    return TAG_ALIASES[k] || s;
+  }
+  function toTagArray(t){
+    if (Array.isArray(t)) return t;
+    if (typeof t === 'string') return t.split(',').map(x => x.trim()).filter(Boolean);
+    return [];
+  }
+  function inferTagsFromText(text="") {
+    const t = text.toLowerCase(); const out = new Set();
+    if (/(private\\s*equity|\\bpe\\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
+    if (/(real\\s*estate|\\breit\\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
+    if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
+    if (/(emerging markets|\\bem\\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
+    if (/(direct lending)/.test(t)) out.add("Direct Lending");
+    if (/\\bclo\\b/.test(t)) out.add("CLO");
+    if (/\\bnav\\b/.test(t)) out.add("NAV");
+    if (/\\bbdc\\b/.test(t)) out.add("BDC");
+    if (/\\babs\\b/.test(t)) out.add("ABS");
+    return Array.from(out);
+  }
+
+  function applyFilter(tag='All'){
+    const selected = normalizeTag(tag);
+    const filtered = selected==='All'
+      ? _items
+      : _items.filter(i => {
+          const tags = toTagArray(i.tags).map(t => normalizeTag(t));
+          return tags.includes(selected);
+        });
+    renderTop10(filtered);
+    renderFeed(filtered.slice(10, 260));
+  }
+
+  async function loadFeed(){
+    try{
+      const res = await fetch(API, { cache: 'no-store' });
+      const data = await res.json();
+      _items = (data.items || []).map(i => {
+        const baseTags = toTagArray(i.tags);
+        const inferred = inferTagsFromText([i.title, i.summary, i.description].filter(Boolean).join(' '));
+        const merged = Array.from(new Set([...baseTags, ...inferred]));
+        return { ...i, tags: merged };
+      }).sort((a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate));
+      applyFilter('All');
+    }catch(e){ console.error('Feed load error', e); }
+  }
+
+  function updateLastUpdated() {
+    const now = new Date();
+    const formatted = now.toLocaleString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, month:'short', day:'numeric' });
+    const el = document.getElementById('last-updated');
+    if (el) el.textContent = `Last updated: ${formatted}`;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#filters .pill').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
+        btn.classList.add('pill--active');
+        applyFilter(btn.dataset.tag);
+      });
     });
+    loadFeed().then(updateLastUpdated);
   });
-  loadFeed().then(updateLastUpdated);
-});
 
-// Debug helper: window.__tags()
-window.__tags = function(){
-  const counts = {};
-  (_items||[]).forEach(i => (i.tags||[]).forEach(t => counts[t] = (counts[t]||0)+1));
-  console.table(counts);
-};
-</script>
+  // Debug helper
+  window.__tags = function(){
+    const counts = {};
+    (_items||[]).forEach(i => (i.tags||[]).forEach(t => counts[t] = (counts[t]||0)+1));
+    console.table(counts);
+  };
+  </script>
+</body>
+</html>
