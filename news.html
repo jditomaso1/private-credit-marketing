@@ -152,9 +152,19 @@ async function loadFeed(){
   try{
     const res = await fetch(API, { cache: 'no-store' });
     const data = await res.json();
-    _items = (data.items||[]).sort(
+
+    _items = (data.items || []).map(i => {
+      const baseTags = toTagArray(i.tags);
+      const inferred = inferTagsFromText(
+        [i.title, i.summary, i.description].filter(Boolean).join(' ')
+      );
+      // merge + de-dupe
+      const merged = Array.from(new Set([...baseTags, ...inferred]));
+      return { ...i, tags: merged };
+    }).sort(
       (a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate)
     );
+
     applyFilter('All');
   }catch(e){
     console.error('Feed load error', e);
@@ -173,7 +183,49 @@ function updateLastUpdated() {
   const el = document.getElementById('last-updated');
   if (el) el.textContent = `Last updated: ${formatted}`;
 }
+// Infer tags from title/summary when the feed doesn't supply them
+function inferTagsFromText(text="") {
+  const t = text.toLowerCase();
 
+  const out = new Set();
+
+  // Private Equity
+  if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) {
+    out.add("Private Equity");
+  }
+
+  // Real Estate
+  if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) {
+    out.add("Real Estate");
+  }
+
+  // Infrastructure
+  if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) {
+    out.add("Infrastructure");
+  }
+
+  // Emerging Markets
+  if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) {
+    out.add("Emerging Markets");
+  }
+
+  // Keep your existing core tags too (if present in text)
+  if (/(direct lending)/.test(t)) out.add("Direct Lending");
+  if (/\bclo\b/.test(t)) out.add("CLO");
+  if (/\bnav\b/.test(t)) out.add("NAV");
+  if (/\bbdc\b/.test(t)) out.add("BDC");
+  if (/\babs\b/.test(t)) out.add("ABS");
+
+  return Array.from(out);
+}
+
+// Ensure tags is always an array of strings (you already have toTagArray)
+function toTagArray(t){
+  if (Array.isArray(t)) return t;
+  if (typeof t === 'string') return t.split(',').map(x=>x.trim()).filter(Boolean);
+  return [];
+}
+  
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#filters .pill').forEach(btn=>{
     btn.addEventListener('click', () => {
@@ -184,4 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   loadFeed().then(updateLastUpdated);
 });
+  
+window.__tags = function(){
+  const counts = {};
+  (_items||[]).forEach(i => (i.tags||[]).forEach(t => counts[t] = (counts[t]||0)+1));
+  console.table(counts);
+};
+  
 </script>
