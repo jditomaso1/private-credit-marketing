@@ -91,7 +91,6 @@ function renderFeed(items){
 function applyFilter(tag='All'){
   const filtered = tag==='All' ? _items : _items.filter(i => (i.tags||[]).includes(tag));
   renderTop10(filtered);
-  // Show “rest” below (skip the ones in Top10)
   renderFeed(filtered.slice(10, 260));
 }
 
@@ -99,26 +98,15 @@ async function loadFeed(){
   try{
     const res = await fetch(API, { cache: 'no-store' });
     const data = await res.json();
-    // Accept either {top10, items} or just {items}
-    _items = (data.items||[]).sort((a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate));
+    _items = (data.items||[]).sort(
+      (a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate)
+    );
     applyFilter('All');
   }catch(e){
     console.error('Feed load error', e);
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Filters
-  document.querySelectorAll('#filters .pill').forEach(btn=>{
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
-      btn.classList.add('pill--active');
-      applyFilter(btn.dataset.tag);
-    });
-  });
-  loadFeed();
-});
-  
 function updateLastUpdated() {
   const now = new Date();
   const formatted = now.toLocaleString('en-US', {
@@ -128,11 +116,19 @@ function updateLastUpdated() {
     month: 'short',
     day: 'numeric'
   });
-  document.getElementById('last-updated').textContent = `Last updated: ${formatted}`;
+  const el = document.getElementById('last-updated');
+  if (el) el.textContent = `Last updated: ${formatted}`;
 }
 
-// Call it once feed finishes loading
+// ✅ Single DOMContentLoaded: wire filters + load feed + stamp time
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#filters .pill').forEach(btn=>{
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
+      btn.classList.add('pill--active');
+      applyFilter(btn.dataset.tag);
+    });
+  });
   loadFeed().then(updateLastUpdated);
 });
 </script>
