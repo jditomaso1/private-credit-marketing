@@ -4,8 +4,8 @@
     <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
     
     <!-- Refresh Button -->
-    <button onclick="location.reload()" 
-            style="padding:6px 12px; background:#2c7cf1; color:white; border:none; border-radius:4px; cursor:pointer; margin-top:12px;">
+    <button id="refresh-btn" onclick="location.reload()"
+            style="padding:6px 12px;background:#2c7cf1;color:#fff;border:none;border-radius:4px;cursor:pointer;margin-top:12px;">
       🔄 Refresh News
     </button>
 
@@ -45,6 +45,7 @@
   .list a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;border-bottom:1px solid #eee;padding:10px 0;color:#111}
   .list a:hover{background:#fafbfc}
   .list .right{white-space:nowrap;color:#666;font-size:12px}
+  #refresh-btn{display:inline-block !important;}
 </style>
 
 <script>
