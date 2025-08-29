@@ -236,6 +236,21 @@
         filter: brightness(0) invert(1); /* simulates white */
       }
       
+      /* Responsive tweaks */
+      @media (max-width: 900px) {
+        .dropdown-menu {
+          grid-template-columns: repeat(2, minmax(200px, 1fr)); /* 2 columns */
+          max-width: 480px;
+        }
+      }
+      
+      @media (max-width: 600px) {
+        .dropdown-menu {
+          grid-template-columns: 1fr; /* 1 column */
+          max-width: 300px; /* or 100% if you want it full width */
+        }
+      }
+      
     </style>
   </head>
   <body>
