@@ -1,1 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Us | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png?v=8" />
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GY4CQ6ZFH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    gtag('config', 'G-6GY4CQ6ZFH');
+   </script>  
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .site-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav {
+      padding: 10px 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.1px;
+      flex-wrap: wrap;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-item a {
+      color: black;
+      text-decoration: none;
+      font-weight: 400;
+      padding: 10px 16px;
+      font-size: 14.5px;
+      letter-spacing: 0.25px;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 20px 30px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      z-index: 1000;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px 30px;
+      max-width: 90vw;
+      max-height: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: #999 #eee;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: grid;
+    }
+
+    .dropdown-item {
+      padding: 4px;
+      line-height: 1.4;
+      transition: background 0.2s;
+    }
+
+    .dropdown-item h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+
+    .dropdown-item p {
+      font-size: 13px;
+      margin: 0;
+      color: #444;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      padding: 6px;
+    }
+
+    /* Contact page specific */
+    .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-radius: 8px;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .contact-form {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .contact-form button {
+      padding: 14px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .contact-form button:hover {
+      background-color: #1a242f;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header section -->
+  <header>
+    <div class="header-container">
+      <a href="https://private-credit.ai" style="text-decoration: none; color: inherit;">
+        <div class="site-title" style="display: flex; align-items: center; gap: 10px;">
+          <img src="img/favicon.png" alt="Private Credit AI logo" style="height: 28px;">
+          <span>Private Credit AI</span>
+        </div>
+      </a>
+      <nav>
+        <div class="nav-links">
+          <div class="nav-item"><a href="/index.html">Home</a></div>
+          <div class="nav-item"><a href="/about.html">About</a></div>
+          <div class="nav-item"><a href="/contact.html">Contact</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact form + info section -->
+  <div class="contact-container">
+    <div class="contact-info">
+      <h2>1 Have a Question About Our Platform?</h2>
+      <p>We’re here to help. Whether you want a demo, have a technical question, or just want to explore partnership opportunities, we’re ready to connect.</p>
+      <h3>Why Private Credit AI?</h3>
+      <p>We help credit professionals automate document parsing, credit risk scoring, and portfolio monitoring using cutting-edge AI. Our platform is used by managers, allocators, and institutions looking to scale smarter.</p>
+
+      <h3>Get in Touch</h3>
+      <p><strong>Email:</strong> contact@private-credit.ai</p>
+      <p><strong>Phone:</strong> +1 (301) 447-0835</p>
+      <p><strong>Address:</strong><br/>
+      Private Credit AI<br/>
+      375 Park Ave<br/>
+      New York, NY 10152</p>
+    </div>
+
+    <form id="contact-form" class="contact-form">
+      <input type="text" name="firstName" id="firstName" placeholder="First Name *" required />
+      <input type="text" name="lastName" id="lastName" placeholder="Last Name *" required />
+      <input type="text" name="phone" id="phone" placeholder="Phone Number or WhatsApp *" required />
+      <input type="email" name="email" id="email" placeholder="Email *" required />
+      <input type="text" name="country" id="country" placeholder="Country/Region *" required />
+      <input type="text" name="city" id="city" placeholder="City *" required />
+    
+      <select name="industry" id="industry" required>
+        <option value="" disabled selected>Industry</option>
+        <option value="Private Credit">Private Credit</option>
+        <option value="Direct Lending">Direct Lending</option>
+        <option value="Structured Credit">Structured Credit</option>
+        <option value="PE / Alternatives">PE / Alternatives</option>
+        <option value="Other">Other</option>
+      </select>
+    
+      <select name="referral" id="referral" required>
+        <option value="" disabled selected>How did you find us?</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Referral">Referral</option>
+        <option value="Google Search">Google Search</option>
+        <option value="Event or Webinar">Event or Webinar</option>
+        <option value="Other">Other</option>
+      </select>
+    
+      <input type="text" name="company" id="company" placeholder="Company Name" />
+      <input type="text" name="dataProvider" id="dataProvider" placeholder="Do you currently use AI?" />
+    
+      <textarea name="message" id="message" rows="5" placeholder="Your message *" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background-color: #3a71b0; padding: 40px 20px; font-family: 'Poppins', sans-serif;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; text-align: center; color: white; gap: 20px;">
+  
+      <!-- Left Section -->
+      <div style="flex: 1; min-width: 250px;">
+        <strong style="font-size: 16px;">Private Credit AI</strong><br/>
+        <span style="font-size: 14px;">© 2025 All rights reserved.</span>
+      </div>
+  
+      <!-- Right Section: Links -->
+      <div style="flex: 1; min-width: 250px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <a href="about.html" style="color: white; font-size: 14px; text-decoration: none;">About</a>
+        <a href="#" style="color: white; font-size: 14px; text-decoration: none;">Terms</a>
+        <a href="#" target="_blank" style="color: white; font-size: 14px; text-decoration: none;">LinkedIn</a>
+        <!-- <a href="https://linkedin.com/company/private-credit-ai" target="_blank" style="color: white; font-size: 14px; text-decoration: none;">LinkedIn</a> -->
+      </div>
+  
+    </div>
+  </footer>
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz5_NVluA-BQ6hKOszC3ogrpxuE8G89T89AMwI3oC1SVACRLCzNBqWQoqFfgYHPPyRFGA/exec";
+    const form = document.getElementById("contact-form");
+  
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+  
+      const formData = {
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        phone: form.phone.value,
+        email: form.email.value,
+        country: form.country.value,
+        city: form.city.value,
+        industry: form.industry.value,
+        referral: form.referral.value,
+        company: form.company.value,
+        dataProvider: form.dataProvider.value,
+        message: form.message.value
+      };
+  
+      fetch(scriptURL, {
+        method: "POST",
+        body: new URLSearchParams(formData)  // ✅ DO NOT REMOVE THIS
+      })
+      .then(response => {
+        alert("✅ Message sent! We’ll be in touch shortly.");
+        form.reset();
+      })
+      .catch(error => {
+        alert("⚠️ Error sending message. Please try again.");
+        console.error("Error!", error.message);
+      });
+    });
+  </script>
+</body>
+</html>
