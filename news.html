@@ -54,7 +54,7 @@
 
 <script>
 // Fetch + render
-const API = '/api/media-feed'; // your serverless endpoint
+const API = '/api/media-feed';
 let _items = [];
 
 function timeAgo(iso){
@@ -93,25 +93,20 @@ function renderFeed(items){
   `).join('');
 }
 
-// --- Smart tag filtering ---
+/* ---------- Smart tag filtering ---------- */
 
-// Map common synonyms/abbreviations to canonical labels used by your pills
 const TAG_ALIASES = {
   "pe": "Private Equity",
   "private-equity": "Private Equity",
   "private equity": "Private Equity",
-
   "re": "Real Estate",
   "real-estate": "Real Estate",
   "real estate": "Real Estate",
-
   "infra": "Infrastructure",
   "infrastructure": "Infrastructure",
-
   "em": "Emerging Markets",
   "emerging-markets": "Emerging Markets",
   "emerging markets": "Emerging Markets",
-
   "direct lending": "Direct Lending",
   "clo": "CLO",
   "nav": "NAV",
@@ -127,10 +122,27 @@ function normalizeTag(s="") {
 // Ensure tags is always an array of strings
 function toTagArray(t){
   if (Array.isArray(t)) return t;
-  if (typeof t === 'string') {
-    return t.split(',').map(x => x.trim()).filter(Boolean);
-  }
+  if (typeof t === 'string') return t.split(',').map(x => x.trim()).filter(Boolean);
   return [];
+}
+
+// Infer tags from title/summary when feed doesn't supply them
+function inferTagsFromText(text="") {
+  const t = text.toLowerCase();
+  const out = new Set();
+
+  if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
+  if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
+  if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
+  if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
+
+  if (/(direct lending)/.test(t)) out.add("Direct Lending");
+  if (/\bclo\b/.test(t)) out.add("CLO");
+  if (/\bnav\b/.test(t)) out.add("NAV");
+  if (/\bbdc\b/.test(t)) out.add("BDC");
+  if (/\babs\b/.test(t)) out.add("ABS");
+
+  return Array.from(out);
 }
 
 function applyFilter(tag='All'){
@@ -146,7 +158,7 @@ function applyFilter(tag='All'){
   renderFeed(filtered.slice(10, 260));
 }
 
-// --- Data load + wiring ---
+/* ---------- Data load + wiring ---------- */
 
 async function loadFeed(){
   try{
@@ -158,7 +170,6 @@ async function loadFeed(){
       const inferred = inferTagsFromText(
         [i.title, i.summary, i.description].filter(Boolean).join(' ')
       );
-      // merge + de-dupe
       const merged = Array.from(new Set([...baseTags, ...inferred]));
       return { ...i, tags: merged };
     }).sort(
@@ -183,49 +194,7 @@ function updateLastUpdated() {
   const el = document.getElementById('last-updated');
   if (el) el.textContent = `Last updated: ${formatted}`;
 }
-// Infer tags from title/summary when the feed doesn't supply them
-function inferTagsFromText(text="") {
-  const t = text.toLowerCase();
 
-  const out = new Set();
-
-  // Private Equity
-  if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) {
-    out.add("Private Equity");
-  }
-
-  // Real Estate
-  if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) {
-    out.add("Real Estate");
-  }
-
-  // Infrastructure
-  if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) {
-    out.add("Infrastructure");
-  }
-
-  // Emerging Markets
-  if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) {
-    out.add("Emerging Markets");
-  }
-
-  // Keep your existing core tags too (if present in text)
-  if (/(direct lending)/.test(t)) out.add("Direct Lending");
-  if (/\bclo\b/.test(t)) out.add("CLO");
-  if (/\bnav\b/.test(t)) out.add("NAV");
-  if (/\bbdc\b/.test(t)) out.add("BDC");
-  if (/\babs\b/.test(t)) out.add("ABS");
-
-  return Array.from(out);
-}
-
-// Ensure tags is always an array of strings (you already have toTagArray)
-function toTagArray(t){
-  if (Array.isArray(t)) return t;
-  if (typeof t === 'string') return t.split(',').map(x=>x.trim()).filter(Boolean);
-  return [];
-}
-  
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#filters .pill').forEach(btn=>{
     btn.addEventListener('click', () => {
@@ -236,11 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   loadFeed().then(updateLastUpdated);
 });
-  
+
+// Debug helper: window.__tags()
 window.__tags = function(){
   const counts = {};
   (_items||[]).forEach(i => (i.tags||[]).forEach(t => counts[t] = (counts[t]||0)+1));
   console.table(counts);
 };
-  
 </script>
