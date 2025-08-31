@@ -1,6 +1,6 @@
 async function loadYield() {
   const out = document.getElementById("yield-output");
-  const FRED_KEY = "YOUR_FRED_API_KEY"; // <-- replace with your real key
+  const FRED_KEY = "831a95b60d57089bbf815d7d866b3009"; // <-- replace with your real key
 
   // Quick checks
   if (!FRED_KEY || FRED_KEY === "YOUR_FRED_API_KEY") {
