@@ -32,6 +32,18 @@
       <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Covenant Checker</h3>
       <p style="font-size:14px;color:#555;">Upload covenant text, get an instant risk assessment.</p>
     </a>
-
+    
+    <section id="yield-snapshot" style="padding:20px; border:1px solid #ddd; border-radius:8px;">
+      <h2>Yield Curve Snapshot</h2>
+      <button onclick="loadYield()">Refresh</button>
+      <div id="yield-output">Loading...</div>
+    </section>
+    
+    <!-- include your script -->
+    <script src="api/yield-snapshot.js"></script>
+    <script>
+      // auto-load on page load
+      loadYield();
+    </script>
   </div>
 </section>
