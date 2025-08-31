@@ -39,11 +39,19 @@
       <div id="yield-output">Loading...</div>
     </section>
     
-    <!-- include your script -->
-    <script src="api/yield-snapshot.js"></script>
+    <!-- SINGLE yield widget (place inside your grid OR below it) -->
+    <section id="yield-snapshot" style="padding:20px;border:1px solid #ddd;border-radius:8px;background:#fff;">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Yield Curve Snapshot</h3>
+      <p style="font-size:14px;color:#555;margin:0 0 10px;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
+      <button onclick="loadYield()" style="margin-bottom:8px;">Refresh</button>
+      <div id="yield-output" style="margin-top:8px;">Loading…</div>
+    </section>
+    
+    <!-- ONE script include only -->
+    <script src="api/yield-snapshot.js?v=2" defer></script>
     <script>
-      // auto-load on page load
-      loadYield();
+      // Auto-load when DOM is ready
+      document.addEventListener('DOMContentLoaded', () => loadYield());
     </script>
   </div>
 </section>
