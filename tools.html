@@ -42,10 +42,17 @@
     </section>
     
     <!-- ONE script include only -->
-    <script src="api/yield-snapshot.js?v=2" defer></script>
+    <script src="/api/yield-snapshot.js?v=3"></script>
     <script>
-      // Auto-load when DOM is ready
-      document.addEventListener('DOMContentLoaded', () => loadYield());
+      window.addEventListener('load', () => {
+        try {
+          loadYield();
+        } catch (e) {
+          const out = document.getElementById('yield-output');
+          if (out) out.textContent = 'Error: yield-snapshot.js did not load.';
+          console.error(e);
+        }
+      });
     </script>
   </div>
 </section>
