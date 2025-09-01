@@ -33,26 +33,27 @@
       <p style="font-size:14px;color:#555;">Upload covenant text, get an instant risk assessment.</p>
     </a>
     
-    <!-- SINGLE yield widget (place inside your grid OR below it) -->
+    <!-- Yield widget lives INSIDE grid -->
     <section id="yield-snapshot" style="padding:20px;border:1px solid #ddd;border-radius:8px;background:#fff;">
       <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Yield Curve Snapshot</h3>
       <p style="font-size:14px;color:#555;margin:0 0 10px;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
       <button onclick="loadYield()" style="margin-bottom:8px;">Refresh</button>
       <div id="yield-output" style="margin-top:8px;">Loading…</div>
     </section>
-    
-    <!-- ONE script include only -->
-    <script src="/api/yield-snapshot.js?v=3"></script>
-    <script>
-      window.addEventListener('load', () => {
-        try {
-          loadYield();
-        } catch (e) {
-          const out = document.getElementById('yield-output');
-          if (out) out.textContent = 'Error: yield-snapshot.js did not load.';
-          console.error(e);
-        }
-      });
-    </script>
-  </div>
+
+  </div> <!-- end of grid -->
 </section>
+
+<!-- Scripts should be OUTSIDE the grid/section -->
+<script src="/api/yield-snapshot.js?v=3"></script>
+<script>
+  window.addEventListener('load', () => {
+    try {
+      loadYield();
+    } catch (e) {
+      const out = document.getElementById('yield-output');
+      if (out) out.textContent = 'Error: yield-snapshot.js did not load.';
+      console.error(e);
+    }
+  });
+</script>
