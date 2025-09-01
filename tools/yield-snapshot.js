@@ -2,7 +2,7 @@ async function loadYield() {
   const out = document.getElementById("yield-output");
   out.textContent = "Loading…";
 
-  const API = "https://YOUR-WORKING-DOMAIN/api/yield-snapshot"; // <— put the domain that returned JSON
+  const API = "https://private-credit.ai/api/yield-snapshot";
   const fmt = (n) => (n == null ? "—" : Number(n).toFixed(2));
   const niceDate = (s) => (s ? new Date(s + "T00:00:00Z").toLocaleDateString() : "—");
   const label = { DGS1MO:"1M", DGS3MO:"3M", DGS6MO:"6M", DGS1:"1Y", DGS2:"2Y",
