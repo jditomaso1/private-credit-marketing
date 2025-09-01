@@ -1,0 +1,18 @@
+<nav class="tool-tabs" aria-label="Tools" style="margin:16px auto 0;max-width:1100px;display:flex;gap:8px;flex-wrap:wrap;">
+  <a class="tool-tab" href="/media-hub.html">Media Hub</a>
+  <a class="tool-tab" href="/irr-calculator.html">IRR Calculator</a>
+  <a class="tool-tab" href="/yield-curve.html">Yield Curve</a>
+  <a class="tool-tab" href="/jargon-decoder.html">Jargon Decoder</a>
+  <a class="tool-tab" href="/loan-pricing.html">Loan Pricing</a>
+  <a class="tool-tab" href="/covenant-checker.html">Covenant Checker</a>
+</nav>
+<script>
+  // highlight active tab
+  (function(){
+    const here = location.pathname.replace(/\/+$/,'');
+    document.querySelectorAll('.tool-tab').forEach(a=>{
+      if(a.getAttribute('href')===here){ a.style.background='#111'; a.style.color='#fff'; a.style.border='1px solid #111'; }
+      else{ a.style.background='#fff'; a.style.color='#111'; a.style.border='1px solid #ddd'; a.style.borderRadius='8px'; padding='10px 14px'; }
+    });
+  })();
+</script>
