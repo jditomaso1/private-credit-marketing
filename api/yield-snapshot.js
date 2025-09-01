@@ -1,49 +1,71 @@
-async function loadYield() {
-  const out = document.getElementById("yield-output");
-  out.textContent = "Loading…";
-
-  const fmt = (n) => (n == null ? "—" : Number(n).toFixed(2));
-  const niceDate = (s) => (s ? new Date(s + "T00:00:00Z").toLocaleDateString() : "—");
-  const label = { DGS1MO:"1M", DGS3MO:"3M", DGS6MO:"6M", DGS1:"1Y", DGS2:"2Y",
-                  DGS3:"3Y", DGS5:"5Y", DGS7:"7Y", DGS10:"10Y", DGS20:"20Y", DGS30:"30Y" };
-
+// /api/yield-snapshot.js  (Vercel serverless function)
+export default async function handler(req, res) {
   try {
-    const r = await fetch("/api/yield-snapshot", { cache: "no-store" });
-    if (!r.ok) throw new Error(`Proxy error ${r.status}`);
-    const data = await r.json();
+    const FRED_KEY = process.env.FRED_API_KEY;
+    if (!FRED_KEY) return res.status(500).json({ error: "FRED_API_KEY missing" });
 
-    let html = `
-      <div style="margin-bottom:10px;">
-        <strong>SOFR:</strong> ${fmt(data.sofr?.value)}%
-        <span style="color:#666;">(as of ${niceDate(data.sofr?.date)})</span>
-        &nbsp; | &nbsp;
-        <strong>HY OAS:</strong> ${fmt(data.hy_oas?.value)}%
-        <span style="color:#666;">(as of ${niceDate(data.hy_oas?.date)})</span>
-      </div>
+    const SERIES = {
+      SOFR: "SOFR",
+      HY_OAS: "BAMLH0A0HYM2",
+      UST: ["DGS1MO","DGS3MO","DGS6MO","DGS1","DGS2","DGS3","DGS5","DGS7","DGS10","DGS20","DGS30"],
+    };
 
-      <table style="width:100%;border-collapse:collapse;">
-        <thead>
-          <tr style="border-bottom:1px solid #ddd;text-align:left;">
-            <th style="padding:6px 4px;">Tenor</th>
-            <th style="padding:6px 4px;">UST Yield (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
+    // simple sleep
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-    (data.ust_curve || []).forEach(p => {
-      const t = label[p.id] || p.tenor || p.id;
-      html += `
-        <tr style="border-bottom:1px solid #f0f0f0;">
-          <td style="padding:6px 4px;">${t}</td>
-          <td style="padding:6px 4px;">${fmt(p.value)}</td>
-        </tr>`;
+    async function latest(id, tries = 3) {
+      const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${id}&api_key=${FRED_KEY}&file_type=json&sort_order=desc&limit=1`;
+      let lastErr;
+      for (let attempt = 1; attempt <= tries; attempt++) {
+        try {
+          const r = await fetch(url, {
+            headers: { "User-Agent": "private-credit.ai yield-snapshot" },
+          });
+          if (!r.ok) {
+            // capture status text for debugging
+            const txt = await r.text().catch(() => "");
+            throw new Error(`HTTP ${r.status} for ${id} ${txt ? "- " + txt.slice(0,120) : ""}`);
+          }
+          const j = await r.json();
+          const obs = j?.observations?.[0];
+          return { id, date: obs?.date ?? null, value: obs && obs.value !== "." ? Number(obs.value) : null };
+        } catch (e) {
+          lastErr = e;
+          // backoff: 200ms, 500ms, 1000ms
+          await wait([200, 500, 1000][Math.min(attempt - 1, 2)]);
+        }
+      }
+      // return a soft failure instead of crashing the whole API
+      return { id, date: null, value: null, error: String(lastErr?.message || lastErr) };
+    }
+
+    // Fetch sequentially to be gentle on FRED & avoid 429s
+    const sofr = await latest(SERIES.SOFR);
+    await wait(120);
+    const hyoas = await latest(SERIES.HY_OAS);
+    await wait(120);
+
+    const ust = [];
+    for (const id of SERIES.UST) {
+      ust.push(await latest(id));
+      await wait(120);
+    }
+
+    // helpful debug info if caller appends ?debug=1
+    if (req.query?.debug === "1") {
+      res.setHeader("x-debug", "1");
+    }
+
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cache-Control", "s-maxage=1800, stale-while-revalidate=300");
+
+    res.status(200).json({
+      updated_at: new Date().toISOString(),
+      sofr,
+      hy_oas: hyoas,
+      ust_curve: ust,
     });
-
-    html += "</tbody></table>";
-    out.innerHTML = html;
-  } catch (err) {
-    console.error(err);
-    out.textContent = `Error loading data: ${String(err?.message || err)}`;
+  } catch (e) {
+    res.status(500).json({ error: String(e?.message || e) });
   }
 }
