@@ -1,43 +1,49 @@
-// /api/yield-snapshot.js  (Vercel Serverless Function)
-export default async function handler(req, res) {
+async function loadYield() {
+  const out = document.getElementById("yield-output");
+  out.textContent = "Loading…";
+
+  const fmt = (n) => (n == null ? "—" : Number(n).toFixed(2));
+  const niceDate = (s) => (s ? new Date(s + "T00:00:00Z").toLocaleDateString() : "—");
+  const label = { DGS1MO:"1M", DGS3MO:"3M", DGS6MO:"6M", DGS1:"1Y", DGS2:"2Y",
+                  DGS3:"3Y", DGS5:"5Y", DGS7:"7Y", DGS10:"10Y", DGS20:"20Y", DGS30:"30Y" };
+
   try {
-    const FRED_KEY = process.env.FRED_API_KEY;
-    if (!FRED_KEY) {
-      return res.status(500).json({ error: "FRED_API_KEY missing" });
-    }
+    const r = await fetch("/api/yield-snapshot", { cache: "no-store" });
+    if (!r.ok) throw new Error(`Proxy error ${r.status}`);
+    const data = await r.json();
 
-    const series = {
-      SOFR: "SOFR",
-      HY_OAS: "BAMLH0A0HYM2",
-      UST: ["DGS1MO","DGS3MO","DGS6MO","DGS1","DGS2","DGS3","DGS5","DGS7","DGS10","DGS20","DGS30"],
-    };
+    let html = `
+      <div style="margin-bottom:10px;">
+        <strong>SOFR:</strong> ${fmt(data.sofr?.value)}%
+        <span style="color:#666;">(as of ${niceDate(data.sofr?.date)})</span>
+        &nbsp; | &nbsp;
+        <strong>HY OAS:</strong> ${fmt(data.hy_oas?.value)}%
+        <span style="color:#666;">(as of ${niceDate(data.hy_oas?.date)})</span>
+      </div>
 
-    async function latest(id) {
-      const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${id}&api_key=${FRED_KEY}&file_type=json&sort_order=desc&limit=1`;
-      const r = await fetch(url);
-      if (!r.ok) throw new Error(`FRED fetch failed for ${id} (${r.status})`);
-      const j = await r.json();
-      const obs = j?.observations?.[0];
-      return { id, date: obs?.date ?? null, value: obs && obs.value !== "." ? Number(obs.value) : null };
-    }
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid #ddd;text-align:left;">
+            <th style="padding:6px 4px;">Tenor</th>
+            <th style="padding:6px 4px;">UST Yield (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
 
-    const [sofr, hyoas, ...ust] = await Promise.all([
-      latest(series.SOFR),
-      latest(series.HY_OAS),
-      ...series.UST.map(latest),
-    ]);
-
-    // CORS headers (optional if only your site calls it)
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Cache-Control", "s-maxage=1800, stale-while-revalidate=300"); // cache at edge
-
-    res.status(200).json({
-      updated_at: new Date().toISOString(),
-      sofr,
-      hy_oas: hyoas,
-      ust_curve: ust,
+    (data.ust_curve || []).forEach(p => {
+      const t = label[p.id] || p.tenor || p.id;
+      html += `
+        <tr style="border-bottom:1px solid #f0f0f0;">
+          <td style="padding:6px 4px;">${t}</td>
+          <td style="padding:6px 4px;">${fmt(p.value)}</td>
+        </tr>`;
     });
-  } catch (e) {
-    res.status(500).json({ error: String(e?.message || e) });
+
+    html += "</tbody></table>";
+    out.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    out.textContent = `Error loading data: ${String(err?.message || err)}`;
   }
 }
