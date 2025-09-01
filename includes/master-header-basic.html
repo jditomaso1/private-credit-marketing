@@ -1,34 +1,51 @@
 <!-- /includes/master-header-basic.html -->
-<header style="background:#fff;color:#000;padding:10px 20px;border-bottom:1px solid #eee;">
-  <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-    <!-- Brand -->
-    <a href="https://private-credit.ai" style="text-decoration:none;color:inherit;">
-      <div style="display:flex;align-items:center;gap:10px;">
+
+<!-- Inject the exact header CSS from About (scoped + identical) -->
+<style id="hdr-basic-css">
+  /* scope to this header only to avoid collisions */
+  header.pca-basic { background:#fff; color:#000; padding:10px 20px; border-bottom:1px solid #eee; }
+  header.pca-basic .header-container {
+    max-width:1200px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
+    font-family:'Poppins',sans-serif;
+  }
+  header.pca-basic .site-title { font-size:24px; font-weight:700; }
+  header.pca-basic nav { padding:10px 0; }
+  header.pca-basic .nav-links { display:flex; align-items:center; gap:0.1px; flex-wrap:wrap; }
+  header.pca-basic .nav-links a {
+    color:#000; text-decoration:none; font-weight:400;
+    padding:10px 16px; font-size:14.5px; letter-spacing:.25px;
+  }
+</style>
+
+<header class="pca-basic">
+  <div class="header-container">
+    <a href="https://private-credit.ai" style="text-decoration:none; color:inherit;">
+      <div class="site-title" style="display:flex; align-items:center; gap:10px;">
         <img src="/img/favicon.png?v=8" alt="Private Credit AI logo" style="height:28px;">
-        <span style="font-size:24px;font-weight:700;">Private Credit AI</span>
+        <span>Private Credit AI</span>
       </div>
     </a>
 
-    <!-- Simple nav -->
-    <nav aria-label="Primary" style="padding:10px 0;">
-      <div style="display:flex;align-items:center;gap:0.1px;flex-wrap:wrap;">
-        <a href="/index.html"   style="color:#000;text-decoration:none;font-weight:400;padding:10px 16px;font-size:14.5px;letter-spacing:.25px;">Home</a>
-        <a href="/about.html"   style="color:#000;text-decoration:none;font-weight:400;padding:10px 16px;font-size:14.5px;letter-spacing:.25px;">About</a>
-        <a href="/contact.html" style="color:#000;text-decoration:none;font-weight:400;padding:10px 16px;font-size:14.5px;letter-spacing:.25px;">Contact</a>
+    <nav aria-label="Primary">
+      <div class="nav-links">
+        <div class="nav-item"><a href="/index.html">Home</a></div>
+        <div class="nav-item"><a href="/about.html">About</a></div>
+        <div class="nav-item"><a href="/contact.html">Contact</a></div>
       </div>
     </nav>
   </div>
 </header>
 
 <script>
-  // optional: highlight active link
+  // Optional: highlight active link exactly like About
   (function(){
     var here = location.pathname.replace(/\/+$/,'');
-    document.querySelectorAll('header nav a').forEach(function(a){
+    document.querySelectorAll('header.pca-basic nav a').forEach(function(a){
       if(a.getAttribute('href')===here){
-        a.style.fontWeight = '600';
-        a.style.textDecoration = 'underline';
-        a.style.textUnderlineOffset = '4px';
+        a.style.fontWeight='600';
+        a.style.textDecoration='underline';
+        a.style.textUnderlineOffset='4px';
       }
     });
   })();
