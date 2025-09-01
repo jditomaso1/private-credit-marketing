@@ -9,6 +9,10 @@
     body{font-family:Poppins,sans-serif;margin:0;background:#f4f4f4;color:#333}
     .page{max-width:1100px;margin:24px auto;padding:20px}
     .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:20px}
+    /* tabs */
+    .tool-tabs{margin:8px 0 16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tool-tab.active{background:#111;color:#fff;border-color:#111}
   </style>
 </head>
 <body>
@@ -16,15 +20,34 @@
 
   <main class="page">
     <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Yield Curve Snapshot</h1>
-    <p style="margin:0 0 16px;color:#666;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
+    <p style="margin:0 8px 8px 0;color:#666;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
 
+    <!-- TABS (shown ABOVE the chart/card) -->
+    <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/media-hub.html">Media Hub</a>
+      <a class="tool-tab" href="/irr-calculator.html">IRR Calculator</a>
+      <a class="tool-tab" href="/yield-curve.html">Yield Curve</a>
+      <a class="tool-tab" href="/jargon-decoder.html">Jargon Decoder</a>
+      <a class="tool-tab" href="/loan-pricing.html">Loan Pricing</a>
+      <a class="tool-tab" href="/covenant-checker.html">Covenant Checker</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){
+            a.classList.add('active');
+          }
+        });
+      })();
+    </script>
+
+    <!-- Yield widget card -->
     <div class="card">
       <button onclick="loadYield()" style="margin-bottom:8px;">Refresh</button>
       <div id="yield-output">Loading…</div>
     </div>
 
-    <!-- tabs -->
-    <!-- paste the tab bar snippet here -->
   </main>
 
   <div id="site-footer"></div>
