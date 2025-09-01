@@ -1,1 +1,60 @@
+<section id="tools" style="max-width:1100px;margin:40px auto;padding:20px;font-family:Poppins, sans-serif;">
+  <h2 style="font-size:28px;font-weight:700;margin-bottom:20px;">Free Tools for Credit Professionals</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;">
+    
+    <!-- Tool Card -->
+    <a href="/media-hub.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Media Hub</h3>
+      <p style="font-size:14px;color:#555;">Daily curated headlines across Direct Lending, CLOs, BDCs, and more.</p>
+    </a>
+
+    <a href="/irr-calculator.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Quick IRR Calculator</h3>
+      <p style="font-size:14px;color:#555;">Run instant IRR & MOIC estimates — no Excel needed.</p>
+    </a>
+
+    <a href="/jargon-decoder.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Credit Jargon Decoder</h3>
+      <p style="font-size:14px;color:#555;">Paste legalese, get a plain-English summary in seconds.</p>
+    </a>
+
+    <a href="/yield-curve.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Yield Curve Snapshot</h3>
+      <p style="font-size:14px;color:#555;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
+    </a>
+
+    <a href="/loan-pricing.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Loan Pricing Tracker</h3>
+      <p style="font-size:14px;color:#555;">Track new issue spreads and “market clearing” levels.</p>
+    </a>
+
+    <a href="/covenant-checker.html" style="display:block;background:#fff;padding:20px;border-radius:12px;text-decoration:none;color:#111;box-shadow:0 4px 12px rgba(0,0,0,.05);">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Covenant Checker</h3>
+      <p style="font-size:14px;color:#555;">Upload covenant text, get an instant risk assessment.</p>
+    </a>
+    
+    <!-- SINGLE yield widget (place inside your grid OR below it) -->
+    <section id="yield-snapshot" style="padding:20px;border:1px solid #ddd;border-radius:8px;background:#fff;">
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:600;">Yield Curve Snapshot</h3>
+      <p style="font-size:14px;color:#555;margin:0 0 10px;">Live SOFR, Treasuries, HY OAS — updated daily.</p>
+      <button onclick="loadYield()" style="margin-bottom:8px;">Refresh</button>
+      <div id="yield-output" style="margin-top:8px;">Loading…</div>
+    </section>
+    
+    <!-- ONE script include only -->
+    <script src="/api/yield-snapshot.js?v=3"></script>
+    <script>
+      window.addEventListener('load', () => {
+        try {
+          loadYield();
+        } catch (e) {
+          const out = document.getElementById('yield-output');
+          if (out) out.textContent = 'Error: yield-snapshot.js did not load.';
+          console.error(e);
+        }
+      });
+    </script>
+  </div>
+</section>
+
 
