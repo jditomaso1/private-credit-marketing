@@ -19,39 +19,22 @@
     <h1>Upload Compliance Certificates</h1>
     <p>Select a file and submit. It will be uploaded to our secure Drive folder.</p>
 
-    <form action="https://script.google.com/macros/s/AKfycbwWezvfYQLfeA3usdHVHT34Vn0tFM_dbQ2dM5ws9fbwJqmBIAmhJJ0IPQagYVoDVUQ/exec"
-          method="post"
-          enctype="multipart/form-data">
-      <div class="row">
-        <input type="file" name="file" required />
-        <div class="hint">PDF under ~25MB works best.</div>
-      </div>
-      <div class="row">
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-
-  <script>
-    const AS_URL = 'https://script.google.com/macros/s/AKfycbwWezvfYQLfeA3usdHVHT34Vn0tFM_dbQ2dM5ws9fbwJqmBIAmhJJ0IPQagYVoDVUQ/exec';
-
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const el = document.getElementById('fileInput');
-      const status = document.getElementById('status');
-      if (!el.files.length) { status.textContent = 'Pick a file first.'; return; }
-
-      const fd = new FormData();
-      fd.append('file', el.files[0]);
-
-      status.textContent = 'Uploading…';
-      try {
-        await fetch(AS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
-        status.textContent = '✅ Uploaded. Check the Drive folder.';
-        el.value = '';
-      } catch (err) {
-        status.textContent = '⚠️ Upload failed. Try again.';
-      }
-    });
-  </script>
+    <div class="card">
+      <form
+        action="https://script.google.com/macros/s/AKfycbwWezvfYQLfeA3usdHVHT34Vn0tFM_dbQ2dM5ws9fbwJqmBIAmhJJ0IPQagYVoDVUQ/exec"
+        method="post"
+        enctype="multipart/form-data"
+        target="_blank"  <!-- optional: open result in new tab -->
+      >
+        <div class="row">
+          <input type="file" name="file" accept="application/pdf" required />
+          <div class="hint">PDF under ~25 MB works best.</div>
+        </div>
+        <div class="row">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
