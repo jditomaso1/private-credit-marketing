@@ -17,7 +17,7 @@
 <body>
   <div class="wrap">
     <h1>Upload Compliance Certificates</h1>
-    <p>Choose one or more files and submit. They’ll be saved to our secure Drive folder.</p>
+    <p>Select a file and submit. It will be uploaded to our secure Drive folder.</p>
 
     <div class="card">
       <form id="uploadForm">
@@ -31,31 +31,29 @@
       </form>
       <div id="status" class="hint" style="margin-top:8px;"></div>
     </div>
-    
-    <script>
-      const AS_URL = 'https://script.google.com/macros/s/AKfycbxQ_Ty4-piT3dJIo3XGZEDiXueFli-Jo6dTQNE9p9A-VWGfBIEwbhehCszFYR9D90K7/exec'; // your /exec
-    
-      document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const el = document.getElementById('fileInput');
-        const status = document.getElementById('status');
-        if (!el.files.length) { status.textContent = 'Pick a file first.'; return; }
-    
-        const fd = new FormData();
-        fd.append('file', el.files[0]);
-    
-        status.textContent = 'Uploading…';
-        try {
-          // no-cors avoids preflight/CORS errors; we can’t read the response, but upload still works
-          await fetch(AS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
-          status.textContent = '✅ Uploaded. Check the Drive folder.';
-          el.value = ''; // reset
-        } catch (err) {
-          status.textContent = '⚠️ Upload failed. Try again.';
-        }
-      });
-    </script>
-
   </div>
+
+  <script>
+    const AS_URL = 'https://script.google.com/macros/s/AKfycbwWezvfYQLfeA3usdHVHT34Vn0tFM_dbQ2dM5ws9fbwJqmBIAmhJJ0IPQagYVoDVUQ/exec';
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const el = document.getElementById('fileInput');
+      const status = document.getElementById('status');
+      if (!el.files.length) { status.textContent = 'Pick a file first.'; return; }
+
+      const fd = new FormData();
+      fd.append('file', el.files[0]);
+
+      status.textContent = 'Uploading…';
+      try {
+        await fetch(AS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+        status.textContent = '✅ Uploaded. Check the Drive folder.';
+        el.value = '';
+      } catch (err) {
+        status.textContent = '⚠️ Upload failed. Try again.';
+      }
+    });
+  </script>
 </body>
 </html>
