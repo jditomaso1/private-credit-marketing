@@ -15,30 +15,28 @@
 <body>
   <h1>Upload Compliance Certificates</h1>
 
-  <!-- IMPORTANT: action points directly to your Apps Script URL -->
-  <form 
+  <form
     action="https://script.google.com/macros/s/AKfycbwLu1YUtuGHB3Nz5QfW5nve6IYdHYcu1oCAdXbAsdGjmohbAUX9Hjcf3C9c456HswG_gw/exec"
-    method="post" 
+    method="post"
     enctype="multipart/form-data">
 
     <label>Client / Entity Name</label>
-    <input name="clientName" required placeholder="e.g., Meridian HoldCo, LLC" />
+    <input name="clientName" required placeholder="Meridian HoldCo, LLC" />
 
     <label>Period</label>
-    <input name="period" required placeholder="e.g., 2025 Q3" />
+    <input name="period" required placeholder="2025 Q3 or Aug 2025" />
 
     <label>File</label>
     <input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx" required />
 
     <label>Notes</label>
-    <textarea name="notes" rows="2"></textarea>
+    <textarea name="notes" rows="2" placeholder="Optional notes"></textarea>
 
     <button type="submit">Submit</button>
   </form>
 
   <p style="margin-top:12px;color:#666">
-    After you hit submit, you’ll see raw JSON like <code>{"ok":true,"fileUrl":"..."}</code>.  
-    That means the file went into your Drive folder.
+    After submit you should see JSON like <code>{"ok":true,"fileUrl":"..."}</code>. That means it saved to Drive.
   </p>
 </body>
 </html>
