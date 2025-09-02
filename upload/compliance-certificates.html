@@ -29,41 +29,32 @@
   </form>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('uploadForm');
-      const successBox = document.getElementById('success');
-      const linkSpan = document.getElementById('link');
-      const errorBox = document.getElementById('error');
-      const endpoint = 'PASTE_YOUR_/exec_URL_HERE';
-  
-      if (!form) return console.error('uploadForm not found');
-  
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        successBox?.style && (successBox.style.display = 'none');
-        errorBox?.style && (errorBox.style.display = 'none');
-        linkSpan && (linkSpan.innerHTML = '');
-  
-        if (!form.reportValidity()) return; // triggers native “required” messages
-  
-        const fd = new FormData(form);
-        try {
-          const res = await fetch(endpoint, { method: 'POST', body: fd });
-          const text = await res.text();
-          let data; try { data = JSON.parse(text); } catch { throw new Error(`Non-JSON (${res.status}): ${text.slice(0,200)}…`); }
-          if (!data.ok) throw new Error(data.error || 'Upload failed');
-          if (successBox) successBox.style.display = 'block';
-          if (linkSpan && data.fileUrl) linkSpan.innerHTML = ` <a href="${data.fileUrl}" target="_blank" rel="noopener">View in Drive</a>`;
-          form.reset();
-        } catch (err) {
-          if (errorBox) {
-            errorBox.textContent = err.message || 'Network/server error';
-            errorBox.style.display = 'block';
-          } else {
-            alert(err.message || 'Upload error');
-          }
-        }
-      });
+    const endpoint = 'PASTE_YOUR_/exec_URL_HERE'; // replace with your Apps Script URL
+
+    const form = document.getElementById('uploadForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Uploading…';
+
+      if (!form.reportValidity()) return;
+
+      const fd = new FormData(form);
+      try {
+        const res = await fetch(endpoint, { method: 'POST', body: fd });
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); } 
+        catch { throw new Error(`Non-JSON (${res.status}): ${text.slice(0,200)}…`); }
+
+        if (!data.ok) throw new Error(data.error || 'Upload failed');
+
+        msg.innerHTML = `✅ Uploaded. <a href="${data.fileUrl}" target="_blank" rel="noopener">View in Drive</a>`;
+        form.reset();
+      } catch (err) {
+        msg.textContent = '❌ ' + (err.message || 'Network/server error');
+      }
     });
   </script>
 </body>
