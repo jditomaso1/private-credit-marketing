@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Upload Compliance Certificates</title>
@@ -15,8 +15,9 @@
 <body>
   <h1>Upload Compliance Certificates</h1>
 
+  <!-- This is the form block -->
   <form
-    action="https://script.google.com/macros/s/AKfycbyuF_MIl1jKUq6ZK4rlrRdUpkO9SORuRz5tUqz8ffSLUA4ks-5K9z4GvENvplOWG6RAHQ/exec"
+    action="https://script.google.com/macros/s/AKfycbzbcb66_oIbzEXbyB5uC2ZcRDEpm447Ilp7g3kOEOwpo7v3qU3mtMvZQTn68GENdVhygQ/exec"
     method="post"
     enctype="multipart/form-data">
 
@@ -36,7 +37,8 @@
   </form>
 
   <p style="margin-top:12px;color:#666">
-    After submit, you should see JSON like <code>{"ok":true,"fileUrl":"..."}</code>.
+    After submit, the browser will show raw JSON like <code>{"ok":true,"fileUrl":"..."}</code>.  
+    That means your file landed in Google Drive.
   </p>
 </body>
 </html>
