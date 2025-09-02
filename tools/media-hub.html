@@ -10,53 +10,20 @@
   <style>
     /* Base */
     * { box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background-color: #f4f4f4;   /* match contact page */
-      color: #333;
-    }
+    body { font-family:Poppins, sans-serif; margin:0; background:#f4f4f4; color:#333; }
 
-    /* === Site header / nav (exact match, scoped) === */
-    .site-header {
-      background-color: white;
-      color: black;
-      padding: 10px 20px;
-    }
-    .site-header .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .site-header .site-title {
-      font-size: 24px;
-      font-weight: bold;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .site-header nav { padding: 10px 0; }
-    .site-header .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 0.1px;   /* keep for pixel match */
-      flex-wrap: wrap;
-    }
-    .site-header .nav-item { position: relative; }
-    .site-header .nav-item a {
-      color: black;
-      text-decoration: none;
-      font-weight: 400;
-      padding: 10px 16px;
-      font-size: 14.5px;
-      letter-spacing: 0.25px;
-    }
-    /* highlight active tab on News page */
-    .site-header .nav-item a[href="/tools/media-hub.html"] { color:#2c7cf1; font-weight:600; }
+    /* Page wrapper (same width as tools pages) */
+    .page{max-width:1100px;margin:24px auto;padding:20px}
+
+    /* Tools sub-nav (same as other tool pages) */
+    .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tool-tab.active{background:#111;color:#fff;border-color:#111}
 
     /* === Media Hub === */
     #media-hub { max-width:1100px; margin:0 auto; padding:40px 20px; }
     #media-hub a { color:#111; text-decoration:none; }
-    #media-hub a:hover { color: #2c7cf1; text-decoration:underline; }
+    #media-hub a:hover { color:#2c7cf1; text-decoration:underline; }
 
     .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
     .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
@@ -71,39 +38,15 @@
     .list a:hover{background:#fafbfc}
     .list .right{white-space:nowrap;color:#666;font-size:12px}
     #refresh-btn{display:inline-block !important;}
-    
-    /* tool sub-nav (same as other pages) */
-    .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
-    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
-    .tool-tab.active{background:#111;color:#fff;border-color:#111}
-    .page{max-width:1100px;margin:24px auto;padding:20px}
-    
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="https://private-credit.ai" style="text-decoration: none; color: inherit;">
-        <div class="site-title">
-          <img src="/img/favicon.png" alt="Private Credit AI logo" style="height: 28px;">
-          <span>Private Credit AI</span>
-        </div>
-      </a>
-      <nav>
-        <div class="nav-links">
-          <div class="nav-item"><a href="/index.html">Home</a></div>
-          <div class="nav-item"><a href="/about.html">About</a></div>
-          <div class="nav-item"><a href="/contact.html">Contact</a></div>
-          <div class="nav-item"><a href="/news.html">News</a></div>
-        </div>
-      </nav>
-    </div>
-  </header>
-  
+  <!-- Shared header (master-header-basic) -->
+  <div id="site-header"></div>
+
   <!-- Tools sub-nav -->
-  <main class="page">  
+  <main class="page">
     <nav class="tool-tabs" aria-label="Tools">
       <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
       <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
@@ -112,17 +55,15 @@
       <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
       <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
     </nav>
-  <script>
-    (function(){
-      const here = location.pathname.replace(/\/+$/,'');
-      document.querySelectorAll('.tool-tab').forEach(a=>{
-        if(a.getAttribute('href')===here){ a.classList.add('active'); }
-      });
-    })();
-  </script>
-
-<!-- Media Hub -->
-<section id="media-hub">
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
+        });
+      })();
+    </script>
+  </main>
 
   <!-- Media Hub -->
   <section id="media-hub">
@@ -156,6 +97,10 @@
     <h3 style="margin:28px 0 12px;font-size:20px;">All Stories</h3>
     <div id="feed" class="list"></div>
   </section>
+
+  <!-- Shared footer (master-header-basic) -->
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
 
   <script>
   // Fetch + render
@@ -217,15 +162,15 @@
   }
   function inferTagsFromText(text="") {
     const t = text.toLowerCase(); const out = new Set();
-    if (/(private\\s*equity|\\bpe\\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
-    if (/(real\\s*estate|\\breit\\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
+    if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
+    if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
     if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
-    if (/(emerging markets|\\bem\\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
+    if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
     if (/(direct lending)/.test(t)) out.add("Direct Lending");
-    if (/\\bclo\\b/.test(t)) out.add("CLO");
-    if (/\\bnav\\b/.test(t)) out.add("NAV");
-    if (/\\bbdc\\b/.test(t)) out.add("BDC");
-    if (/\\babs\\b/.test(t)) out.add("ABS");
+    if (/\bclo\b/.test(t)) out.add("CLO");
+    if (/\bnav\b/.test(t)) out.add("NAV");
+    if (/\bbdc\b/.test(t)) out.add("BDC");
+    if (/\babs\b/.test(t)) out.add("ABS");
     return Array.from(out);
   }
 
