@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Upload Test</title>
+  <title>Upload Compliance Certificates</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 20px; }
@@ -10,52 +10,35 @@
     label { display:block; margin: 12px 0 6px; }
     input, textarea, button { width: 100%; padding: 10px; }
     button { cursor: pointer; }
-    .msg { margin-top: 12px; }
   </style>
 </head>
 <body>
-  <h1>Upload Compliance Certificates (Test)</h1>
-  <form id="uploadForm">
+  <h1>Upload Compliance Certificates</h1>
+
+  <!-- IMPORTANT: action points directly to your Apps Script URL -->
+  <form 
+    action="https://script.google.com/macros/s/AKfycbwLu1YUtuGHB3Nz5QfW5nve6IYdHYcu1oCAdXbAsdGjmohbAUX9Hjcf3C9c456HswG_gw/exec"
+    method="post" 
+    enctype="multipart/form-data">
+
     <label>Client / Entity Name</label>
-    <input name="clientName" required value="TestCo LLC" />
+    <input name="clientName" required placeholder="e.g., Meridian HoldCo, LLC" />
+
     <label>Period</label>
-    <input name="period" required value="2025 Q3" />
+    <input name="period" required placeholder="e.g., 2025 Q3" />
+
     <label>File</label>
     <input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx" required />
+
     <label>Notes</label>
     <textarea name="notes" rows="2"></textarea>
-    <button type="submit" id="submitBtn">Submit</button>
-    <div id="msg" class="msg"></div>
+
+    <button type="submit">Submit</button>
   </form>
 
-  <script>
-    const endpoint = 'https://script.google.com/macros/s/AKfycbwLu1YUtuGHB3Nz5QfW5nve6IYdHYcu1oCAdXbAsdGjmohbAUX9Hjcf3C9c456HswG_gw/exec'; // replace with your Apps Script URL
-
-    const form = document.getElementById('uploadForm');
-    const msg = document.getElementById('msg');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      msg.textContent = 'Uploading…';
-
-      if (!form.reportValidity()) return;
-
-      const fd = new FormData(form);
-      try {
-        const res = await fetch(endpoint, { method: 'POST', body: fd });
-        const text = await res.text();
-        let data;
-        try { data = JSON.parse(text); } 
-        catch { throw new Error(`Non-JSON (${res.status}): ${text.slice(0,200)}…`); }
-
-        if (!data.ok) throw new Error(data.error || 'Upload failed');
-
-        msg.innerHTML = `✅ Uploaded. <a href="${data.fileUrl}" target="_blank" rel="noopener">View in Drive</a>`;
-        form.reset();
-      } catch (err) {
-        msg.textContent = '❌ ' + (err.message || 'Network/server error');
-      }
-    });
-  </script>
+  <p style="margin-top:12px;color:#666">
+    After you hit submit, you’ll see raw JSON like <code>{"ok":true,"fileUrl":"..."}</code>.  
+    That means the file went into your Drive folder.
+  </p>
 </body>
 </html>
