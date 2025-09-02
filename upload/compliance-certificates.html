@@ -1,44 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Upload Compliance Certificates</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:20px}
-    form{max-width:520px;border:1px solid #ddd;padding:16px;border-radius:10px}
-    label{display:block;margin:12px 0 6px}
-    input,textarea,button{width:100%;padding:10px}
-    button{cursor:pointer}
+    body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f8f9fb;color:#222}
+    .wrap{max-width:720px;margin:40px auto;padding:24px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    h1{font-size:22px;margin:0 0 12px}
+    p{margin:0 0 16px;color:#555}
+    .card{padding:16px;border:1px solid #e6e8ef;border-radius:12px;background:#fafbff}
+    .row{margin:12px 0}
+    input[type=file]{width:100%;padding:12px;border:1px solid #d7dae3;border-radius:10px;background:#fff}
+    button{padding:10px 16px;border:0;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer}
+    .hint{font-size:12px;color:#777;margin-top:6px}
+    iframe{width:100%;height:220px;border:1px solid #e6e8ef;border-radius:12px;background:#fff}
   </style>
 </head>
 <body>
-  <h1>Upload Compliance Certificates</h1>
+  <div class="wrap">
+    <h1>Upload Compliance Certificates</h1>
+    <p>Choose one or more files and submit. They’ll be saved to our secure Drive folder.</p>
 
-  <!-- This is the form block -->
-  <form
-    action="https://script.google.com/macros/s/AKfycbzbcb66_oIbzEXbyB5uC2ZcRDEpm447Ilp7g3kOEOwpo7v3qU3mtMvZQTn68GENdVhygQ/exec"
-    method="post"
-    enctype="multipart/form-data">
+    <!--
+      Simplest, most reliable approach: plain HTML form POSTing directly to Apps Script.
+      We use a hidden iframe as the target so we can show the success page
+      without navigating away from your site.
+    -->
+    <div class="card">
+      <form id="uploadForm"
+            action="https://script.google.com/macros/s/AKfycbxemGLf0zjl_EbyE610kRwQrVE5Gy8OiI0CSEj-wIsDJN0HCqet4AwFbohn3HpdTfsJ/exec"
+            method="post"
+            enctype="multipart/form-data"
+            target="uploadTarget">
+        <!-- Optional shared-secret -->
+        <!-- <input type="hidden" name="token" value="YOUR_SHARED_SECRET" /> -->
 
-    <label>Client / Entity Name</label>
-    <input name="clientName" required placeholder="Meridian HoldCo, LLC" />
+        <div class="row">
+          <input type="file" name="file1" required />
+          <div class="hint">Accepted: any file type. You can add more fields below for multiple files.</div>
+        </div>
 
-    <label>Period</label>
-    <input name="period" required placeholder="2025 Q3 or Aug 2025" />
+        <!-- Add more file inputs if needed -->
+        <!-- <div class="row"><input type="file" name="file2" /></div>
+        <div class="row"><input type="file" name="file3" /></div> -->
 
-    <label>File</label>
-    <input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx" required />
+        <div class="row">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
 
-    <label>Notes</label>
-    <textarea name="notes" rows="2" placeholder="Optional notes"></textarea>
+      <div class="row">
+        <div class="hint">After upload, a confirmation will appear below. You can open the Drive folder from that page.</div>
+      </div>
+    </div>
 
-    <button type="submit">Submit</button>
-  </form>
-
-  <p style="margin-top:12px;color:#666">
-    After submit, the browser will show raw JSON like <code>{"ok":true,"fileUrl":"..."}</code>.  
-    That means your file landed in Google Drive.
-  </p>
+    <div class="row" style="margin-top:16px;">
+      <iframe name="uploadTarget" id="uploadTarget"></iframe>
+    </div>
+  </div>
 </body>
 </html>
