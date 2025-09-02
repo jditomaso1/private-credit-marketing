@@ -20,19 +20,41 @@
     <p>Choose one or more files and submit. They’ll be saved to our secure Drive folder.</p>
 
     <div class="card">
-      <p>
-        <a href="https://docs.google.com/forms/d/1LgupPFIume82bTAJhtMtIueOpcmjDlznFMdY2ld2d1A/viewform"
-           target="_blank" rel="noopener"
-           style="display:inline-block;padding:10px 16px;border-radius:10px;background:#2c7cf1;color:#fff;text-decoration:none">
-          Upload Compliance Certificate
-        </a>
-      </p>
-      <div class="row">
-        <div class="hint">
-          Click the button to open the secure Google Form. From there you can select your file(s) and upload directly to our Drive folder.
+      <form id="uploadForm">
+        <div class="row">
+          <input type="file" name="file" id="fileInput" required />
+          <div class="hint">PDF under ~25MB works best.</div>
         </div>
-      </div>
+        <div class="row">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+      <div id="status" class="hint" style="margin-top:8px;"></div>
     </div>
+    
+    <script>
+      const AS_URL = 'https://script.google.com/macros/s/AKfycbxQ_Ty4-piT3dJIo3XGZEDiXueFli-Jo6dTQNE9p9A-VWGfBIEwbhehCszFYR9D90K7/exec'; // your /exec
+    
+      document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const el = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        if (!el.files.length) { status.textContent = 'Pick a file first.'; return; }
+    
+        const fd = new FormData();
+        fd.append('file', el.files[0]);
+    
+        status.textContent = 'Uploading…';
+        try {
+          // no-cors avoids preflight/CORS errors; we can’t read the response, but upload still works
+          await fetch(AS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+          status.textContent = '✅ Uploaded. Check the Drive folder.';
+          el.value = ''; // reset
+        } catch (err) {
+          status.textContent = '⚠️ Upload failed. Try again.';
+        }
+      });
+    </script>
 
   </div>
 </body>
