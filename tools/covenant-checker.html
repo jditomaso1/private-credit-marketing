@@ -3,25 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Covenant Checker</title>
+  <title>Covenant Checker | Private Credit AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
-    h1 { color: #2c7cf1; }
-    a.back-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 16px;
-      background: #2c7cf1;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
+    body { font-family:Poppins,sans-serif; margin:0; background:#f4f4f4; color:#333; }
+    .page { max-width:1100px; margin:24px auto; padding:20px; }
+    .card { background:#fff; border:1px solid #e8e8e8; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.05); padding:20px; text-align:center; }
+    .tool-tabs { margin:0 0 16px; display:flex; gap:8px; flex-wrap:wrap; }
+    .tool-tab { display:inline-block; padding:10px 14px; border:1px solid #ddd; border-radius:8px; background:#fff; text-decoration:none; color:#111; font-size:14px; }
+    .tool-tab.active { background:#111; color:#fff; border-color:#111; }
+    .back-button {
+      display:inline-block; margin-top:20px; padding:10px 16px;
+      background:#2c7cf1; color:#fff; text-decoration:none; border-radius:6px;
     }
-    a.back-button:hover { background: #1a56b7; }
+    .back-button:hover { background:#1a56b7; }
   </style>
 </head>
 <body>
-  <h1>Covenant Checker</h1>
-  <p>Coming soon...</p>
-  <a href="tools.html" class="back-button">← Back to Tools</a>
+  <div id="site-header"></div>
+
+  <main class="page">
+    <!-- Tabs ABOVE heading -->
+    <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
+      <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
+      <a class="tool-tab" href="/tools/yield-curve.html">Yield Curve</a>
+      <a class="tool-tab" href="/tools/credit-decoder.html">Credit Decoder</a>
+      <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
+      <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){
+            a.classList.add('active');
+          }
+        });
+      })();
+    </script>
+
+    <!-- Page content -->
+    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Covenant Checker</h1>
+    <p style="margin:0 0 16px;color:#666;">Upload covenant text, get an instant risk assessment.</p>
+
+    <div class="card">
+      <p>Coming soon...</p>
+      <a href="/tools/tools.html" class="back-button">← Back to Tools</a>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
 </body>
 </html>
