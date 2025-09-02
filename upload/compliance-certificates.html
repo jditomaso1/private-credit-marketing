@@ -11,10 +11,7 @@
     p{margin:0 0 16px;color:#555}
     .card{padding:16px;border:1px solid #e6e8ef;border-radius:12px;background:#fafbff}
     .row{margin:12px 0}
-    input[type=file]{width:100%;padding:12px;border:1px solid #d7dae3;border-radius:10px;background:#fff}
-    button{padding:10px 16px;border:0;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer}
     .hint{font-size:12px;color:#777;margin-top:6px}
-    iframe{width:100%;height:220px;border:1px solid #e6e8ef;border-radius:12px;background:#fff}
   </style>
 </head>
 <body>
@@ -22,21 +19,17 @@
     <h1>Upload Compliance Certificates</h1>
     <p>Choose one or more files and submit. They’ll be saved to our secure Drive folder.</p>
 
-    <!--
-      Simplest, most reliable approach: plain HTML form POSTing directly to Apps Script.
-      We use a hidden iframe as the target so we can show the success page
-      without navigating away from your site.
-    -->
     <div class="card">
       <p>
-        <a href="https://script.google.com/macros/s/AKfycbx97HXqGVa9bOfqsY9ivY7hx9L4qUjzUfTSiwEw7FRwfmfLCrD7umcAyAY5Y4IyueMc/exec"
+        <a href="https://docs.google.com/forms/d/1LgupPFIume82bTAJhtMtIueOpcmjDlznFMdY2ld2d1A/viewform"
+           target="_blank" rel="noopener"
            style="display:inline-block;padding:10px 16px;border-radius:10px;background:#2c7cf1;color:#fff;text-decoration:none">
-          Open Upload Portal
+          Upload Compliance Certificate
         </a>
       </p>
       <div class="row">
         <div class="hint">
-          Click the button to open the secure upload portal. From there you can select your file(s), submit, and see the confirmation page with a link to the Drive folder.
+          Click the button to open the secure Google Form. From there you can select your file(s) and upload directly to our Drive folder.
         </div>
       </div>
     </div>
