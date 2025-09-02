@@ -31,20 +31,15 @@
       <form id="uploadForm"
             action="https://script.google.com/macros/s/AKfycbxemGLf0zjl_EbyE610kRwQrVE5Gy8OiI0CSEj-wIsDJN0HCqet4AwFbohn3HpdTfsJ/exec"
             method="post"
-            enctype="multipart/form-data"
-            target="uploadTarget">
+            enctype="multipart/form-data">
         <!-- Optional shared-secret -->
         <!-- <input type="hidden" name="token" value="YOUR_SHARED_SECRET" /> -->
-
+      
         <div class="row">
           <input type="file" name="file1" required />
           <div class="hint">Accepted: any file type. You can add more fields below for multiple files.</div>
         </div>
-
-        <!-- Add more file inputs if needed -->
-        <!-- <div class="row"><input type="file" name="file2" /></div>
-        <div class="row"><input type="file" name="file3" /></div> -->
-
+      
         <div class="row">
           <button type="submit">Submit</button>
         </div>
@@ -55,9 +50,6 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top:16px;">
-      <iframe name="uploadTarget" id="uploadTarget"></iframe>
-    </div>
   </div>
 </body>
 </html>
