@@ -1,10 +1,10 @@
 // /api/upload.js
 import { google } from 'googleapis';
+import formidable from 'formidable';
+import fs from 'node:fs';
 
 export const config = {
-  api: {
-    bodyParser: false, // we'll parse multipart manually
-  },
+  api: { bodyParser: false }, // we'll parse multipart manually
 };
 
 function parseServiceAccount() {
@@ -20,26 +20,26 @@ function parseServiceAccount() {
 
 function authClientFromEnv() {
   const creds = parseServiceAccount();
-  const jwt = new google.auth.JWT({
+  return new google.auth.JWT({
     email: creds.client_email,
     key: creds.private_key,
     scopes: ['https://www.googleapis.com/auth/drive'],
   });
-  return jwt;
 }
 
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
-    // Use formidable (built-in in Vercel Node runtime) – no install needed in v2+
-    const formidable = require('formidable');
     const form = formidable({
       multiples: false,
-      maxFileSize: (Number(process.env.MAX_UPLOAD_MB || 25) * 1024 * 1024),
+      maxFileSize: Number(process.env.MAX_UPLOAD_MB || 25) * 1024 * 1024,
       keepExtensions: true,
+      uploadDir: '/tmp', // safe temp dir in serverless
     });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
-      const file = files.file; // expecting <input name="file">
+      let file = files.file;
+      // formidable can return an array depending on version/options
+      if (Array.isArray(file)) file = file[0];
       if (!file) return reject(new Error('No file provided (field name must be "file")'));
       resolve({ fields, file });
     });
@@ -62,33 +62,18 @@ export default async function handler(req, res) {
     await auth.authorize();
     const drive = google.drive({ version: 'v3', auth });
 
-    // Stream file content to Drive
-    const fs = require('fs');
-    const path = file.filepath || file.path; // different props depending on formidable version
+    const path = file.filepath || file.path; // v3 uses .filepath
     const mimeType = file.mimetype || 'application/octet-stream';
     const name = file.originalFilename || file.newFilename || 'upload';
 
-    const metadata = {
-      name,
-      parents: [folderId],
-    };
-
-    const media = {
-      mimeType,
-      body: fs.createReadStream(path),
-    };
-
     const { data } = await drive.files.create({
-      requestBody: metadata,
-      media,
+      requestBody: { name, parents: [folderId] },
+      media: { mimeType, body: fs.createReadStream(path) },
       fields: 'id, name, parents, mimeType, size, webViewLink',
-      supportsAllDrives: true, // useful if target is a Shared Drive
+      supportsAllDrives: true,
     });
 
-    return res.status(200).json({
-      status: 'ok',
-      file: data,
-    });
+    return res.status(200).json({ status: 'ok', file: data });
   } catch (err) {
     console.error(err);
     return res.status(400).json({
