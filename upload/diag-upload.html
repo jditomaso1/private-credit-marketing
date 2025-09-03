@@ -1,10 +1,73 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Test Uploader</title>
-<form action="https://script.google.com/macros/s/AKfycbzN5PEeRVIcX5H2FJnSqDmGLGyJibkGxIg54BwEYX87McE827pKPjo2LP_cFMG50KAT/exec"
-      method="post"
-      enctype="multipart/form-data"
-      target="_blank">
-  <input type="file" name="file" required>
-  <button type="submit">Upload</button>
-</form>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Upload Compliance Certificate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f8f9fb;color:#222}
+    .wrap{max-width:720px;margin:40px auto;padding:24px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    h1{font-size:22px;margin:0 0 12px}
+    .row{margin:14px 0}
+    input[type=file]{width:100%;padding:12px;border:1px solid #d7dae3;border-radius:10px;background:#fff}
+    button{padding:10px 16px;border:0;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer}
+    .hint{font-size:12px;color:#666}
+    .ok{color:#2e7d32}
+    .err{color:#b00020}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Upload Compliance Certificate</h1>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <div class="row">
+        <input id="fileInput" type="file" name="file" required
+               accept=".pdf,.png,.jpg,.jpeg,.xls,.xlsx,.csv,.doc,.docx,application/pdf,image/*,
+                       application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                       text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <div class="hint">Accepted: PDF / Office / Images. Max ~25MB (configurable).</div>
+      </div>
+      <div class="row">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
+    <div id="result" class="hint" style="margin-top:12px;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const result = document.getElementById('result');
+    const fileInput = document.getElementById('fileInput');
+    const MAX_MB = 25; // client hint only; server enforces too
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = fileInput.files[0];
+      if (!f) { result.textContent = 'Please choose a file.'; return; }
+      if (f.size > MAX_MB * 1024 * 1024) {
+        result.innerHTML = `<span class="err">File too large (>${MAX_MB}MB).</span>`;
+        return;
+      }
+      result.textContent = 'Uploading…';
+
+      const fd = new FormData();
+      fd.append('file', f);
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          const link = data.file.webViewLink || `https://drive.google.com/file/d/${data.file.id}/view`;
+          result.innerHTML = `<span class="ok">✅ Upload complete</span> — <a href="${link}" target="_blank" rel="noopener">View in Drive</a>`;
+        } else {
+          result.innerHTML = `<span class="err">❌ ${data.message || 'Upload failed'}</span>`;
+        }
+      } catch (err) {
+        result.innerHTML = `<span class="err">❌ ${err.message || 'Network error'}</span>`;
+      }
+    });
+  </script>
+</body>
+</html>
