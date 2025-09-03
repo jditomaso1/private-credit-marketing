@@ -52,21 +52,28 @@ function parseMultipart(req) {
 }
 
 export default async function handler(req, res) {
-  // Quick diagnostic: GET /api/upload?diag=1
-  if (req.method === 'GET' && req.query.diag === '1') {
-    const have = {
-      CLIENT_ID: !!process.env.GOOGLE_OAUTH_CLIENT_ID,
-      CLIENT_SECRET: !!process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-      REFRESH_TOKEN: !!process.env.GOOGLE_OAUTH_REFRESH_TOKEN,
-      DRIVE_FOLDER_ID: !!process.env.DRIVE_FOLDER_ID,
-    };
-    // tell which mode we'd use
-    const mode = (have.CLIENT_ID && have.CLIENT_SECRET && have.REFRESH_TOKEN) ? 'oauth' : 'service_account';
-    return res.status(200).json({ ok: true, mode, have });
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(200).send('Uploader live. POST a multipart/form-data with field "file".');
+  // Robust diag: works even if req.query isn't populated
+  if (req.method === 'GET') {
+    try {
+      const url = new URL(req.url, 'http://localhost'); // base ignored on Vercel
+      if (url.searchParams.get('diag') === '1') {
+        const have = {
+          CLIENT_ID: !!process.env.GOOGLE_OAUTH_CLIENT_ID,
+          CLIENT_SECRET: !!process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+          REFRESH_TOKEN: !!process.env.GOOGLE_OAUTH_REFRESH_TOKEN,
+          DRIVE_FOLDER_ID: !!process.env.DRIVE_FOLDER_ID,
+        };
+        const mode = (have.CLIENT_ID && have.CLIENT_SECRET && have.REFRESH_TOKEN)
+          ? 'oauth'
+          : 'service_account';
+        return res.status(200).json({ ok: true, mode, have });
+      }
+    } catch (_) {
+      // fall through
+    }
+    return res
+      .status(200)
+      .send('Uploader live. POST a multipart/form-data with field "file".');
   }
 
   try {
