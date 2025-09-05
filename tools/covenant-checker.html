@@ -43,9 +43,339 @@
     <p style="margin:0 0 16px;color:#666;">Upload covenant text and get an instant risk assessment.</p>
 
     <!-- Placeholder card -->
-    <div class="card">
-      <p>Coming soon...</p>
+    <!-- ===== Covenant Checker (MVP) ===== -->
+    <div id="cov-tool" style="max-width:1100px;margin:0 auto;">
+      <!-- Controls -->
+      <div class="cardish">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div>
+            <label>Template</label><br>
+            <select id="tpl" class="ctl">
+              <option value="unitranche" selected>Unitranche (example)</option>
+              <option value="senior">Senior Secured TL (example)</option>
+              <option value="rcf">Revolver / RCF (example)</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div>
+            <label>Net Lev (max, x)</label><br>
+            <input id="t_net" type="number" step="0.01" class="ctl" value="4.75">
+          </div>
+          <div>
+            <label>Senior Lev (max, x)</label><br>
+            <input id="t_sen" type="number" step="0.01" class="ctl" value="3.75">
+          </div>
+          <div>
+            <label>ICR (min, x)</label><br>
+            <input id="t_icr" type="number" step="0.01" class="ctl" value="2.00">
+          </div>
+          <div>
+            <label>FCCR (min, x)</label><br>
+            <input id="t_fccr" type="number" step="0.01" class="ctl" value="1.25">
+          </div>
+          <div>
+            <label>Liquidity (min, $)</label><br>
+            <input id="t_liq" type="number" step="1000" class="ctl" value="2000000">
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button id="addRow" class="btn alt">+ Period</button>
+            <button id="run" class="btn">Run Checks</button>
+            <button id="download" class="btn ghost">Download CSV</button>
+          </div>
+        </div>
+        <p class="hint">Near-miss band is 10% headroom by default. Edit thresholds directly after picking a template.</p>
+      </div>
+    
+      <!-- Inputs table -->
+      <div class="cardish">
+        <div style="overflow:auto">
+          <table id="inTable" class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Period</th>
+                <th>EBITDA</th>
+                <th>Total Debt</th>
+                <th>Senior Debt</th>
+                <th>Cash</th>
+                <th>Cash Interest</th>
+                <th>Capex</th>
+                <th>Req. Amort</th>
+                <th>Liquidity</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="inBody"></tbody>
+          </table>
+        </div>
+      </div>
+    
+      <!-- Results -->
+      <div class="grid3">
+        <div class="metric"><div class="k">Overall Status (worst period)</div><div id="m_overall" class="v">–</div></div>
+        <div class="metric"><div class="k">Breaches</div><div id="m_breaches" class="v">–</div></div>
+        <div class="metric"><div class="k">Near-Misses</div><div id="m_near" class="v">–</div></div>
+      </div>
+    
+      <div class="cardish" id="resBox" style="display:none">
+        <div style="overflow:auto">
+          <table id="resTable" class="table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Net Lev (≤)</th>
+                <th>Senior Lev (≤)</th>
+                <th>ICR (≥)</th>
+                <th>FCCR (≥)</th>
+                <th>Liquidity (≥)</th>
+                <th>Overall</th>
+              </tr>
+            </thead>
+            <tbody id="resBody"></tbody>
+          </table>
+        </div>
+        <div class="narr">
+          <label>Auto-summary</label>
+          <textarea id="narrative" rows="3" class="ctl" style="width:100%"></textarea>
+        </div>
+      </div>
     </div>
+    
+    <style>
+      #cov-tool .cardish{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:16px;margin:12px 0}
+      #cov-tool label{font-size:.86rem;color:#444}
+      #cov-tool .ctl{padding:8px;border:1px solid #ddd;border-radius:10px}
+      #cov-tool .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+      #cov-tool .btn.alt{background:#10b981}
+      #cov-tool .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+      #cov-tool .hint{margin:8px 2px 0;color:#666}
+      #cov-tool .table{width:100%;border-collapse:collapse}
+      #cov-tool th, #cov-tool td{padding:10px;border-bottom:1px solid #f0f0f0;text-align:right;font-size:.95rem}
+      #cov-tool th:nth-child(1), #cov-tool td:nth-child(1),
+      #cov-tool th:nth-child(2), #cov-tool td:nth-child(2){text-align:left}
+      #cov-tool input[type="number"]{width:120px;text-align:right}
+      #cov-tool input.per{width:100px}
+      #cov-tool .grid3{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px}
+      #cov-tool .metric{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
+      #cov-tool .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
+      #cov-tool .metric .v{font-size:1.25rem;font-weight:700}
+      #cov-tool .ok{color:#059669;font-weight:700}
+      #cov-tool .warn{color:#b45309;font-weight:700}
+      #cov-tool .bad{color:#dc2626;font-weight:700}
+      #cov-tool .narr{margin-top:12px}
+      #cov-tool .del{padding:6px 10px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#444;cursor:pointer}
+    </style>
+    
+    <script>
+    (function(){
+      const $ = id => document.getElementById(id);
+      const inBody = $('inBody'), resBody = $('resBody');
+    
+      // Example templates (edit as you like)
+      const TEMPLATES = {
+        unitranche: { netMax:4.75, senMax:3.75, icrMin:2.00, fccrMin:1.25, liqMin:2000000 },
+        senior:     { netMax:4.50, senMax:3.25, icrMin:2.50, fccrMin:1.20, liqMin:1000000 },
+        rcf:        { netMax:3.50, senMax:3.50, icrMin:2.00, fccrMin:1.00, liqMin:5000000 },
+      };
+      const NEAR = 0.10; // 10% headroom band
+    
+      function applyTemplate(name){
+        const t = TEMPLATES[name];
+        if(!t) return;
+        $('t_net').value = t.netMax;
+        $('t_sen').value = t.senMax;
+        $('t_icr').value = t.icrMin;
+        $('t_fccr').value = t.fccrMin;
+        $('t_liq').value = t.liqMin;
+      }
+    
+      $('tpl').onchange = e => {
+        if(e.target.value !== 'custom'){ applyTemplate(e.target.value); }
+      };
+      applyTemplate('unitranche');
+    
+      function addRow(periodLabel){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td></td>
+          <td style="text-align:left"><input type="text" class="ctl" value="${periodLabel||suggestLabel()}" style="width:110px;text-align:left"></td>
+          <td><input type="number" class="ctl" step="1000" value="5000000"></td>
+          <td><input type="number" class="ctl" step="1000" value="20000000"></td>
+          <td><input type="number" class="ctl" step="1000" value="15000000"></td>
+          <td><input type="number" class="ctl" step="1000" value="1000000"></td>
+          <td><input type="number" class="ctl" step="1000" value="1500000"></td>
+          <td><input type="number" class="ctl" step="1000" value="500000"></td>
+          <td><input type="number" class="ctl" step="1000" value="250000"></td>
+          <td><input type="number" class="ctl" step="1000" value="3000000"></td>
+          <td><button class="del">Delete</button></td>
+        `;
+        tr.querySelector('.del').onclick = ()=>{ tr.remove(); renumber(); };
+        inBody.appendChild(tr);
+        renumber();
+      }
+    
+      function renumber(){
+        [...inBody.querySelectorAll('tr')].forEach((tr,i)=> tr.firstElementChild.textContent = i+1);
+      }
+    
+      function suggestLabel(){
+        const n = inBody.querySelectorAll('tr').length;
+        const labels = ['Q1','Q2','Q3','Q4','Q5','Q6'];
+        return labels[n] || `P${n+1}`;
+        }
+    
+      $('addRow').onclick = ()=> addRow();
+    
+      // seed a couple rows
+      addRow('Q1');
+      addRow('Q2');
+    
+      function val(cell){ const v = +cell.value; return isFinite(v)? v : 0; }
+    
+      function classifyMax(actual, limit){
+        if(!isFinite(actual) || !isFinite(limit)) return {status:'bad',head:NaN};
+        const head = limit - actual;
+        if(head < 0) return {status:'bad',head};
+        const near = limit === 0 ? (actual > 0) : (head/Math.max(1e-9,Math.abs(limit)) <= NEAR);
+        return {status: near ? 'warn':'ok', head};
+      }
+      function classifyMin(actual, limit){
+        if(!isFinite(actual) || !isFinite(limit)) return {status:'bad',head:NaN};
+        const head = actual - limit;
+        if(head < 0) return {status:'bad',head};
+        const near = limit === 0 ? false : (head/Math.max(1e-9,Math.abs(limit)) <= NEAR);
+        return {status: near ? 'warn':'ok', head};
+      }
+    
+      function fmtNum(n){ return isFinite(n) ? (Math.abs(n)>=1000 ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : n.toFixed(2)) : '–'; }
+      function badge(status, text){
+        const cls = status==='ok'?'ok':status==='warn'?'warn':'bad';
+        const icon = status==='ok'?'✅':status==='warn'?'⚠️':'❌';
+        return `<span class="${cls}">${icon} ${text}</span>`;
+      }
+    
+      function run(){
+        const limits = {
+          netMax: +$('t_net').value,
+          senMax: +$('t_sen').value,
+          icrMin: +$('t_icr').value,
+          fccrMin:+$('t_fccr').value,
+          liqMin: +$('t_liq').value,
+        };
+    
+        resBody.innerHTML = '';
+        let worstOverall = 'ok', breaches=0, near=0;
+        const lines = [];
+    
+        [...inBody.querySelectorAll('tr')].forEach(tr=>{
+          const tds = tr.querySelectorAll('td');
+          const period = tds[1].querySelector('input').value || '';
+          const EBITDA = val(tds[2].querySelector('input'));
+          const totDebt= val(tds[3].querySelector('input'));
+          const senDebt= val(tds[4].querySelector('input'));
+          const cash   = val(tds[5].querySelector('input'));
+          const interest = val(tds[6].querySelector('input'));
+          const capex    = val(tds[7].querySelector('input'));
+          const reqAmort = val(tds[8].querySelector('input'));
+          const liquidity= val(tds[9].querySelector('input'));
+    
+          // metrics
+          const safeDiv = (a,b)=> (b===0? NaN : a/b);
+          const netLev = safeDiv(totDebt - cash, EBITDA);
+          const senLev = safeDiv(senDebt, EBITDA);
+          const icr = safeDiv(EBITDA, interest);
+          const fccr = safeDiv(EBITDA - capex, interest + reqAmort);
+    
+          // classify
+          const cNet = classifyMax(netLev, limits.netMax);
+          const cSen = classifyMax(senLev, limits.senMax);
+          const cIcr = classifyMin(icr, limits.icrMin);
+          const cFcc = classifyMin(fccr, limits.fccrMin);
+          const cLiq = classifyMin(liquidity, limits.liqMin);
+    
+          const order = {bad:3, warn:2, ok:1};
+          const rowWorst = [cNet,cSen,cIcr,cFcc,cLiq].sort((a,b)=>order[b.status]-order[a.status])[0].status;
+          if(order[rowWorst] > order[worstOverall]) worstOverall = rowWorst;
+          breaches += [cNet,cSen,cIcr,cFcc,cLiq].filter(x=>x.status==='bad').length;
+          near     += [cNet,cSen,cIcr,cFcc,cLiq].filter(x=>x.status==='warn').length;
+    
+          const trOut = document.createElement('tr');
+          trOut.innerHTML = `
+            <td style="text-align:left">${period}</td>
+            <td>${badge(cNet.status, `${fmtNum(netLev)} ≤ ${fmtNum(limits.netMax)}`)}</td>
+            <td>${badge(cSen.status, `${fmtNum(senLev)} ≤ ${fmtNum(limits.senMax)}`)}</td>
+            <td>${badge(cIcr.status, `${fmtNum(icr)} ≥ ${fmtNum(limits.icrMin)}`)}</td>
+            <td>${badge(cFcc.status, `${fmtNum(fccr)} ≥ ${fmtNum(limits.fccrMin)}`)}</td>
+            <td>${badge(cLiq.status, `$${fmtNum(liquidity)} ≥ $${fmtNum(limits.liqMin)}`)}</td>
+            <td>${rowWorst==='ok'?'✅ In':' '}${rowWorst==='warn'?'⚠️ Near':''}${rowWorst==='bad'?'❌ Out':''}</td>
+          `;
+          resBody.appendChild(trOut);
+    
+          lines.push({period, EBITDA, totDebt, senDebt, cash, interest, capex, reqAmort, liquidity,
+                      netLev, senLev, icr, fccr,
+                      netLimit:limits.netMax, senLimit:limits.senMax, icrLimit:limits.icrMin, fccrLimit:limits.fccrMin, liqLimit:limits.liqMin,
+                      status: rowWorst});
+        });
+    
+        $('m_overall').textContent = worstOverall==='ok' ? '✅ All in' : worstOverall==='warn' ? '⚠️ Some near' : '❌ Breach';
+        $('m_near').textContent = near.toString();
+        $('m_breaches').textContent = breaches.toString();
+        $('resBox').style.display = 'block';
+    
+        // narrative
+        const first = lines[0] || {};
+        const msg = [];
+        if(isFinite(first.netLev)) msg.push(`Net leverage ${fmtNum(first.netLev)}x vs ${fmtNum(limits.netMax)}x.`);
+        if(isFinite(first.icr))    msg.push(`ICR ${fmtNum(first.icr)}x vs ${fmtNum(limits.icrMin)}x.`);
+        if(isFinite(first.fccr))   msg.push(`FCCR ${fmtNum(first.fccr)}x vs ${fmtNum(limits.fccrMin)}x.`);
+        $('narrative').value = `${$('m_overall').textContent}. ${msg.join(' ')} Generated by Covenant Checker (MVP).`;
+      }
+    
+      $('run').onclick = run;
+    
+      // CSV export of inputs + computed outputs
+      $('download').onclick = ()=>{
+        const rows = [...resBody.querySelectorAll('tr')];
+        if(rows.length===0){ run(); }
+        // rebuild from inputs + recompute to get clean CSV
+        const hdr = ['Period','EBITDA','TotalDebt','SeniorDebt','Cash','CashInterest','Capex','ReqAmort','Liquidity','NetLev','SeniorLev','ICR','FCCR','NetMax','SeniorMax','ICRMin','FCCRMin','LiqMin','Overall'];
+        const limits = {netMax:+$('t_net').value, senMax:+$('t_sen').value, icrMin:+$('t_icr').value, fccrMin:+$('t_fccr').value, liqMin:+$('t_liq').value};
+        const out = [hdr];
+        [...inBody.querySelectorAll('tr')].forEach(tr=>{
+          const tds = tr.querySelectorAll('td');
+          const P = tds[1].querySelector('input').value||'';
+          const E = +tds[2].querySelector('input').value||0;
+          const TD= +tds[3].querySelector('input').value||0;
+          const SD= +tds[4].querySelector('input').value||0;
+          const C = +tds[5].querySelector('input').value||0;
+          const I = +tds[6].querySelector('input').value||0;
+          const X = +tds[7].querySelector('input').value||0;
+          const A = +tds[8].querySelector('input').value||0;
+          const L = +tds[9].querySelector('input').value||0;
+          const safeDiv=(a,b)=> (b===0? NaN : a/b);
+          const NL=safeDiv(TD-C,E), SL=safeDiv(SD,E), ICR=safeDiv(E,I), FCCR=safeDiv(E-X,I+A);
+          const order={bad:3,warn:2,ok:1};
+          const c=[ // classify quickly
+            (limits.netMax - NL) < 0 ? 'bad' : ((limits.netMax - NL)/Math.max(1e-9,limits.netMax) <= 0.10 ? 'warn':'ok'),
+            (limits.senMax - SL) < 0 ? 'bad' : ((limits.senMax - SL)/Math.max(1e-9,limits.senMax) <= 0.10 ? 'warn':'ok'),
+            (ICR - limits.icrMin) < 0 ? 'bad' : ((ICR - limits.icrMin)/Math.max(1e-9,limits.icrMin) <= 0.10 ? 'warn':'ok'),
+            (FCCR - limits.fccrMin) < 0 ? 'bad' : ((FCCR - limits.fccrMin)/Math.max(1e-9,limits.fccrMin) <= 0.10 ? 'warn':'ok'),
+            (L - limits.liqMin) < 0 ? 'bad' : ((L - limits.liqMin)/Math.max(1e-9,limits.liqMin) <= 0.10 ? 'warn':'ok'),
+          ];
+          const overall = c.sort((a,b)=>({bad:3,warn:2,ok:1}[b]-{bad:3,warn:2,ok:1}[a]))[0];
+          out.push([P,E,TD,SD,C,I,X,A,L,NL,SL,ICR,FCCR,limits.netMax,limits.senMax,limits.icrMin,limits.fccrMin,limits.liqMin,overall]);
+        });
+        const csv = out.map(r=>r.map(x=>{
+          const s=(''+(isFinite(x)?x:x)).replace(/"/g,'""'); return /[",\n]/.test(s)? `"${s}"`: s;
+        }).join(',')).join('\n');
+        const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'covenant_checker_results.csv'; a.click(); URL.revokeObjectURL(a.href);
+      };
+    
+      // Run once to show defaults
+      run();
+    })();
+    </script>
   </main>
 
   <div id="site-footer"></div>
