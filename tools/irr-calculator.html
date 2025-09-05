@@ -43,10 +43,332 @@
     <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">IRR Calculator</h1>
     <p style="margin:0 0 16px;color:#666;">Quickly calculate internal rates of return (IRR) and basic MOIC.</p>
 
-    <div class="card">
-      <p>Coming soon...</p>
+    <!-- ===== Replace the "Coming soon..." card with everything below ===== -->
+    <div id="irr-tool" style="max-width:1100px;margin:0 auto;">
+      <!-- Controls -->
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:18px 18px 6px;margin:12px 0;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div>
+            <label>Deal Mode</label><br>
+            <select id="mode" style="padding:8px;border:1px solid #ddd;border-radius:10px">
+              <option value="standard" selected>Standard (auto schedule)</option>
+              <option value="custom">Custom (manual cash flows)</option>
+            </select>
+          </div>
+    
+          <div class="std">
+            <label>Amount Funded</label><br>
+            <input id="amount" type="number" value="1000000" min="0" step="1000"
+                   style="padding:8px;border:1px solid #ddd;border-radius:10px;width:160px">
+          </div>
+    
+          <div class="std">
+            <label>OID / Upfront Fee (% of face)</label><br>
+            <input id="oidPct" type="number" value="2.0" step="0.1"
+                   style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
+          </div>
+    
+          <div class="std">
+            <label>Exit Fee (% of face)</label><br>
+            <input id="exitPct" type="number" value="1.0" step="0.1"
+                   style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
+          </div>
+    
+          <div class="std">
+            <label>Rate (% per year)</label><br>
+            <input id="rate" type="number" value="12.0" step="0.1"
+                   style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
+          </div>
+    
+          <div class="std">
+            <label>Term</label><br>
+            <input id="term" type="number" value="36" step="1" min="1"
+                   style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
+          </div>
+    
+          <div class="std">
+            <label>Frequency</label><br>
+            <select id="freq" style="padding:8px;border:1px solid #ddd;border-radius:10px">
+              <option value="12" selected>Monthly</option>
+              <option value="4">Quarterly</option>
+              <option value="2">Semi-Annual</option>
+              <option value="1">Annual</option>
+            </select>
+          </div>
+    
+          <div class="std">
+            <label>Amortization</label><br>
+            <select id="amort" style="padding:8px;border:1px solid #ddd;border-radius:10px">
+              <option value="io" selected>Interest-Only, bullet principal</option>
+              <option value="am">Level-payment amortizing</option>
+            </select>
+          </div>
+    
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button id="build" class="btn">Build/Refresh</button>
+            <button id="addRow" class="btn alt">+ Cash Flow</button>
+            <button id="download" class="btn ghost">Download CSV</button>
+          </div>
+        </div>
+        <p style="margin:10px 2px 0;color:#666">
+          <small>
+            IRR convention: periodic IRR compounded to **annual** (freq-based). Negative = outflow from the investor (funding), positive = inflow (payments).
+          </small>
+        </p>
+      </div>
+    
+      <!-- Table -->
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:16px;margin:12px 0;">
+        <div style="overflow:auto">
+          <table id="cfTable" style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr style="background:#f7f7f7">
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">#</th>
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Month</th>
+                <th style="text-align:right;padding:10px;border-bottom:1px solid #eee">Cash Flow</th>
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Note</th>
+                <th style="padding:10px;border-bottom:1px solid #eee"></th>
+              </tr>
+            </thead>
+            <tbody id="cfBody"></tbody>
+          </table>
+        </div>
+      </div>
+    
+      <!-- Results -->
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px">
+        <div class="metric"><div class="k">Net IRR (annual)</div><div id="irrNet" class="v">–</div></div>
+        <div class="metric"><div class="k">Gross IRR (annual)</div><div id="irrGross" class="v">–</div></div>
+        <div class="metric"><div class="k">MOIC (Σ inflows / |Σ outflows|)</div><div id="moic" class="v">–</div></div>
+        <div class="metric"><div class="k">Total Interest</div><div id="totInt" class="v">–</div></div>
+        <div class="metric"><div class="k">Total Fees (OID + Exit)</div><div id="totFees" class="v">–</div></div>
+        <div class="metric"><div class="k">Payback Month</div><div id="payback" class="v">–</div></div>
+      </div>
     </div>
-  </main>
+    
+    <style>
+      #irr-tool label{font-size:.86rem;color:#444}
+      #irr-tool .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+      #irr-tool .btn.alt{background:#10b981}
+      #irr-tool .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+      #irr-tool .metric{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
+      #irr-tool .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
+      #irr-tool .metric .v{font-size:1.25rem;font-weight:700}
+      #irr-tool input:disabled, #irr-tool select:disabled{opacity:.6}
+      #irr-tool td, #irr-tool th{font-size:.95rem}
+      #irr-tool td{border-bottom:1px solid #f0f0f0}
+      #irr-tool .num{text-align:right;width:160px}
+      #irr-tool .note{width:100%}
+    </style>
+    
+    <script>
+    (function(){
+      const el = id => document.getElementById(id);
+      const cfBody = el('cfBody');
+      const fmt = n => isFinite(n) ? (Math.abs(n) >= 1000 ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : n.toFixed(2)) : '–';
+      const fmtPct = p => isFinite(p) ? (p*100).toFixed(2)+'%' : '–';
+    
+      // IRR solver (periodic), robust: attempts Newton-Raphson then bisection.
+      function xirrPeriodic(cashflows){
+        // cashflows: [{t:0, cf:-100}, {t:1, cf:10}, ...], t in periods (months or quarters)
+        const f = r => cashflows.reduce((acc, x)=> acc + x.cf / Math.pow(1+r, x.t), 0);
+        const df = r => cashflows.reduce((acc, x)=> acc + (-x.t*x.cf) / Math.pow(1+r, x.t+1), 0);
+        // bracket search
+        let lo = -0.9999, hi = 10; // allow very high periodic rates just in case
+        // Try Newton from 0.02
+        let r = 0.02;
+        for(let i=0;i<50;i++){
+          const fr = f(r), dfr = df(r);
+          if(!isFinite(fr) || !isFinite(dfr)) break;
+          const nr = r - fr/dfr;
+          if(Math.abs(nr - r) < 1e-8) return r;
+          r = nr;
+          if(r <= lo || r >= hi || !isFinite(r)){ r = 0.02; break; }
+        }
+        // Bisection
+        let flo = f(lo), fhi = f(hi);
+        // expand until sign change or bounds hit
+        for(let k=0;k<60 && flo*fhi>0;k++){ hi/=2; fhi=f(hi); if(!isFinite(fhi)) break; }
+        if(flo*fhi>0){ return NaN; }
+        for(let i=0;i<200;i++){
+          const mid = (lo+hi)/2, fm = f(mid);
+          if(Math.abs(fm) < 1e-8) return mid;
+          if(flo*fm<0){ hi=mid; fhi=fm; } else { lo=mid; flo=fm; }
+        }
+        return (lo+hi)/2;
+      }
+    
+      function tableCashflows(){
+        const rows = [...cfBody.querySelectorAll('tr')];
+        return rows.map(r=>{
+          const t = +r.querySelector('.t').value;
+          const cf = +r.querySelector('.cf').value;
+          const note = r.querySelector('.note').value || '';
+          return {t, cf, note};
+        }).sort((a,b)=>a.t-b.t);
+      }
+    
+      function rebuildStandard(){
+        const amount = +el('amount').value || 0;
+        const oidPct = (+el('oidPct').value || 0)/100;
+        const exitPct = (+el('exitPct').value || 0)/100;
+        const rate = (+el('rate').value || 0)/100;
+        const termMonths = +el('term').value || 0;
+        const freq = +el('freq').value; // periods per year
+        const amort = el('amort').value; // 'io' | 'am'
+    
+        const periodMonths = 12 / freq;
+        const nPeriods = Math.round(termMonths / periodMonths);
+        const i = rate / freq;
+    
+        cfBody.innerHTML = '';
+        // Funding at t=0 (negative), net of OID
+        const oid = amount * oidPct;
+        addRow(0, -(amount - oid), `Funded (OID ${ (oidPct*100).toFixed(2) }% retained = ${fmt(oid)})`);
+    
+        if(amort === 'io'){
+          // Interest-only coupons each period, principal bullet at end
+          for(let k=1;k<=nPeriods;k++){
+            const interest = amount * i;
+            if(k < nPeriods){
+              addRow(Math.round(k*periodMonths), interest, 'Interest');
+            }else{
+              const exit = amount * exitPct;
+              addRow(Math.round(k*periodMonths), interest + amount + exit, `Interest + Principal + Exit (${(exitPct*100).toFixed(2)}%)`);
+            }
+          }
+        }else{
+          // Amortizing: level payment
+          const pmt = (i===0) ? amount/nPeriods : amount * (i*Math.pow(1+i,nPeriods))/(Math.pow(1+i,nPeriods)-1);
+          let bal = amount;
+          for(let k=1;k<=nPeriods;k++){
+            const interest = bal * i;
+            const principal = Math.min(pmt - interest, bal);
+            bal = Math.max(0, bal - principal);
+            const isLast = k===nPeriods;
+            const exit = isLast ? amount * exitPct : 0;
+            addRow(Math.round(k*periodMonths), pmt + (isLast?exit:0), isLast ? `Final Payment + Exit (${(exitPct*100).toFixed(2)}%)` : 'Level Payment');
+          }
+        }
+        recalc();
+      }
+    
+      function addRow(t=0, cf=0, note=''){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="padding:8px"></td>
+          <td style="padding:8px"><input class="t" type="number" value="${t}" step="1" min="0" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100px"></td>
+          <td style="padding:8px"><input class="cf num" type="number" value="${cf.toFixed(2)}" step="0.01" style="padding:6px;border:1px solid #ddd;border-radius:8px"></td>
+          <td style="padding:8px"><input class="note" type="text" value="${note}" style="padding:6px;border:1px solid #ddd;border-radius:8px"></td>
+          <td style="padding:8px;text-align:right"><button class="btn ghost del">Delete</button></td>
+        `;
+        cfBody.appendChild(tr);
+        renumber();
+        tr.querySelector('.del').onclick = ()=>{ tr.remove(); renumber(); recalc(); };
+        tr.querySelector('.t').oninput = recalc;
+        tr.querySelector('.cf').oninput = recalc;
+        tr.querySelector('.note').oninput = ()=>{};
+      }
+    
+      function renumber(){
+        [...cfBody.querySelectorAll('tr')].forEach((tr,idx)=>{
+          tr.firstElementChild.textContent = idx+1;
+        });
+      }
+    
+      function recalc(){
+        const rows = tableCashflows();
+        if(rows.length===0){ showResults(NaN,NaN,NaN,0,0,NaN); return; }
+    
+        // Gross vs Net: Net treats OID as retained by lender at t=0; Gross assumes full outflow of face at t=0
+        const mode = el('mode').value;
+        const freq = +el('freq').value;
+        // Annualize helper
+        const ann = r => (isFinite(r) ? (Math.pow(1+r, freq)-1) : NaN);
+    
+        // Build periodic CFs (t in months); convert to "periods" based on chosen frequency for IRR math
+        const monthsToPeriods = m => m * (freq/12);
+        const cfs = rows.map(r=>({t: monthsToPeriods(+r.t), cf:+r.cf}));
+        cfs.sort((a,b)=>a.t-b.t);
+    
+        // Detect OID/Exit from notes (best effort) to display totals
+        const totalIn = cfs.filter(x=>x.cf>0).reduce((s,x)=>s+x.cf,0);
+        const totalOut = cfs.filter(x=>x.cf<0).reduce((s,x)=>s+x.cf,0);
+        // Interest approx: positive inflows minus principal & exit if we can infer… keep simple:
+        const principalGuess = Math.abs(Math.min(...cfs.map(x=>x.cf))); // size of biggest outflow
+        const exitGuess = cfs.slice(-1)[0]?.note?.toLowerCase().includes('exit') ? (cfs.slice(-1)[0].cf - principalGuess) : 0;
+        const interestApprox = totalIn - Math.max(0,principalGuess) - Math.max(0,exitGuess);
+    
+        // Gross IRR: adjust first CF to full funding if first row is negative net of OID (note contains 'OID')
+        let grossCfs = JSON.parse(JSON.stringify(cfs));
+        const first = grossCfs[0];
+        if(first && first.note && first.note.toLowerCase().includes('oid')){
+          // recover implied face by adding OID back
+          const m = first.note.match(/oid .*?=\s*([0-9,.\-]+)/i);
+          if(m){ const oidVal = parseFloat(m[1].replace(/,/g,'')); if(isFinite(oidVal)) grossCfs[0].cf = first.cf - oidVal; }
+        }
+        const irrP = xirrPeriodic(cfs);
+        const irrGrossP = xirrPeriodic(grossCfs);
+    
+        const irrAnn = ann(irrP);
+        const irrAnnGross = ann(irrGrossP);
+        const moic = totalIn / Math.abs(totalOut || 1);
+    
+        // Payback month: earliest t where cumulative >= 0
+        let cum = totalOut; // negative
+        let payback = NaN;
+        for(const r of cfs){
+          cum += r.cf;
+          if(cum>=0){ payback = Math.round(r.t*(12/freq)); break; }
+        }
+    
+        showResults(irrAnn, irrAnnGross, moic, interestApprox, Math.max(0,totalIn - (principalGuess + interestApprox)), payback);
+      }
+    
+      function showResults(irr, irrG, moic, totInt, totFees, payback){
+        el('irrNet').textContent = isFinite(irr)? (irr*100).toFixed(2)+'%':'–';
+        el('irrGross').textContent = isFinite(irrG)? (irrG*100).toFixed(2)+'%':'–';
+        el('moic').textContent = isFinite(moic)? moic.toFixed(3):'–';
+        el('totInt').textContent = isFinite(totInt)? '$'+fmt(totInt):'–';
+        el('totFees').textContent = isFinite(totFees)? '$'+fmt(totFees):'–';
+        el('payback').textContent = isFinite(payback)? payback+' mo':'–';
+      }
+    
+      // CSV export
+      function downloadCSV(){
+        const rows = tableCashflows();
+        if(rows.length===0) return;
+        const lines = [['Index','Month','CashFlow','Note']].concat(rows.map((r,i)=>[i+1,r.t,r.cf,r.note]));
+        const csv = lines.map(r=>r.map(x=>{
+          const s = (''+x).replace(/"/g,'""');
+          return /[",\n]/.test(s)? `"${s}"`: s;
+        }).join(',')).join('\n');
+        const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'irr_cashflows.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    
+      // UI wiring
+      el('build').onclick = ()=> {
+        if(el('mode').value==='standard'){ rebuildStandard(); }
+        else { if(cfBody.children.length===0){ addRow(0,-1000000,'Funding'); } recalc(); }
+      };
+      el('addRow').onclick = ()=> addRow();
+      el('download').onclick = downloadCSV;
+    
+      el('mode').onchange = ()=>{
+        const std = document.querySelectorAll('.std');
+        std.forEach(n=> n.style.display = (el('mode').value==='standard' ? '' : 'none'));
+        el('build').click();
+      };
+    
+      // initial
+      el('build').click();
+    })();
+    </script>
 
   <div id="site-footer"></div>
   <script src="/includes/include.js"></script>
