@@ -1,326 +1,421 @@
-<!-- ===== Replace the "Coming soon..." card with everything below ===== -->
-<div id="irr-tool" style="max-width:1100px;margin:0 auto;">
-  <!-- Controls -->
-  <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:18px 18px 6px;margin:12px 0;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-      <div>
-        <label>Deal Mode</label><br>
-        <select id="mode" style="padding:8px;border:1px solid #ddd;border-radius:10px">
-          <option value="standard" selected>Standard (auto schedule)</option>
-          <option value="custom">Custom (manual cash flows)</option>
-        </select>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Decoder | Private Credit AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
+  <style>
+    /* Site shell (match your other tools) */
+    body{font-family:Poppins,sans-serif;margin:0;background:#f4f4f4;color:#333}
+    .page{max-width:1100px;margin:24px auto;padding:20px}
+    .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tool-tab.active{background:#111;color:#fff;border-color:#111}
+
+    /* Decoder scoped styles */
+    #decoder .cardish{background:#fff;border-radius:12px;border:1px solid #e8e8e8;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:16px;margin:12px 0}
+    #decoder .hint{margin:8px 2px 0;color:#666}
+    #decoder .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+    #decoder .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+    #decoder .btn.warn{background:#10b981}
+    #decoder .ctl{width:100%;padding:10px 11px;border:1px solid #d9d9d9;border-radius:10px;font-size:14px;background:#fff}
+    #decoder label{display:flex;flex-direction:column;gap:6px;font-size:.9rem;color:#444}
+    #decoder .grid2{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:12px}
+    #decoder .formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    #decoder .h{margin:0 0 10px;font-size:1rem;font-weight:700;color:#222}
+    #decoder textarea#src{min-height:168px}
+    #decoder textarea{resize:vertical}
+    #decoder .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    #decoder .row > *{flex:1 1 220px}
+    @media (max-width:900px){
+      #decoder .grid2{grid-template-columns:1fr}
+      #decoder .formgrid{grid-template-columns:1fr}
+      #decoder .row > *{flex:1 1 100%}
+    }
+  </style>
+</head>
+<body>
+  <!-- Keep header include -->
+  <div id="site-header"></div>
+
+  <main class="page">
+    <!-- Tabs ABOVE the page heading -->
+    <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
+      <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
+      <a class="tool-tab" href="/tools/yield-curve.html">Yield Curve</a>
+      <a class="tool-tab" href="/tools/credit-decoder.html">Credit Decoder</a>
+      <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
+      <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
+        });
+      })();
+    </script>
+
+    <!-- Heading + description -->
+    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Credit Decoder</h1>
+    <p style="margin:0 0 16px;color:#666;">Translate complex credit jargon into plain English.</p>
+
+    <!-- ===== Credit Decoder (MVP) ===== -->
+    <div id="decoder">
+      <div class="cardish">
+        <div class="row">
+          <div style="flex:1 1 460px">
+            <label>Paste agreement text (or upload .txt)
+              <textarea id="src" class="ctl" placeholder="Paste credit agreement or covenant sections here…"></textarea>
+            </label>
+          </div>
+          <div style="max-width:240px">
+            <label>Upload .txt
+              <input id="file" type="file" accept=".txt" class="ctl">
+            </label>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:280px">
+            <button id="parse" class="btn">Decode</button>
+            <button id="copySummary" class="btn ghost">Copy Summary</button>
+            <button id="downloadJson" class="btn ghost">Export JSON</button>
+            <button id="downloadCsv" class="btn ghost">Export CSV</button>
+            <button id="downloadCovJson" class="btn ghost">Export Covenant JSON</button>
+          </div>
+        </div>
+        <p class="hint">Tip: copy/paste from your PDF reader or Word for now. We’ll add native PDF parsing later.</p>
       </div>
 
-      <div class="std">
-        <label>Amount Funded</label><br>
-        <input id="amount" type="number" value="1000000" min="0" step="1000"
-               style="padding:8px;border:1px solid #ddd;border-radius:10px;width:160px">
+      <!-- Results grid -->
+      <div class="grid2">
+        <div class="cardish">
+          <h3 class="h">Deal Header</h3>
+          <div class="formgrid">
+            <label>Borrower<input id="borrower" class="ctl"></label>
+            <label>Guarantors<input id="guarantors" class="ctl"></label>
+            <label>Agent / Lender<input id="agent" class="ctl"></label>
+            <label>Facility Type<input id="facility" class="ctl"></label>
+            <label>Principal ($)<input id="principal" type="number" class="ctl" step="1000" inputmode="decimal"></label>
+            <label>Maturity (date)<input id="maturity" class="ctl"></label>
+            <label>Base Rate<input id="baseRate" class="ctl" placeholder="SOFR, Prime…"></label>
+            <label>Spread (bps)<input id="spreadBps" type="number" class="ctl" step="1" inputmode="decimal"></label>
+            <label>Floor (%)<input id="floorPct" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>OID (%)<input id="oidPct" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>Upfront Fee (%)<input id="upfrontPct" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>Exit Fee (%)<input id="exitPct" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+          </div>
+        </div>
+
+        <div class="cardish">
+          <h3 class="h">Security / Structure</h3>
+          <label>Collateral Description<textarea id="collateral" rows="3" class="ctl"></textarea></label>
+          <label>Guarantees<textarea id="guarantees" rows="3" class="ctl"></textarea></label>
+          <h3 class="h" style="margin-top:14px">Maintenance Covenants</h3>
+          <div class="formgrid">
+            <label>Net Leverage (max x)<input id="netLev" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>Senior Leverage (max x)<input id="senLev" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>ICR (min x)<input id="icr" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>FCCR (min x)<input id="fccr" type="number" class="ctl" step="0.01" inputmode="decimal"></label>
+            <label>Liquidity (min $)<input id="liqMin" type="number" class="ctl" step="1000" inputmode="decimal"></label>
+          </div>
+        </div>
+
+        <div class="cardish">
+          <h3 class="h">Incurrence Baskets (best-effort sizes)</h3>
+          <div class="formgrid">
+            <label>Debt Basket<input id="debtB" class="ctl" placeholder="$ amount or text"></label>
+            <label>Liens Basket<input id="liensB" class="ctl" placeholder="$ amount or text"></label>
+            <label>Investments Basket<input id="invB" class="ctl" placeholder="$ amount or text"></label>
+            <label>Restricted Payments<input id="rpB" class="ctl" placeholder="$ amount or text"></label>
+          </div>
+        </div>
+
+        <div class="cardish">
+          <h3 class="h">Reporting / Defaults</h3>
+          <div class="formgrid">
+            <label>Reporting Cadence<input id="reporting" class="ctl" placeholder="Monthly, quarterly, annual…"></label>
+            <label>Audited FS Due<input id="auditDue" class="ctl" placeholder="e.g., 120 days after FY"></label>
+            <label>Compliance Cert Due<input id="ccDue" class="ctl" placeholder="e.g., 45 days after quarter-end"></label>
+          </div>
+          <label>Events of Default (high-level)<textarea id="eod" rows="4" class="ctl"></textarea></label>
+        </div>
       </div>
 
-      <div class="std">
-        <label>OID / Upfront Fee (% of face)</label><br>
-        <input id="oidPct" type="number" value="2.0" step="0.1"
-               style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
-      </div>
-
-      <div class="std">
-        <label>Exit Fee (% of face)</label><br>
-        <input id="exitPct" type="number" value="1.0" step="0.1"
-               style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
-      </div>
-
-      <div class="std">
-        <label>Rate (% per year)</label><br>
-        <input id="rate" type="number" value="12.0" step="0.1"
-               style="padding:8px;border:1px solid #ddd;border-radius:10px;width:120px">
-      </div>
-
-      <div class="std">
-        <label>Term</label><br>
-        <input id="term" type="number" value="36" step="1" min="1"
-               style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
-      </div>
-
-      <div class="std">
-        <label>Frequency</label><br>
-        <select id="freq" style="padding:8px;border:1px solid #ddd;border-radius:10px">
-          <option value="12" selected>Monthly</option>
-          <option value="4">Quarterly</option>
-          <option value="2">Semi-Annual</option>
-          <option value="1">Annual</option>
-        </select>
-      </div>
-
-      <div class="std">
-        <label>Amortization</label><br>
-        <select id="amort" style="padding:8px;border:1px solid #ddd;border-radius:10px">
-          <option value="io" selected>Interest-Only, bullet principal</option>
-          <option value="am">Level-payment amortizing</option>
-        </select>
-      </div>
-
-      <div style="margin-left:auto;display:flex;gap:8px">
-        <button id="build" class="btn">Build/Refresh</button>
-        <button id="addRow" class="btn alt">+ Cash Flow</button>
-        <button id="download" class="btn ghost">Download CSV</button>
+      <div class="cardish">
+        <label>Auto-summary
+          <textarea id="summary" rows="4" class="ctl"></textarea>
+        </label>
       </div>
     </div>
-    <p style="margin:10px 2px 0;color:#666">
-      <small>
-        IRR convention: periodic IRR compounded to **annual** (freq-based). Negative = outflow from the investor (funding), positive = inflow (payments).
-      </small>
-    </p>
-  </div>
+  </main>
 
-  <!-- Table -->
-  <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:16px;margin:12px 0;">
-    <div style="overflow:auto">
-      <table id="cfTable" style="width:100%;border-collapse:collapse">
-        <thead>
-          <tr style="background:#f7f7f7">
-            <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">#</th>
-            <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Month</th>
-            <th style="text-align:right;padding:10px;border-bottom:1px solid #eee">Cash Flow</th>
-            <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Note</th>
-            <th style="padding:10px;border-bottom:1px solid #eee"></th>
-          </tr>
-        </thead>
-        <tbody id="cfBody"></tbody>
-      </table>
-    </div>
-  </div>
+  <!-- Keep footer include -->
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
 
-  <!-- Results -->
-  <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px">
-    <div class="metric"><div class="k">Net IRR (annual)</div><div id="irrNet" class="v">–</div></div>
-    <div class="metric"><div class="k">Gross IRR (annual)</div><div id="irrGross" class="v">–</div></div>
-    <div class="metric"><div class="k">MOIC (Σ inflows / |Σ outflows|)</div><div id="moic" class="v">–</div></div>
-    <div class="metric"><div class="k">Total Interest</div><div id="totInt" class="v">–</div></div>
-    <div class="metric"><div class="k">Total Fees (OID + Exit)</div><div id="totFees" class="v">–</div></div>
-    <div class="metric"><div class="k">Payback Month</div><div id="payback" class="v">–</div></div>
-  </div>
-</div>
+  <script>
+  (function(){
+    const $ = id => document.getElementById(id);
+    const g = id => ($(id).value || '').trim();
 
-<style>
-  #irr-tool label{font-size:.86rem;color:#444}
-  #irr-tool .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
-  #irr-tool .btn.alt{background:#10b981}
-  #irr-tool .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
-  #irr-tool .metric{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
-  #irr-tool .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
-  #irr-tool .metric .v{font-size:1.25rem;font-weight:700}
-  #irr-tool input:disabled, #irr-tool select:disabled{opacity:.6}
-  #irr-tool td, #irr-tool th{font-size:.95rem}
-  #irr-tool td{border-bottom:1px solid #f0f0f0}
-  #irr-tool .num{text-align:right;width:160px}
-  #irr-tool .note{width:100%}
-</style>
-
-<script>
-(function(){
-  const el = id => document.getElementById(id);
-  const cfBody = el('cfBody');
-  const fmt = n => isFinite(n) ? (Math.abs(n) >= 1000 ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : n.toFixed(2)) : '–';
-  const fmtPct = p => isFinite(p) ? (p*100).toFixed(2)+'%' : '–';
-
-  // IRR solver (periodic), robust: attempts Newton-Raphson then bisection.
-  function xirrPeriodic(cashflows){
-    // cashflows: [{t:0, cf:-100}, {t:1, cf:10}, ...], t in periods (months or quarters)
-    const f = r => cashflows.reduce((acc, x)=> acc + x.cf / Math.pow(1+r, x.t), 0);
-    const df = r => cashflows.reduce((acc, x)=> acc + (-x.t*x.cf) / Math.pow(1+r, x.t+1), 0);
-    // bracket search
-    let lo = -0.9999, hi = 10; // allow very high periodic rates just in case
-    // Try Newton from 0.02
-    let r = 0.02;
-    for(let i=0;i<50;i++){
-      const fr = f(r), dfr = df(r);
-      if(!isFinite(fr) || !isFinite(dfr)) break;
-      const nr = r - fr/dfr;
-      if(Math.abs(nr - r) < 1e-8) return r;
-      r = nr;
-      if(r <= lo || r >= hi || !isFinite(r)){ r = 0.02; break; }
-    }
-    // Bisection
-    let flo = f(lo), fhi = f(hi);
-    // expand until sign change or bounds hit
-    for(let k=0;k<60 && flo*fhi>0;k++){ hi/=2; fhi=f(hi); if(!isFinite(fhi)) break; }
-    if(flo*fhi>0){ return NaN; }
-    for(let i=0;i<200;i++){
-      const mid = (lo+hi)/2, fm = f(mid);
-      if(Math.abs(fm) < 1e-8) return mid;
-      if(flo*fm<0){ hi=mid; fhi=fm; } else { lo=mid; flo=fm; }
-    }
-    return (lo+hi)/2;
-  }
-
-  function tableCashflows(){
-    const rows = [...cfBody.querySelectorAll('tr')];
-    return rows.map(r=>{
-      const t = +r.querySelector('.t').value;
-      const cf = +r.querySelector('.cf').value;
-      const note = r.querySelector('.note').value || '';
-      return {t, cf, note};
-    }).sort((a,b)=>a.t-b.t);
-  }
-
-  function rebuildStandard(){
-    const amount = +el('amount').value || 0;
-    const oidPct = (+el('oidPct').value || 0)/100;
-    const exitPct = (+el('exitPct').value || 0)/100;
-    const rate = (+el('rate').value || 0)/100;
-    const termMonths = +el('term').value || 0;
-    const freq = +el('freq').value; // periods per year
-    const amort = el('amort').value; // 'io' | 'am'
-
-    const periodMonths = 12 / freq;
-    const nPeriods = Math.round(termMonths / periodMonths);
-    const i = rate / freq;
-
-    cfBody.innerHTML = '';
-    // Funding at t=0 (negative), net of OID
-    const oid = amount * oidPct;
-    addRow(0, -(amount - oid), `Funded (OID ${ (oidPct*100).toFixed(2) }% retained = ${fmt(oid)})`);
-
-    if(amort === 'io'){
-      // Interest-only coupons each period, principal bullet at end
-      for(let k=1;k<=nPeriods;k++){
-        const interest = amount * i;
-        if(k < nPeriods){
-          addRow(Math.round(k*periodMonths), interest, 'Interest');
-        }else{
-          const exit = amount * exitPct;
-          addRow(Math.round(k*periodMonths), interest + amount + exit, `Interest + Principal + Exit (${(exitPct*100).toFixed(2)}%)`);
-        }
-      }
-    }else{
-      // Amortizing: level payment
-      const pmt = (i===0) ? amount/nPeriods : amount * (i*Math.pow(1+i,nPeriods))/(Math.pow(1+i,nPeriods)-1);
-      let bal = amount;
-      for(let k=1;k<=nPeriods;k++){
-        const interest = bal * i;
-        const principal = Math.min(pmt - interest, bal);
-        bal = Math.max(0, bal - principal);
-        const isLast = k===nPeriods;
-        const exit = isLast ? amount * exitPct : 0;
-        addRow(Math.round(k*periodMonths), pmt + (isLast?exit:0), isLast ? `Final Payment + Exit (${(exitPct*100).toFixed(2)}%)` : 'Level Payment');
-      }
-    }
-    recalc();
-  }
-
-  function addRow(t=0, cf=0, note=''){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="padding:8px"></td>
-      <td style="padding:8px"><input class="t" type="number" value="${t}" step="1" min="0" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100px"></td>
-      <td style="padding:8px"><input class="cf num" type="number" value="${cf.toFixed(2)}" step="0.01" style="padding:6px;border:1px solid #ddd;border-radius:8px"></td>
-      <td style="padding:8px"><input class="note" type="text" value="${note}" style="padding:6px;border:1px solid #ddd;border-radius:8px"></td>
-      <td style="padding:8px;text-align:right"><button class="btn ghost del">Delete</button></td>
-    `;
-    cfBody.appendChild(tr);
-    renumber();
-    tr.querySelector('.del').onclick = ()=>{ tr.remove(); renumber(); recalc(); };
-    tr.querySelector('.t').oninput = recalc;
-    tr.querySelector('.cf').oninput = recalc;
-    tr.querySelector('.note').oninput = ()=>{};
-  }
-
-  function renumber(){
-    [...cfBody.querySelectorAll('tr')].forEach((tr,idx)=>{
-      tr.firstElementChild.textContent = idx+1;
+    // Load .txt file
+    $('file').addEventListener('change', async (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const txt = await f.text();
+      $('src').value = txt;
+      debouncedDecode();
     });
-  }
 
-  function recalc(){
-    const rows = tableCashflows();
-    if(rows.length===0){ showResults(NaN,NaN,NaN,0,0,NaN); return; }
+    // Helpers
+    const norm = s => (s||'').replace(/\s+/g,' ').trim();
+    const find = (re, text, i=1) => { re.lastIndex=0; const m = re.exec(text); return m ? norm(m[i]||'') : ''; }
+    const findAll = (re, text) => { const out=[]; let m; re.lastIndex=0; while((m=re.exec(text))){ out.push(norm(m[1]||m[0])); if(!re.global) break; } return out; }
 
-    // Gross vs Net: Net treats OID as retained by lender at t=0; Gross assumes full outflow of face at t=0
-    const mode = el('mode').value;
-    const freq = +el('freq').value;
-    // Annualize helper
-    const ann = r => (isFinite(r) ? (Math.pow(1+r, freq)-1) : NaN);
-
-    // Build periodic CFs (t in months); convert to "periods" based on chosen frequency for IRR math
-    const monthsToPeriods = m => m * (freq/12);
-    const cfs = rows.map(r=>({t: monthsToPeriods(+r.t), cf:+r.cf}));
-    cfs.sort((a,b)=>a.t-b.t);
-
-    // Detect OID/Exit from notes (best effort) to display totals
-    const totalIn = cfs.filter(x=>x.cf>0).reduce((s,x)=>s+x.cf,0);
-    const totalOut = cfs.filter(x=>x.cf<0).reduce((s,x)=>s+x.cf,0);
-    // Interest approx: positive inflows minus principal & exit if we can infer… keep simple:
-    const principalGuess = Math.abs(Math.min(...cfs.map(x=>x.cf))); // size of biggest outflow
-    const exitGuess = cfs.slice(-1)[0]?.note?.toLowerCase().includes('exit') ? (cfs.slice(-1)[0].cf - principalGuess) : 0;
-    const interestApprox = totalIn - Math.max(0,principalGuess) - Math.max(0,exitGuess);
-
-    // Gross IRR: adjust first CF to full funding if first row is negative net of OID (note contains 'OID')
-    let grossCfs = JSON.parse(JSON.stringify(cfs));
-    const first = grossCfs[0];
-    if(first && first.note && first.note.toLowerCase().includes('oid')){
-      // recover implied face by adding OID back
-      const m = first.note.match(/oid .*?=\s*([0-9,.\-]+)/i);
-      if(m){ const oidVal = parseFloat(m[1].replace(/,/g,'')); if(isFinite(oidVal)) grossCfs[0].cf = first.cf - oidVal; }
+    function moneyNumStrict(s){
+      if(!s) return '';
+      const m = (s+'').replace(/[, ]/g,'').match(/-?\d+(?:\.\d+)?/);
+      return m ? Number(m[0]) : '';
     }
-    const irrP = xirrPeriodic(cfs);
-    const irrGrossP = xirrPeriodic(grossCfs);
+    function moneyWithUnits(s){
+      if(!s) return '';
+      const str = (s+'').toLowerCase().replace(/[, ]/g,'');
+      const m = str.match(/-?\d+(?:\.\d+)?/);
+      if(!m) return '';
+      let n = Number(m[0]);
+      if(/bn|b(?=\D|$)/.test(str)) n *= 1e9;
+      else if(/mm|m(?=\D|$)/.test(str)) n *= 1e6;
+      else if(/k(?=\D|$)/.test(str)) n *= 1e3;
+      return n;
+    }
+    const pctNum = s => { if(!s) return ''; const m=(s+'').match(/-?\d+(?:\.\d+)?/); return m ? Number(m[0]) : ''; };
 
-    const irrAnn = ann(irrP);
-    const irrAnnGross = ann(irrGrossP);
-    const moic = totalIn / Math.abs(totalOut || 1);
+    function decode(){
+      const raw = $('src').value || '';
+      const text = raw.replace(/\u00A0/g,' ').replace(/[\r]/g,''); // normalize NBSP & CR
+      if(!text){ alert('Paste agreement text or upload a .txt first.'); return; }
 
-    // Payback month: earliest t where cumulative >= 0
-    let cum = totalOut; // negative
-    let payback = NaN;
-    for(const r of cfs){
-      cum += r.cf;
-      if(cum>=0){ payback = Math.round(r.t*(12/freq)); break; }
+      // --- Parties / Header ---
+      $('borrower').value =
+        find(/(?:Borrower|Issuer|Company)\s*[:\-]\s*([^\n;]+)/i, text) ||
+        find(/This\s+(?:CREDIT|LOAN)\s+AGREEMENT[\s\S]*?by\s+and\s+between\s+(.+?)(?:,|\sand)/i, text);
+
+      $('guarantors').value =
+        find(/(?:Guarantors?)\s*[:\-]\s*([^\n;]+)/i, text) ||
+        find(/guarantors?,\s*including\s*(.+?)\./i, text);
+
+      $('agent').value =
+        find(/(?:Administrative\s+Agent|Agent)\s*[:\-]\s*([^\n;]+)/i, text) ||
+        find(/Administrative\s+Agent:\s*([^\n]+)/i, text);
+
+      $('facility').value =
+        find(/(?:Facility|Loan\s+Type)\s*[:\-]\s*([^\n;]+)/i, text) ||
+        find(/(Term Loan|Unitranche|Revolver|RCF|Delayed Draw|Mezzanine)/i, text);
+
+      // Principal & Maturity
+      const principal =
+        find(/(?:Principal Amount|Commitments?)\s*[:\-]\s*\$?([\d,\.]+)/i, text) ||
+        find(/\$([\d,][\d,\.]+)\s*(?:Term\s*Loan|Facility)/i, text);
+      $('principal').value = principal ? moneyNumStrict(principal) : '';
+
+      $('maturity').value  =
+        find(/Maturity\s*(?:Date)?\s*[:\-]\s*([A-Za-z]{3,}\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i, text) ||
+        find(/scheduled\s+maturity\s+date\s+of\s+([A-Za-z0-9 ,\-\/]+)/i, text);
+
+      // Rate / Spread / Floor
+      $('baseRate').value = find(/(SOFR|Term SOFR|LIBOR|Prime|Base Rate)/i, text);
+
+      const spread1 = find(/(?:Applicable Margin|Spread)\s*[:\-]?\s*(\d{1,4}(?:\.\d+)?)\s*(?:bps|basis\s*points|bp)/i, text);
+      const spread2 = find(/(?:SOFR|LIBOR|Base Rate)\s*\+\s*(\d{1,4})\s*(?:bp|bps|basis)/i, text);
+      $('spreadBps').value = spread1 ? Number(spread1) : (spread2 ? Number(spread2) : '');
+      if(!$('spreadBps').value){
+        const spreadPct = find(/(?:margin|spread)\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i, text);
+        if(spreadPct) $('spreadBps').value = Math.round(Number(spreadPct)*100); // % → bps
+      }
+
+      const floor = find(/(?:Rate )?Floor\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i, text);
+      $('floorPct').value = floor ? pctNum(floor) : '';
+
+      // Fees
+      $('oidPct').value     = pctNum(find(/(?:OID|Original Issue Discount)\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i, text));
+      $('upfrontPct').value = pctNum(find(/(?:Upfront Fee|Arrangement Fee)\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i, text));
+      $('exitPct').value    = pctNum(find(/(?:Exit Fee|Prepayment Premium)\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i, text));
+
+      // Collateral / Guarantees
+      $('collateral').value =
+        find(/(?:Collateral|Security)\s*[:\-]\s*([\s\S]{0,500})/i, text) ||
+        find(/granted\s+a\s+security\s+interest\s+in\s+([\s\S]{0,400})\./i, text);
+
+      $('guarantees').value =
+        find(/(?:Guarantees?)\s*[:\-]\s*([\s\S]{0,500})/i, text) ||
+        find(/joint\s+and\s+several\s+guarantee\s+by\s+([\s\S]{0,400})\./i, text);
+
+      // Maintenance covenants
+      $('netLev').value = pctNum(find(/Net\s+Leverage(?:\s+Ratio)?\s*(?:may\s+not\s+exceed|≤|not\s+to\s+exceed|max)\s*([0-9]+(?:\.[0-9]+)?)/i, text));
+      $('senLev').value = pctNum(find(/(?:Senior|First\s*Lien)\s+Leverage(?:\s+Ratio)?\s*(?:may\s+not\s+exceed|≤|not\s+to\s+exceed|max)\s*([0-9]+(?:\.[0-9]+)?)/i, text));
+      $('icr').value    = pctNum(find(/Interest\s+Coverage(?:\s+Ratio)?\s*(?:must\s+be\s+at\s+least|≥|not\s+less\s+than|min)\s*([0-9]+(?:\.[0-9]+)?)/i, text));
+      $('fccr').value   = pctNum(find(/Fixed\s*Charge\s*Coverage(?:\s+Ratio)?\s*(?:must\s+be\s+at\s+least|≥|not\s+less\s+than|min)\s*([0-9]+(?:\.[0-9]+)?)/i, text));
+      const liq = find(/Minimum\s+Liquidity\s*(?:must\s+be\s+at\s+least|≥|not\s+less\s+than|min|:)\s*\$?\s*([0-9,\.]+(?:\s*(?:mm|m|million|bn|b|k))?)/i, text);
+      $('liqMin').value = liq ? moneyWithUnits(liq) : '';
+
+      // Baskets (best-effort)
+      $('debtB').value  =
+        find(/(?:Debt\s+Basket|Permitted\s+Debt)[\s\S]{0,40}?\$?([\d,\.]+\s*(?:mm|m|million|bn|b|k)?)/i, text) ||
+        find(/incurrence\s+of\s+additional\s+debt[\s\S]{0,40}?\$?([\d,\.]+\s*(?:mm|m|million|bn|b|k)?)/i, text);
+
+      $('liensB').value =
+        find(/(?:Liens\s+Basket|Permitted\s+Liens)[\s\S]{0,40}?\$?([\d,\.]+\s*(?:mm|m|million|bn|b|k)?)/i, text);
+
+      $('invB').value   =
+        find(/(?:Investment\s+Basket|Permitted\s+Investments)[\s\S]{0,40}?\$?([\d,\.]+\s*(?:mm|m|million|bn|b|k)?)/i, text);
+
+      $('rpB').value    =
+        find(/(?:Restricted\s+Payments|Dividends)[\s\S]{0,40}?\$?([\d,\.]+\s*(?:mm|m|million|bn|b|k)?)/i, text);
+
+      // Reporting & EoD
+      $('reporting').value = find(/(monthly|quarterly|annual)\s+(?:financial\s+statements|reporting)/i, text);
+      $('auditDue').value  = find(/audited\s+financial\s+statements[\s\S]{0,40}?due\s+within\s+([0-9]{2,3})\s+days/i, text) || '';
+      $('ccDue').value     = find(/compliance\s+certificate[\s\S]{0,40}?due\s+within\s+([0-9]{1,3})\s+days/i, text) || '';
+
+      const eods = findAll(/Events?\s+of\s+Default[\s\S]*?:(.*?)(?:Remedies|Section|\n\n)/gi, text);
+      $('eod').value       = (eods[0] || '').slice(0, 1000);
+
+      buildSummary();
     }
 
-    showResults(irrAnn, irrAnnGross, moic, interestApprox, Math.max(0,totalIn - (principalGuess + interestApprox)), payback);
-  }
+    function buildSummary(){
+      const parts = [];
+      if(g('borrower')) parts.push(g('borrower'));
+      if(g('facility')) parts.push(g('facility'));
+      if(g('principal')) parts.push('$'+Number(g('principal')).toLocaleString());
+      if(g('maturity')) parts.push('maturity '+g('maturity'));
+      const hdr = parts.join(' • ');
 
-  function showResults(irr, irrG, moic, totInt, totFees, payback){
-    el('irrNet').textContent = isFinite(irr)? (irr*100).toFixed(2)+'%':'–';
-    el('irrGross').textContent = isFinite(irrG)? (irrG*100).toFixed(2)+'%':'–';
-    el('moic').textContent = isFinite(moic)? moic.toFixed(3):'–';
-    el('totInt').textContent = isFinite(totInt)? '$'+fmt(totInt):'–';
-    el('totFees').textContent = isFinite(totFees)? '$'+fmt(totFees):'–';
-    el('payback').textContent = isFinite(payback)? payback+' mo':'–';
-  }
+      const rateBits = [];
+      if(g('baseRate')) rateBits.push(g('baseRate'));
+      if(g('spreadBps')) rateBits.push('+ '+g('spreadBps')+' bps');
+      if(g('floorPct')) rateBits.push('floor '+g('floorPct')+'%');
 
-  // CSV export
-  function downloadCSV(){
-    const rows = tableCashflows();
-    if(rows.length===0) return;
-    const lines = [['Index','Month','CashFlow','Note']].concat(rows.map((r,i)=>[i+1,r.t,r.cf,r.note]));
-    const csv = lines.map(r=>r.map(x=>{
-      const s = (''+x).replace(/"/g,'""');
-      return /[",\n]/.test(s)? `"${s}"`: s;
-    }).join(',')).join('\n');
-    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'irr_cashflows.csv';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
+      const fees = ['oidPct','upfrontPct','exitPct']
+        .map(k=> g(k) ? (k.replace('Pct','').toUpperCase()+' '+g(k)+'%') : '')
+        .filter(Boolean).join(', ');
 
-  // UI wiring
-  el('build').onclick = ()=> {
-    if(el('mode').value==='standard'){ rebuildStandard(); }
-    else { if(cfBody.children.length===0){ addRow(0,-1000000,'Funding'); } recalc(); }
-  };
-  el('addRow').onclick = ()=> addRow();
-  el('download').onclick = downloadCSV;
+      const covBits = [];
+      if(g('netLev')) covBits.push('Net Lev ≤ '+g('netLev')+'x');
+      if(g('senLev')) covBits.push('Senior Lev ≤ '+g('senLev')+'x');
+      if(g('icr'))    covBits.push('ICR ≥ '+g('icr')+'x');
+      if(g('fccr'))   covBits.push('FCCR ≥ '+g('fccr')+'x');
+      if(g('liqMin')) covBits.push('Liquidity ≥ $'+Number(g('liqMin')).toLocaleString());
 
-  el('mode').onchange = ()=>{
-    const std = document.querySelectorAll('.std');
-    std.forEach(n=> n.style.display = (el('mode').value==='standard' ? '' : 'none'));
-    el('build').click();
-  };
+      $('summary').value =
+        `${hdr}.
+Rate: ${rateBits.join(' ')}${fees ? ' • Fees: '+fees : ''}.
+Covenants: ${covBits.join('; ') || '—'}.
+Collateral: ${g('collateral') || '—'}. Guarantees: ${g('guarantees') || '—'}.
+Reporting: ${g('reporting') || '—'}; CC due ${g('ccDue') || '—'}; Audited FS due ${g('auditDue') || '—'}.
+(Generated by Credit Decoder MVP — edit any field above if needed.)`;
+    }
 
-  // initial
-  el('build').click();
-})();
-</script>
+    function toJson(){
+      return {
+        header:{
+          borrower: g('borrower'), guarantors: g('guarantors'), agent: g('agent'),
+          facility: g('facility'), principal: g('principal'), maturity: g('maturity'),
+          baseRate: g('baseRate'), spreadBps: g('spreadBps'), floorPct: g('floorPct'),
+          fees:{ oidPct:g('oidPct'), upfrontPct:g('upfrontPct'), exitPct:g('exitPct') }
+        },
+        security:{ collateral:g('collateral'), guarantees:g('guarantees') },
+        maintenance:{ netLev:g('netLev'), senLev:g('senLev'), icr:g('icr'), fccr:g('fccr'), liqMin:g('liqMin') },
+        baskets:{ debt:g('debtB'), liens:g('liensB'), investments:g('invB'), restrictedPayments:g('rpB') },
+        reporting:{ cadence:g('reporting'), auditedDue:g('auditDue'), ccDue:g('ccDue') },
+        defaults: g('eod'),
+        summary: g('summary')
+      };
+    }
+
+    function toCovenantJson(){
+      return {
+        limits:{
+          netMax: g('netLev') ? Number(g('netLev')) : null,
+          senMax: g('senLev') ? Number(g('senLev')) : null,
+          icrMin: g('icr')    ? Number(g('icr'))    : null,
+          fccrMin:g('fccr')   ? Number(g('fccr'))   : null,
+          liqMin: g('liqMin') ? Number(g('liqMin')) : null
+        },
+        periods:[]
+      };
+    }
+
+    function downloadBlob(name, text, type){
+      const blob = new Blob([text],{type}); const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+    }
+
+    $('parse').onclick = decode;
+
+    // Debounced auto-decode when pasting
+    let t; const debouncedDecode = ()=>{ clearTimeout(t); t=setTimeout(()=>{ if(($('src').value||'').trim()) decode(); }, 350); };
+    $('src').addEventListener('input', debouncedDecode);
+
+    $('copySummary').onclick = async ()=>{
+      try{ await navigator.clipboard.writeText($('summary').value||''); alert('Summary copied.'); }catch{ alert('Copy failed'); }
+    };
+
+    $('downloadJson').onclick = ()=> downloadBlob('credit_decoder.json', JSON.stringify(toJson(), null, 2), 'application/json');
+
+    $('downloadCsv').onclick = ()=>{
+      const j = toJson();
+      const rows = [
+        ['Borrower', j.header.borrower],
+        ['Guarantors', j.header.guarantors],
+        ['Agent', j.header.agent],
+        ['Facility', j.header.facility],
+        ['Principal', j.header.principal],
+        ['Maturity', j.header.maturity],
+        ['BaseRate', j.header.baseRate],
+        ['SpreadBps', j.header.spreadBps],
+        ['FloorPct', j.header.floorPct],
+        ['OIDPct', j.header.fees.oidPct],
+        ['UpfrontPct', j.header.fees.upfrontPct],
+        ['ExitPct', j.header.fees.exitPct],
+        ['Collateral', j.security.collateral],
+        ['Guarantees', j.security.guarantees],
+        ['NetLevMax', j.maintenance.netLev],
+        ['SeniorLevMax', j.maintenance.senLev],
+        ['ICRMin', j.maintenance.icr],
+        ['FCCRMin', j.maintenance.fccr],
+        ['LiquidityMin', j.maintenance.liqMin],
+        ['DebtBasket', j.baskets.debt],
+        ['LiensBasket', j.baskets.liens],
+        ['InvestmentsBasket', j.baskets.investments],
+        ['RestrictedPayments', j.baskets.restrictedPayments],
+        ['ReportingCadence', j.reporting.cadence],
+        ['AuditedDue', j.reporting.auditedDue],
+        ['CCDue', j.reporting.ccDue],
+        ['EventsOfDefault', j.defaults],
+        ['Summary', j.summary]
+      ];
+      const csv = rows.map(r=>r.map(x=>{
+        const s=(''+(x??'')).replace(/"/g,'""');
+        return /[",\n]/.test(s)? `"${s}"` : s;
+      }).join(',')).join('\n');
+      downloadBlob('credit_decoder.csv', csv, 'text/csv');
+    };
+
+    $('downloadCovJson').onclick = ()=> downloadBlob(
+      'covenant_limits_from_decoder.json',
+      JSON.stringify(toCovenantJson(), null, 2),
+      'application/json'
+    );
+
+    // Live summary refresh on edits
+    [
+      'borrower','guarantors','agent','facility','principal','maturity',
+      'baseRate','spreadBps','floorPct','oidPct','upfrontPct','exitPct',
+      'collateral','guarantees','netLev','senLev','icr','fccr','liqMin',
+      'debtB','liensB','invB','rpB','reporting','auditDue','ccDue','eod'
+    ].forEach(id=> $(id).addEventListener('input', buildSummary));
+  })();
+  </script>
+</body>
+</html>
