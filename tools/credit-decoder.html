@@ -12,48 +12,38 @@
     .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
     .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
     .tool-tab.active{background:#111;color:#fff;border-color:#111}
-
-    /* Decoder scoped styles */
-    #decoder .cardish{background:#fff;border-radius:12px;border:1px solid #e8e8e8;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:16px;margin:12px 0}
+  
+    /* -------- Credit Decoder layout + fixes -------- */
+    /* Make width:100% include padding/border so inputs never overflow */
+    #decoder, #decoder * { box-sizing: border-box; }
+  
+    #decoder .cardish{background:#fff;border-radius:12px;border:1px solid #e8e8e8;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:16px;margin:12px 0;overflow:hidden}
     #decoder .hint{margin:8px 2px 0;color:#666}
     #decoder .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
     #decoder .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
     #decoder .btn.warn{background:#10b981}
-    #decoder .ctl{width:100%;padding:10px 11px;border:1px solid #d9d9d9;border-radius:10px;font-size:14px;background:#fff}
+  
     #decoder label{display:flex;flex-direction:column;gap:6px;font-size:.9rem;color:#444}
-    #decoder .grid2{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:12px}
-    #decoder .formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    #decoder .h{margin:0 0 10px;font-size:1rem;font-weight:700;color:#222}
+    #decoder .ctl{width:100%;max-width:100%;padding:10px 11px;border:1px solid #d9d9d9;border-radius:10px;font-size:14px;background:#fff;margin:0}
     #decoder textarea#src{min-height:168px}
     #decoder textarea{resize:vertical}
+  
+    /* Two-column cards */
+    #decoder .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    #decoder .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    #decoder .h{margin:0 0 10px;font-size:1rem;font-weight:700;color:#222}
+  
+    /* Top row (textarea | file | buttons) */
     #decoder .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
-    #decoder .row > * { flex:1 1 0; min-width:0; }
+    #decoder .row > *{flex:1 1 0;min-width:0}  /* allow shrinking without overflow */
+    #decoder input[type="file"].ctl{max-width:100%}
+  
+    /* Responsive tweaks */
     @media (max-width:900px){
       #decoder .grid2{grid-template-columns:1fr}
       #decoder .formgrid{grid-template-columns:1fr}
       #decoder .row > *{flex:1 1 100%}
-
-    /* --- Fix input overflow/overlap in Credit Decoder --- */
-    #decoder, #decoder * { box-sizing: border-box; }             /* 100% includes padding/border */
-    #decoder .cardish { overflow: hidden; }                       /* avoid visual bleed on corners */
-  
-    /* Make grid columns shrink correctly on smaller screens */
-    #decoder .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    #decoder .formgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-  
-    /* Inputs/textareas should never exceed their container */
-    #decoder .ctl { width:100%; max-width:100%; margin:0; }
-    #decoder textarea.ctl { width:100%; max-width:100%; }
-  
-    /* Flex row at the top: allow children to shrink, not overflow */
-    #decoder .row > * { min-width:0; }
-  
-    /* File input can be wide—cap it on narrow columns */
-    #decoder input[type="file"].ctl { max-width:100%; }
-  
-    /* Optional: slightly smaller padding if space is tight */
-    @media (max-width:900px){
-      #decoder .ctl { padding:9px 10px; }
+      #decoder .ctl{padding:9px 10px}
     }
   </style>
 </head>
