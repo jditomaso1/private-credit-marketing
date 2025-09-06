@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Credit Risk Management 101 — Covenants, Defaults, Recoveries, Monitoring Playbooks</title>
+  <meta name="description" content="A practitioner’s intro to credit risk management: covenant design, early-warning indicators, defaults, recoveries, and practical monitoring playbooks." />
+  <link rel="canonical" href="https://private-credit.ai/credit-risk-management-101" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Credit Risk Management 101 — Covenants, Defaults, Recoveries, Monitoring Playbooks" />
+  <meta property="og:description" content="Covenant design, early warning signals, default handling, recovery analysis, and hands-on monitoring playbooks for private credit." />
+  <meta property="og:url" content="https://private-credit.ai/credit-risk-management-101" />
+  <meta property="og:image" content="https://private-credit.ai/img/social/credit-risk-management-101.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Credit Risk Management 101 — Covenants, Defaults, Recoveries, Monitoring Playbooks" />
+  <meta name="twitter:description" content="Covenant design, early warning signals, default handling, recovery analysis, and hands-on monitoring playbooks for private credit." />
+  <meta name="twitter:image" content="https://private-credit.ai/img/social/credit-risk-management-101.jpg" />
+
+  <!-- Styles (same system as other guides) -->
+  <style>
+    :root { --maxw: 900px; --fg: #111; --muted: #555; --bg: #fff; --accent: #0f766e; --border:#e6e6e6;}
+    html, body { margin:0; padding:0; background: var(--bg); color: var(--fg); font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 24px 20px 80px; }
+    header.article-header { margin: 12px 0 28px; }
+    header .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .02em; text-transform: uppercase; font-size: 12px; }
+    h1 { font-size: 36px; line-height: 1.2; margin: 8px 0 12px; }
+    .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .lede { font-size: 18px; line-height: 1.6; margin: 10px 0 24px; color:#222; }
+    h2 { font-size: 24px; margin: 28px 0 12px; }
+    h3 { font-size: 18px; margin: 22px 0 10px; }
+    p { line-height: 1.7; margin: 10px 0; }
+    ul { margin: 8px 0 16px 20px; }
+    li { margin: 6px 0; }
+    .callout { border: 1px solid var(--border); border-left: 4px solid var(--accent); background:#f8fbfa; padding: 14px 16px; border-radius: 8px; margin: 18px 0; }
+    .toc { border: 1px dashed var(--border); padding: 12px 16px; border-radius: 8px; background:#fcfcfc; }
+    .divider { height:1px; background:var(--border); margin: 24px 0; }
+    .muted { color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .tags { margin-top: 18px; font-size: 13px; }
+    .tags span { background:#eef6f5; color:#0f4b45; border:1px solid #cde8e4; border-radius:999px; padding:4px 10px; margin-right:6px; }
+    .cta { display:inline-block; margin: 8px 0 20px; padding:10px 14px; border:1px solid var(--accent); border-radius:10px; text-decoration:none; }
+  </style>
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Credit Risk Management 101",
+    "description": "A practitioner’s intro to credit risk management: covenant design, early-warning indicators, defaults, recoveries, and practical monitoring playbooks.",
+    "author": { "@type": "Person", "name": "Joseph DiTomaso" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Private Credit AI",
+      "logo": { "@type": "ImageObject", "url": "https://private-credit.ai/img/logo.png" }
+    },
+    "datePublished": "2025-09-06",
+    "dateModified": "2025-09-06",
+    "mainEntityOfPage": "https://private-credit.ai/credit-risk-management-101",
+    "image": ["https://private-credit.ai/img/social/credit-risk-management-101.jpg"]
+  }
+  </script>
+</head>
+<body>
+  <main class="container">
+    <header class="article-header">
+      <div class="eyebrow">Risk</div>
+      <h1>Credit Risk Management 101</h1>
+      <div class="meta">By Joseph DiTomaso • Updated Sep 6, 2025 • 8–11 min read</div>
+      <p class="lede">
+        The job isn’t winning the term sheet; it’s protecting principal and keeping cash flowing. This primer
+        covers <strong>covenant design</strong>, <strong>early-warning indicators</strong>, <strong>defaults & recoveries</strong>,
+        and <strong>practical monitoring playbooks</strong> you can actually run.
+      </p>
+
+      <a class="cta" href="/knowledge/guides/">← Back to Guides</a>
+
+      <div class="toc">
+        <strong>In this guide:</strong>
+        <ul>
+          <li><a href="#overview">Risk Management Overview</a></li>
+          <li><a href="#covenants">Covenant Design</a></li>
+          <li><a href="#signals">Early-Warning Indicators</a></li>
+          <li><a href="#defaults">Defaults & Recoveries</a></li>
+          <li><a href="#monitoring">Monitoring Playbooks</a></li>
+          <li><a href="#governance">Reporting & Governance</a></li>
+          <li><a href="#tools">Tools & Automation</a></li>
+          <li><a href="#mistakes">Common Mistakes</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section id="overview">
+      <h2>Risk Management Overview</h2>
+      <p>
+        Credit risk management is the discipline of <strong>preventing loss</strong> and <strong>maximizing recoveries</strong>.
+        It starts at underwriting but lives in <em>monitoring and action</em>: codify expectations in documents, track reality,
+        escalate quickly, and negotiate from leverage.
+      </p>
+    </section>
+
+    <section id="covenants">
+      <h2>Covenant Design</h2>
+      <ul>
+        <li><strong>Financial covenants:</strong> leverage, interest coverage, FCCR; sensible cushions and step-downs.</li>
+        <li><strong>Negative covenants:</strong> debt baskets, liens, RPs, investments, asset sales, prepayments.</li>
+        <li><strong>Builder baskets:</strong> calibrated to FCF; tight definitions to avoid leakage.</li>
+        <li><strong>Definitions matter:</strong> EBITDA, capex, extraordinary items; MFN and portability guardrails.</li>
+        <li><strong>Information rights:</strong> monthly/quarterly KPI packs, auditor letters, board/observer rights.</li>
+      </ul>
+      <div class="callout"><strong>Rule:</strong> Write covenants to catch drift early, not to punish collapse late.</div>
+    </section>
+
+    <section id="signals">
+      <h2>Early-Warning Indicators</h2>
+      <ul>
+        <li><strong>P&L/CF:</strong> margin compression, negative mix, cash burn, SBC creep replacing cash comp.</li>
+        <li><strong>Working capital:</strong> AR aging stretch, inventory weeks rising, AP past due, cash traps.</li>
+        <li><strong>Operational:</strong> customer churn, backlog slippage, quality issues, key-person risk.</      li>
+        <li><strong>Covenant headroom:</strong> shrinking cushions vs plan; recurring “one-time” add-backs.</li>
+        <li><strong>Sponsor behavior:</strong> delayed reporting, aggressive add-backs, reluctance to fund DDAs.</li>
+      </ul>
+    </section>
+
+    <section id="defaults">
+      <h2>Defaults & Recoveries</h2>
+      <ul>
+        <li><strong>Default triggers:</strong> payment, covenant, cross-default, MAC, reporting failures.</li>
+        <li><strong>Recovery levers:</strong> collateral enforcement, equity cures, pay-to-play waivers, DIP options.</li>
+        <li><strong>Negotiation posture:</strong> milestone-based forbearance; give-gets tied to liquidity and KPIs.</li>
+        <li><strong>Waterfall modeling:</strong> breakpoints for first/second liens; sensitivity to sale proceeds.</li>
+      </ul>
+      <p class="muted">Aim for going-concern outcomes; liquidation is usually worst economics.</p>
+    </section>
+
+    <section id="monitoring">
+      <h2>Monitoring Playbooks</h2>
+      <ul>
+        <li><strong>Baseline:</strong> quarterly compliance certificates, KPI dashboards, variance-to-plan analysis.</li>
+        <li><strong>Yellow flag:</strong> tighten reporting cadence, add 13-week cash flow, covenant reset planning.</li>
+        <li><strong>Orange flag:</strong> independent business review, advisor engagement, liquidity bridge, amendment terms.</li>
+        <li><strong>Red flag:</strong> standstill/forbearance, collateral actions, interim funding with priming protections.</li>
+      </ul>
+      <div class="callout"><strong>Playbooks are pre-written.</strong> You shouldn’t be inventing steps mid-crisis.</div>
+    </section>
+
+    <section id="governance">
+      <h2>Reporting & Governance</h2>
+      <ul>
+        <li><strong>Cadence:</strong> monthly ops packs; quarterly board-level risk reviews.</li>
+        <li><strong>Heatmaps:</strong> traffic-light borrowers by leverage, coverage, ratings drift, covenant runway.</li>
+        <li><strong>Escalation:</strong> define thresholds for IC notification and amendment authorization.</li>
+        <li><strong>Documentation:</strong> decision logs; amendment/waiver history with rationale.</li>
+      </ul>
+    </section>
+
+    <section id="tools">
+      <h2>Tools & Automation</h2>
+      <ul>
+        <li><strong>Certificate ingestion:</strong> auto-parse covenants, compute headroom, attach source docs.</li>
+        <li><strong>Alerting:</strong> threshold-based notifications on KPIs, covenants, and liquidity drift.</li>
+        <li><strong>Portfolio view:</strong> roll-ups by sector, sponsor, risk band, and ratings drift.</li>
+        <li><strong>Workflow:</strong> ticketing for amendments/waivers with checklists and approvals.</li>
+      </ul>
+      <p class="muted">Yes, this is exactly where your Orion modules shine.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>Common Mistakes</h2>
+      <ul>
+        <li>Loose definitions that gut covenants over time.</li>
+        <li>Ignoring working-capital signals until cash is gone.</li>
+        <li>Underestimating sponsor incentives and timing pressure.</li>
+        <li>Reporting that tracks too little, too slowly.</li>
+        <li>Negotiating amendments without hard milestones and give-gets.</li>
+      </ul>
+    </section>
+
+    <section id="conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        Credit risk management is repeatable process, not art. Codify expectations, measure reality, escalate early,
+        and negotiate from strength. Build the playbooks before you need them.
+      </p>
+
+      <div class="divider"></div>
+      <div class="tags">
+        <span>credit risk</span>
+        <span>covenants</span>
+        <span>defaults</span>
+        <span>recoveries</span>
+        <span>monitoring</span>
+        <span>private credit</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
