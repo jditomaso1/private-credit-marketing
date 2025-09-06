@@ -1,1 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <title>Knowledge Hub | Private Credit AI</title>
+  <meta name="description" content="Explore Private Credit AI’s Knowledge Hub: long-form guides, weekly insights, and downloadable playbooks for private credit professionals." />
+  <link rel="canonical" href="https://private-credit.ai/knowledge" />
+
+  <!-- Favicons / Fonts -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Knowledge Hub | Private Credit AI" />
+  <meta property="og:description" content="Long-form guides, weekly insights, and downloadable resources for private credit." />
+  <meta property="og:url" content="https://private-credit.ai/knowledge" />
+  <meta property="og:image" content="https://private-credit.ai/img/social/knowledge-hub.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root { --maxw: 1100px; --fg:#111; --muted:#666; --bg:#fff; --accent:#0f766e; --border:#eaeaea; }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    .container{max-width:var(--maxw);margin:0 auto;padding:28px 20px 80px;}
+    header.hero{padding:18px 0 10px;}
+    .eyebrow{color:var(--accent);font-weight:600;letter-spacing:.02em;text-transform:uppercase;font-size:12px;}
+    h1{font-size:38px;line-height:1.15;margin:8px 0 10px;}
+    .lede{font-size:18px;color:#222;max-width:800px;line-height:1.6;}
+    .searchbar{margin:22px 0 8px;display:flex;gap:10px}
+    .searchbar input{flex:1;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px}
+    .searchbar button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px 16px;font-weight:600;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0 10px;}
+    .card{border:1px solid var(--border);border-radius:14px;padding:18px;background:#fff;transition:box-shadow .2s, transform .05s;}
+    .card:hover{box-shadow:0 6px 26px rgba(0,0,0,.06);transform:translateY(-1px)}
+    .card .eyebrow{font-size:11px}
+    .card h3{font-size:20px;margin:6px 0 8px}
+    .card p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
+    .card a{display:inline-block;margin-top:12px;color:var(--accent);text-decoration:none;font-weight:600}
+    .section{margin-top:34px}
+    h2{font-size:24px;margin:8px 0 6px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+    .tag{font-size:12px;border:1px solid #cde8e4;background:#eef6f5;color:#0f4b45;border-radius:999px;padding:6px 10px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media (max-width:900px){.row{grid-template-columns:1fr}}
+    .list{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .item{display:flex;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid var(--border)}
+    .item:first-child{border-top:none}
+    .item a{color:var(--accent);text-decoration:none;font-weight:600}
+    .muted{color:var(--muted)}
+    .cta{margin-top:18px;border:1px dashed var(--border);border-radius:12px;padding:16px}
+  </style>
+
+  <!-- JSON-LD WebPage schema -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name":"Knowledge Hub | Private Credit AI",
+    "description":"Long-form guides, weekly insights, and downloadable resources for private credit.",
+    "url":"https://private-credit.ai/knowledge",
+    "publisher":{"@type":"Organization","name":"Private Credit AI"}
+  }
+  </script>
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <div class="eyebrow">Knowledge Hub</div>
+      <h1>Guides, Insights & Resources for Private Credit</h1>
+      <p class="lede">Your front door to Private Credit AI’s media layer — <strong>evergreen guides</strong> for fundamentals, <strong>weekly insights</strong> for what’s moving now, and <strong>downloadable playbooks</strong> to execute.</p>
+      <div class="searchbar">
+        <input type="search" placeholder="Search topics: direct lending, CLOs, covenants, AI…" aria-label="Search Knowledge Hub">
+        <button type="button">Search</button>
+      </div>
+      <div class="tags">
+        <span class="tag">Private Credit</span>
+        <span class="tag">Direct Lending</span>
+        <span class="tag">CLOs</span>
+        <span class="tag">BDCs</span>
+        <span class="tag">Mezzanine</span>
+        <span class="tag">AI in Credit</span>
+        <span class="tag">Compliance</span>
+      </div>
+    </header>
+
+    <!-- Primary tiles -->
+    <section class="grid">
+      <div class="card">
+        <div class="eyebrow">Evergreen</div>
+        <h3>Guides</h3>
+        <p>Deep dives (2,000–3,000 words) on core private-credit topics. SEO pillars that link out to insights and downloads.</p>
+        <a href="/guides/">Browse Guides →</a>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Weekly</div>
+        <h3>Insights</h3>
+        <p>Short, timely commentary (800–1,200 words) on spreads, flows, issuance, and tech adoption.</p>
+        <a href="/insights/">Read Insights →</a>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Downloads</div>
+        <h3>Resources</h3>
+        <p>Playbooks, toolkits, and PDFs you can use: covenant checklists, monitoring templates, strategy decks.</p>
+        <a href="/resources/">Get Resources →</a>
+      </div>
+    </section>
+
+    <!-- Featured content -->
+    <section class="section">
+      <h2>Featured this week</h2>
+      <div class="row">
+        <div class="card">
+          <div class="eyebrow">Guide</div>
+          <h3><a href="/guides/what-is-private-credit.html">What Is Private Credit? A Complete Guide to the $2T+ Market</a></h3>
+          <p class="muted">Private credit market size, strategies (direct lending, CLOs, mezz), risks, and 2030 outlook.</p>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Insight</div>
+          <h3><a href="/insights/private-credit-market-q3-2025.html">Q3 2025: Spreads, Issuance & CLO Pricing</a></h3>
+          <p class="muted">What changed this quarter and why it matters for managers and allocators.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest lists -->
+    <section class="section row">
+      <div>
+        <h2>Latest Guides</h2>
+        <div class="list">
+          <div class="item">
+            <a href="/guides/what-is-private-credit.html">What Is Private Credit?</a>
+            <span class="muted">Evergreen</span>
+          </div>
+          <div class="item">
+            <a href="/guides/clo-explained.html">CLOs Explained Simply</a>
+            <span class="muted">Evergreen</span>
+          </div>
+          <div class="item">
+            <a href="/guides/direct-lending-guide.html">Direct Lending: A Practitioner’s Guide</a>
+            <span class="muted">Evergreen</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>Latest Insights</h2>
+        <div class="list">
+          <div class="item">
+            <a href="/insights/private-credit-market-q3-2025.html">Private Credit Market: Q3 2025</a>
+            <span class="muted">3 min</span>
+          </div>
+          <div class="item">
+            <a href="/insights/fed-move-private-credit.html">Fed Move: What It Means for Spreads</a>
+            <span class="muted">4 min</span>
+          </div>
+          <div class="item">
+            <a href="/insights/ai-in-underwriting-2025.html">AI in Underwriting: Early Proof Points</a>
+            <span class="muted">5 min</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <strong>Want the playbooks?</strong>
+      <p class="muted">Download the Private Credit Playbook, AI in Credit Whitepaper, and the Deal Toolkit.</p>
+      <p><a href="/resources/">Visit Resources →</a></p>
+    </section>
+  </main>
+</body>
+</html>
