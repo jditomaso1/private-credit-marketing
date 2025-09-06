@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>AI in Credit Underwriting — Document Ingestion, Covenant Extraction, Anomaly Detection</title>
+  <meta name="description" content="Where AI adds real edge in credit underwriting: automated document ingestion, covenant extraction, anomaly detection, and portfolio-level insights." />
+  <link rel="canonical" href="https://private-credit.ai/ai-in-credit-underwriting" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI in Credit Underwriting" />
+  <meta property="og:description" content="Where AI adds real edge: document ingestion, covenant extraction, anomaly detection, and portfolio insights." />
+  <meta property="og:url" content="https://private-credit.ai/ai-in-credit-underwriting" />
+  <meta property="og:image" content="https://private-credit.ai/img/social/ai-in-credit-underwriting.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI in Credit Underwriting" />
+  <meta name="twitter:description" content="Where AI adds real edge: document ingestion, covenant extraction, anomaly detection, and portfolio insights." />
+  <meta name="twitter:image" content="https://private-credit.ai/img/social/ai-in-credit-underwriting.jpg" />
+
+  <!-- Styles -->
+  <style>
+    :root { --maxw: 900px; --fg: #111; --muted: #555; --bg: #fff; --accent: #0f766e; --border:#e6e6e6;}
+    html, body { margin:0; padding:0; background: var(--bg); color: var(--fg); font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 24px 20px 80px; }
+    header.article-header { margin: 12px 0 28px; }
+    header .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .02em; text-transform: uppercase; font-size: 12px; }
+    h1 { font-size: 36px; line-height: 1.2; margin: 8px 0 12px; }
+    .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .lede { font-size: 18px; line-height: 1.6; margin: 10px 0 24px; color:#222; }
+    h2 { font-size: 24px; margin: 28px 0 12px; }
+    h3 { font-size: 18px; margin: 22px 0 10px; }
+    p { line-height: 1.7; margin: 10px 0; }
+    ul { margin: 8px 0 16px 20px; }
+    li { margin: 6px 0; }
+    .callout { border: 1px solid var(--border); border-left: 4px solid var(--accent); background:#f8fbfa; padding: 14px 16px; border-radius: 8px; margin: 18px 0; }
+    .toc { border: 1px dashed var(--border); padding: 12px 16px; border-radius: 8px; background:#fcfcfc; }
+    .divider { height:1px; background:var(--border); margin: 24px 0; }
+    .muted { color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .tags { margin-top: 18px; font-size: 13px; }
+    .tags span { background:#eef6f5; color:#0f4b45; border:1px solid #cde8e4; border-radius:999px; padding:4px 10px; margin-right:6px; }
+    .cta { display:inline-block; margin: 8px 0 20px; padding:10px 14px; border:1px solid var(--accent); border-radius:10px; text-decoration:none; }
+  </style>
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "AI in Credit Underwriting",
+    "description": "Where AI adds real edge: document ingestion, covenant extraction, anomaly detection, and portfolio insights.",
+    "author": { "@type": "Person", "name": "Joseph DiTomaso" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Private Credit AI",
+      "logo": { "@type": "ImageObject", "url": "https://private-credit.ai/img/logo.png" }
+    },
+    "datePublished": "2025-09-06",
+    "dateModified": "2025-09-06",
+    "mainEntityOfPage": "https://private-credit.ai/ai-in-credit-underwriting",
+    "image": ["https://private-credit.ai/img/social/ai-in-credit-underwriting.jpg"]
+  }
+  </script>
+</head>
+<body>
+  <main class="container">
+    <header class="article-header">
+      <div class="eyebrow">AI</div>
+      <h1>AI in Credit Underwriting</h1>
+      <div class="meta">By Joseph DiTomaso • Updated Sep 6, 2025 • 7–10 min read</div>
+      <p class="lede">
+        Where does <strong>AI</strong> actually move the needle in credit underwriting?
+        Not fluffy chatbots, but hard-edge use cases: <strong>document ingestion</strong>,
+        <strong>covenant extraction</strong>, <strong>anomaly detection</strong>, and 
+        portfolio-level risk insights. Here’s what matters today—and what’s hype.
+      </p>
+
+      <a class="cta" href="/knowledge/guides/">← Back to Guides</a>
+
+      <div class="toc">
+        <strong>In this guide:</strong>
+        <ul>
+          <li><a href="#ingestion">Document Ingestion</a></li>
+          <li><a href="#covenants">Covenant Extraction</a></li>
+          <li><a href="#anomalies">Anomaly Detection</a></li>
+          <li><a href="#portfolio">Portfolio-Level Insights</a></li>
+          <li><a href="#limits">Limits & Challenges</a></li>
+          <li><a href="#future">The Future of AI in Credit</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section id="ingestion">
+      <h2>Document Ingestion</h2>
+      <p>
+        Underwriting deals means sifting through <strong>credit agreements, CIMs, 10-Qs, and models</strong>.
+        AI-driven ingestion parses and normalizes these at scale—turning 500-page PDFs into structured fields
+        like debt quantum, maturity, pricing, and covenants.
+      </p>
+      <div class="callout"><strong>Edge:</strong> Hours of analyst time compressed into minutes, with consistency across deals.</div>
+    </section>
+
+    <section id="covenants">
+      <h2>Covenant Extraction</h2>
+      <ul>
+        <li>Pulls leverage, coverage, and liquidity covenants directly from docs.</li>
+        <li>Normalizes across deals for portfolio comparability.</li>
+        <li>Flags carve-outs, baskets, and aggressive definitions.</li>
+        <li>Tracks headroom automatically once borrower data is ingested.</li>
+      </ul>
+    </section>
+
+    <section id="anomalies">
+      <h2>Anomaly Detection</h2>
+      <p>
+        AI models learn expected patterns across financials and KPIs, then flag
+        anomalies—unexpected margin erosion, sudden WC swings, or off-market covenant terms.
+      </p>
+      <ul>
+        <li><strong>Financial drift:</strong> EBITDA add-backs rising vs. history.</li>
+        <li><strong>Compliance:</strong> covenant breaches flagged automatically.</li>
+        <li><strong>Docs:</strong> unusual clauses or missing protections vs. peer set.</li>
+      </ul>
+    </section>
+
+    <section id="portfolio">
+      <h2>Portfolio-Level Insights</h2>
+      <p>
+        AI doesn’t just analyze single deals—it scales across the book. That means:
+      </p>
+      <ul>
+        <li>Roll-up dashboards by sector, sponsor, leverage, risk band.</li>
+        <li>Early-warning heatmaps across exposures.</li>
+        <li>Benchmarking terms against market averages.</li>
+      </ul>
+    </section>
+
+    <section id="limits">
+      <h2>Limits & Challenges</h2>
+      <ul>
+        <li>Garbage in, garbage out — messy borrower data still cripples outputs.</li>
+        <li>AI is <strong>assistive</strong>, not autonomous — human judgment is required.</li>
+        <li>Explainability and audit trails matter for ICs and regulators.</li>
+      </ul>
+    </section>
+
+    <section id="future">
+      <h2>The Future of AI in Credit</h2>
+      <p>
+        AI in credit underwriting will evolve from pilots to table stakes. The winners
+        will be firms who <strong>integrate AI into workflows</strong>, not bolt it on.
+        Expect tighter doc automation, real-time covenant monitoring, and predictive risk scoring.
+      </p>
+      <div class="divider"></div>
+      <div class="tags">
+        <span>AI in credit</span>
+        <span>credit underwriting</span>
+        <span>document ingestion</span>
+        <span>covenant extraction</span>
+        <span>anomaly detection</span>
+        <span>private credit</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
