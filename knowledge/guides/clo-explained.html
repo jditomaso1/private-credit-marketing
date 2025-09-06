@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>CLOs Explained Simply — Structure, Tranches, and Performance</title>
+  <meta name="description" content="A clear guide to CLOs: how they work, their tranche structure, who manages them, and what drives pricing and performance in the $1T+ market." />
+  <link rel="canonical" href="https://private-credit.ai/clo-explained" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+
+  <!-- Fonts (match your site) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="CLOs Explained Simply — Structure, Tranches, and Performance" />
+  <meta property="og:description" content="A clear guide to CLOs: how they work, their tranche structure, who manages them, and what drives pricing and performance in the $1T+ market." />
+  <meta property="og:url" content="https://private-credit.ai/clo-explained" />
+  <meta property="og:image" content="https://private-credit.ai/img/social/clo-explained.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CLOs Explained Simply — Structure, Tranches, and Performance" />
+  <meta name="twitter:description" content="A clear guide to CLOs: how they work, their tranche structure, who manages them, and what drives pricing and performance in the $1T+ market." />
+  <meta name="twitter:image" content="https://private-credit.ai/img/social/clo-explained.jpg" />
+
+  <!-- Styles -->
+  <style>
+    :root { --maxw: 900px; --fg: #111; --muted: #555; --bg: #fff; --accent: #0f766e; --border:#e6e6e6;}
+    html, body { margin:0; padding:0; background: var(--bg); color: var(--fg); font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 24px 20px 80px; }
+    header.article-header { margin: 12px 0 28px; }
+    header .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .02em; text-transform: uppercase; font-size: 12px; }
+    h1 { font-size: 36px; line-height: 1.2; margin: 8px 0 12px; }
+    .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .lede { font-size: 18px; line-height: 1.6; margin: 10px 0 24px; color:#222; }
+    h2 { font-size: 24px; margin: 28px 0 12px; }
+    h3 { font-size: 18px; margin: 22px 0 10px; }
+    p { line-height: 1.7; margin: 10px 0; }
+    ul { margin: 8px 0 16px 20px; }
+    li { margin: 6px 0; }
+    .callout { border: 1px solid var(--border); border-left: 4px solid var(--accent); background:#f8fbfa; padding: 14px 16px; border-radius: 8px; margin: 18px 0; }
+    .toc { border: 1px dashed var(--border); padding: 12px 16px; border-radius: 8px; background:#fcfcfc; }
+    .divider { height:1px; background:var(--border); margin: 24px 0; }
+    .muted { color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .tags { margin-top: 18px; font-size: 13px; }
+    .tags span { background:#eef6f5; color:#0f4b45; border:1px solid #cde8e4; border-radius:999px; padding:4px 10px; margin-right:6px; }
+    .footnote { font-size: 13px; color: var(--muted); margin-top: 28px; }
+  </style>
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "CLOs Explained Simply — Structure, Tranches, and Performance",
+    "description": "A clear guide to CLOs: how they work, their tranche structure, who manages them, and what drives pricing and performance in the $1T+ market.",
+    "author": { "@type": "Person", "name": "Joseph DiTomaso" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Private Credit AI",
+      "logo": { "@type": "ImageObject", "url": "https://private-credit.ai/img/logo.png" }
+    },
+    "datePublished": "2025-09-06",
+    "dateModified": "2025-09-06",
+    "mainEntityOfPage": "https://private-credit.ai/clo-explained",
+    "image": ["https://private-credit.ai/img/social/clo-explained.jpg"]
+  }
+  </script>
+</head>
+<body>
+  <main class="container">
+    <header class="article-header">
+      <div class="eyebrow">Evergreen Guide</div>
+      <h1>CLOs Explained Simply</h1>
+      <div class="meta">By Joseph DiTomaso • Updated Sep 6, 2025 • 8–10 min read</div>
+      <p class="lede">
+        <strong>Collateralized Loan Obligations (CLOs)</strong> are structured credit vehicles that pool leveraged loans
+        and slice them into tranches with different risk/return profiles. They’ve become a <strong>$1T+ market</strong>
+        at the heart of private credit and syndicated lending. This guide explains how CLOs work, their tranche structure,
+        who manages them, and what drives pricing and performance.
+      </p>
+
+      <div class="toc">
+        <strong>In this guide:</strong>
+        <ul>
+          <li><a href="#overview">What Are CLOs?</a></li>
+          <li><a href="#structure">Tranche Structure</a></li>
+          <li><a href="#managers">CLO Managers</a></li>
+          <li><a href="#pricing">What Drives Pricing & Performance</a></li>
+          <li><a href="#market">The CLO Market Today</a></li>
+          <li><a href="#future">Future of CLOs</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section id="overview">
+      <h2>What Are CLOs?</h2>
+      <p>
+        A CLO is a special-purpose vehicle (SPV) that issues bonds backed by a portfolio of leveraged loans.
+        Investors buy tranches with varying seniority, yield, and risk, while the CLO manager actively manages
+        the underlying loan pool.
+      </p>
+      <div class="callout">
+        <strong>Think of a CLO like this:</strong> a pool of risky loans, sliced into safer and riskier pieces,
+        giving investors choice across the risk/return spectrum.
+      </div>
+    </section>
+
+    <section id="structure">
+      <h2>Tranche Structure</h2>
+      <ul>
+        <li><strong>Senior AAA/AA tranches</strong> — lowest risk, lowest yield, first in line for repayment.</li>
+        <li><strong>Mezzanine tranches</strong> — BBB/BB rated, higher yield, moderate risk.</li>
+        <li><strong>Equity tranche</strong> — unrated, highest risk, residual cash flows after debt tranches.</li>
+      </ul>
+      <p>
+        This waterfall ensures that senior noteholders are paid first, while junior investors take higher risk but
+        earn higher potential returns.
+      </p>
+    </section>
+
+    <section id="managers">
+      <h2>CLO Managers</h2>
+      <p>
+        CLOs are actively managed by specialized firms (e.g., Blackstone, Carlyle, Ares).
+        Managers reinvest loan proceeds, trade loans, and oversee portfolio construction.
+      </p>
+    </section>
+
+    <section id="pricing">
+      <h2>What Drives Pricing & Performance</h2>
+      <ul>
+        <li><strong>Loan spreads</strong> — wider spreads increase CLO yields.</li>
+        <li><strong>Default rates</strong> — higher defaults hurt CLO equity and mezz tranches.</li>
+        <li><strong>Manager skill</strong> — active management can drive alpha vs. static pools.</li>
+        <li><strong>Market liquidity</strong> — secondary trading of tranches can reprice risk quickly.</li>
+      </ul>
+    </section>
+
+    <section id="market">
+      <h2>The CLO Market Today</h2>
+      <p>
+        CLOs represent over <strong>$1 trillion</strong> in outstanding issuance, making them the backbone
+        of the leveraged loan market. They provide essential liquidity for corporate borrowers
+        and investment opportunities for institutions.
+      </p>
+    </section>
+
+    <section id="future">
+      <h2>Future of CLOs</h2>
+      <ul>
+        <li>Technology and AI improving portfolio surveillance.</li>
+        <li>New types of collateral (e.g., middle-market loans, private credit CLOs).</li>
+        <li>Increasing global demand from pensions and insurers.</li>
+        <li>Potential regulatory shifts shaping issuance and risk retention.</li>
+      </ul>
+      <p>
+        CLOs are evolving, but their core role—transforming leveraged loans into investable securities—remains central to credit markets.
+      </p>
+      <div class="divider"></div>
+      <div class="tags">
+        <span>CLOs explained</span>
+        <span>collateralized loan obligations</span>
+        <span>structured credit</span>
+        <span>tranche structure</span>
+        <span>leveraged loans</span>
+        <span>private credit CLOs</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
