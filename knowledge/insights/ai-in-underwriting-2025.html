@@ -1,1 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI in Underwriting: Early Proof Points in 2025 | Private Credit AI</title>
+  <meta name="description" content="How AI tools are being applied to covenant tracking, monitoring, and deal screening—what’s working, what’s not, and how to implement without blowing up ops." />
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/includes/global.css" />
+  <meta property="og:title" content="AI in Underwriting: Early Proof Points in 2025" />
+  <meta property="og:description" content="Where AI is landing in credit workflows now—covenants, monitoring, and screening—and a 90-day implementation playbook." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://private-credit.ai/insights/ai-in-underwriting-proof-points-2025.html" />
+  <meta property="og:image" content="https://private-credit.ai/img/og/ai-underwriting-2025.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"AI in Underwriting: Early Proof Points in 2025",
+    "description":"How AI tools are being applied to covenant tracking, monitoring, and deal screening.",
+    "author":{"@type":"Person","name":"Joseph DiTomaso"},
+    "publisher":{"@type":"Organization","name":"Private Credit AI","logo":{"@type":"ImageObject","url":"https://private-credit.ai/img/logo.png"}},
+    "datePublished":"2025-09-06",
+    "dateModified":"2025-09-06",
+    "mainEntityOfPage":{"@type":"WebPage","@id":"https://private-credit.ai/insights/ai-in-underwriting-proof-points-2025.html"}
+  }
+  </script>
+  <style>
+    .article-wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+    .eyebrow { text-transform: uppercase; font-size: 12px; opacity:.7; letter-spacing:.08em; }
+    .article-title { font-size: 34px; margin: 6px 0 12px; }
+    .dek { font-size: 18px; color:#555; margin: 0 0 20px; }
+    .meta { font-size: 14px; color:#777; margin-bottom: 24px; }
+    .section h2 { margin-top: 32px; font-size: 22px; }
+    .keybox { background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 16px 18px; margin: 20px 0; }
+    .callout { border-left: 4px solid #111; padding-left: 14px; margin: 16px 0; color: #444; }
+    .backlink { display:inline-block; margin-top:36px; font-weight:500; text-decoration:none; }
+    .backlink:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <!--#include virtual="/includes/header.html" -->
 
+  <main class="article-wrap">
+    <div class="eyebrow">Playbook</div>
+    <h1 class="article-title">AI in Underwriting: Early Proof Points in 2025</h1>
+    <p class="dek">How AI tools are being applied to covenant tracking, monitoring, and deal screening.</p>
+    <div class="meta">Published Sep 6, 2025 • 5 min read</div>
+
+    <div class="keybox">
+      <h2 style="margin:0 0 8px; font-size:18px;">TL;DR</h2>
+      <ul style="margin:0;">
+        <li>Covenants, monitoring, and screening are producing the clearest ROI.</li>
+        <li>Time saved (40–70%), earlier variance detection, and 2–4× screening throughput are realistic.</li>
+        <li>Control hallucinations with strict schemas + validators; ship audit logs and citations.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>1) Where AI is working now (and why)</h2>
+      <p>Best-fit workflows are repetitive, document-rich, and have crisp acceptance criteria. That’s covenants, portfolio monitoring, and high-volume screening.</p>
+      <p class="callout"><strong>Operator note:</strong> Success = constrained outputs + deterministic guardrails + page-level cites.</p>
+    </div>
+
+    <div class="section">
+      <h2>2) Proof points teams actually believe</h2>
+      <ul>
+        <li>40–70% faster covenant extraction with sub-3% post-validation miss rates.</li>
+        <li>Monitoring alerts days earlier, fewer “surprises” in OC pressure.</li>
+        <li>2–4× more teasers/CIMs triaged with fewer non-fit meetings.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>3) Common failure modes</h2>
+      <ul>
+        <li>Unbounded prompts → hallucinations; enforce schemas and validators.</li>
+        <li>Low-quality scans/tables; run OCR and table repair first.</li>
+        <li>No audit trail; record model/prompt/version + doc hash with every field.</li>
+        <li>Over-automation; keep human-in-the-loop on high-impact fields.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>4) Implementation playbook (90-day cut)</h2>
+      <ol>
+        <li><strong>Weeks 0–3:</strong> Pick one workflow; define JSON schema; build validator + cites on 50–100 gold examples.</li>
+        <li><strong>Weeks 4–8:</strong> Reviewer UI with side-by-side PDF, confidence, one-click edits; push to trackers/BI.</li>
+        <li><strong>Weeks 9–12:</strong> Monitoring jobs + alert routing; start time-saved and miss-rate scorecards.</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>5) Data, governance, and security</h2>
+      <ul>
+        <li>Source control (doc hashes, page refs), PII handling in-tenant/VPC, model registry, and acceptance logs.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>6) What to watch into H2 2025</h2>
+      <ul>
+        <li>Multimodal parsing for tables/exhibits, tuned legal RAG, and scenario helpers for covenant headroom.</li>
+      </ul>
+    </div>
+
+    <a class="backlink" href="/insights/index.html">← Back to Insights</a>
+  </main>
+
+  <!--#include virtual="/includes/footer.html" -->
+</body>
+</html>
