@@ -87,13 +87,20 @@ export default async function handler(req, res) {
     const path = file.filepath || file.path;
     const mimeType = file.mimetype || 'application/octet-stream';
     const name = file.originalFilename || file.newFilename || 'upload';
+    
+    const stat = fs.statSync(path);
+    const fileModifiedISO = stat.mtime.toISOString();
 
     console.log('UPLOADING', { folderId, name, mimeType });
 
     const { data } = await drive.files.create({
-      requestBody: { name, parents: [folderId] },
+      requestBody: {
+        name,
+        parents: [folderId],
+        modifiedTime: fileModifiedISO, // ensure Drive "Last modified" matches the file's mtime
+      },
       media: { mimeType, body: fs.createReadStream(path) },
-      fields: 'id, name, parents, mimeType, size, webViewLink',
+      fields: 'id, name, parents, mimeType, size, webViewLink, modifiedTime',
       supportsAllDrives: true,
     });
 
