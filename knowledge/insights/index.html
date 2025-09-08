@@ -38,8 +38,9 @@
     .item p{color:var(--muted);margin:6px 0 0;font-size:14px}
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px; /* matches your earlier spacing */
+      align-items: start; /* prevents stretching if one card is taller */
     }
   </style>
 </head>
