@@ -89,7 +89,9 @@ export default async function handler(req, res) {
     const name = file.originalFilename || file.newFilename || 'upload';
     
     const stat = fs.statSync(path);
-    const fileModifiedISO = stat.mtime.toISOString();
+    const d = new Date(stat.mtime);
+    d.setHours(0, 0, 0, 0);           // round to midnight
+    const fileModifiedISO = d.toISOString();
 
     console.log('UPLOADING', { folderId, name, mimeType });
 
