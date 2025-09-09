@@ -2,25 +2,40 @@
 import Parser from 'rss-parser';
 
 const SOURCES = [
-  // Direct industry feeds
+  // === Direct industry feeds ===
   'https://www.privatedebtinvestor.com/feed/',
   'https://www.hedgeweek.com/feed/',
   'https://alpha-week.com/rss.xml',
   'https://www.livewiremarkets.com/feeds',
-  // Private Markets Review (Substack)
   'https://privatemarketsreview.substack.com/feed',
+  'https://www.privatemarketsmagazine.com/feed/',
 
-  // GlobalCapital (articles via Google News site filter)
+  // === GlobalCapital ===
+  // Articles (via Google News site filter)
   'https://news.google.com/rss/search?q=site:globalcapital.com%20(securitization%20OR%20CLO%20OR%20%22private%20credit%22)&hl=en-US&gl=US&ceid=US:en',
-
-  // Optional: GlobalCapital Podcast (filtered by podcast guard)
+  // Podcast (guarded: skip audio enclosures in api/media-feed.js)
   'https://feeds.buzzsprout.com/1811593.rss',
 
-  // Existing Google News catch-alls and site filters
+  // === Catch-all for breadth ===
   'https://news.google.com/rss/search?q=(private+credit%20OR%20%22direct%20lending%22%20OR%20CLO%20OR%20BDC%20OR%20%22NAV%20loan%22%20OR%20securitization)&hl=en-US&gl=US&ceid=US:en',
+
+  // === Publisher-specific site filters ===
+  // PitchBook (public mentions only; full API upgrade later)
+  'https://news.google.com/rss/search?q=site:pitchbook.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+
+  // Bloomberg (free articles via GN; Digest = manual/paid API later)
+  'https://news.google.com/rss/search?q=site:bloomberg.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
+
+  // Reuters (private credit coverage)
   'https://news.google.com/rss/search?q=site:reuters.com%20(private%20credit%20OR%20%22direct%20lending%22%20OR%20CLO)&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=site:bloomberg.com%20(CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en'
+
+  // S&P Global (direct lending / CLO / BDC coverage)
+  'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+
+  // WSJ / FT / Barron’s (headlines only; paywalled content)
+  'https://news.google.com/rss/search?q=site:wsj.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:ft.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:barrons.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en'
 ];
 
 const TAGS = [
