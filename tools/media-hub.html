@@ -160,7 +160,7 @@
     el.innerHTML = items.slice(0,10).map(i => `
       <a class="card" href="${i.url}" target="_blank" rel="noopener">
         <div class="card-title">${i.title}</div>
-        <div class="card-meta">${(i.source||'').replace(/^www\\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
+        <div class="card-meta">${badgeHTML(i.source||'')} ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
         ${tagPills(i.tags)}
       </a>
     `).join('');
@@ -170,7 +170,7 @@
     const el = document.getElementById('feed');
     el.innerHTML = items.map(i => `
       <a href="${i.url}" target="_blank" rel="noopener">
-        <span>${i.title}</span>
+        <span>${badgeHTML(i.source||'')}${i.title}</span>
         <span class="right">${(i.source||'').replace(/^www\\./,'')} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
       </a>
     `).join('');
