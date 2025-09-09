@@ -130,36 +130,25 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const all = [];
-  let expandedCount = 0;
+  try {
+    // ------------- PARALLEL FETCH -------------
+    const results = await Promise.allSettled(
+      SOURCES.map(url => parser.parseURL(url))
+    );
 
-  for (const url of SOURCES) {
-    try {
-      const feed = await parser.parseURL(url);
+    const all = [];
 
+    for (const r of results) {
+      if (r.status !== 'fulfilled') continue;
+      const feed = r.value;
       for (const it of (feed.items || [])) {
-        // Podcast guard: skip audio-only items
+        // podcast guard
         if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) continue;
 
         const summary = it.contentSnippet || it.content || '';
 
-        // Normalize link (resolve + optional expansion) and compute host
+        // fast link resolution (no network expands)
         let link = resolveLink(it);
-
-        // Expand stubborn GN article URLs (cap to avoid slowdowns)
-        if (expandedCount < MAX_EXPANDS) {
-          try {
-            const hostNow = new URL(link).hostname;
-            if (hostNow.endsWith('news.google.com') && /\/articles\//.test(new URL(link).pathname)) {
-              const expanded = await expandGoogleNewsUrl(link);
-              if (expanded && expanded !== link) {
-                link = expanded;
-                expandedCount++;
-              }
-            }
-          } catch { /* ignore bad URLs */ }
-        }
-
         link = cleanUrl(link);
 
         let host = '';
@@ -174,53 +163,52 @@ export default async function handler(req, res) {
           tags: tagger(`${it.title} ${summary}`)
         });
       }
-    } catch (e) {
-      // Keep the whole feed resilient even if one source fails
-      // console.error('Source error', url, e);
     }
-  }
 
-  // Sort newest → oldest
-  all.sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
+    // Sort newest → oldest
+    all.sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
 
-  // De-dupe by cleaned URL (fallback to title)
-  const seen = new Set();
-  const items = all.filter(i => {
-    const key = i.url || i.title;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    // De-dupe by cleaned URL (fallback to title)
+    const seen = new Set();
+    const items = all.filter(i => {
+      const key = i.url || i.title;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
 
-  // Top10 = last 24h with domain diversity (cap)
-  const cutoff = Date.now() - 24*3600*1000;
-  const within24h = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
-  const base = (within24h.length ? within24h : items);
+    // Top10 = last 24h with domain cap
+    const cutoff = Date.now() - 24*3600*1000;
+    const within24h = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
+    const base = (within24h.length ? within24h : items);
 
-  function topNWithDomainCap(list, n = 10, cap = 3) {
-    const byDomain = new Map();
-    const out = [];
-    for (const it of list) {
-      const d = it.source || 'unknown';
-      const c = byDomain.get(d) || 0;
-      if (c < cap) {
-        out.push(it);
-        byDomain.set(d, c + 1);
-        if (out.length === n) break;
-      }
-    }
-    if (out.length < n) {
+    function topNWithDomainCap(list, n = 10, cap = 3) {
+      const byDomain = new Map();
+      const out = [];
       for (const it of list) {
-        if (out.length === n) break;
-        if (!out.includes(it)) out.push(it);
+        const d = it.source || 'unknown';
+        const c = byDomain.get(d) || 0;
+        if (c < cap) {
+          out.push(it);
+          byDomain.set(d, c + 1);
+          if (out.length === n) break;
+        }
       }
+      if (out.length < n) {
+        for (const it of list) {
+          if (out.length === n) break;
+          if (!out.includes(it)) out.push(it);
+        }
+      }
+      return out.slice(0, n);
     }
-    return out.slice(0, n);
+
+    const top10 = topNWithDomainCap(base, 10, 3);
+
+    // Cache on the edge
+    res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900'); // 15m
+    res.status(200).json({ top10, items: items.slice(0, 300) });
+  } catch (e) {
+    res.status(500).json({ error: 'media feed failed' });
   }
-
-  const top10 = topNWithDomainCap(base, 10, 3);
-
-  // Edge cache (fast + auto refresh)
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800'); // 1h
-  res.status(200).json({ top10, items: items.slice(0, 300) });
 }
