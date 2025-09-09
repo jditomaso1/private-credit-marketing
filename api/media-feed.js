@@ -69,6 +69,40 @@ function cleanUrl(u='') {
   } catch { return u; }
 }
 
+function resolveLink(it) {
+  // 1) Start from the item link
+  let link = it?.link || '';
+
+  // 2) If it's a Google News URL with a ?url= or ?q= param, use that
+  try {
+    const u = new URL(link);
+    if (u.hostname.endsWith('news.google.com')) {
+      const q = u.searchParams.get('url') || u.searchParams.get('q');
+      if (q) {
+        try { link = decodeURIComponent(q); } catch { link = q; }
+      }
+    }
+  } catch { /* ignore */ }
+
+  // 3) feedburner:origLink (commonly carries the publisher URL)
+  if ((!link || link.includes('news.google.com')) && it && it['feedburner:origLink']) {
+    link = it['feedburner:origLink'];
+  }
+
+  // 4) rss-parser "links" array – pick the first non-Google URL
+  if ((!link || link.includes('news.google.com')) && Array.isArray(it?.links)) {
+    const alt = it.links.find(l => l?.url && !/news\.google\.com$/.test(new URL(l.url).hostname));
+    if (alt?.url) link = alt.url;
+  }
+
+  // 5) GUID sometimes contains the canonical
+  if ((!link || link.includes('news.google.com')) && typeof it?.guid === 'string' && it.guid.startsWith('http')) {
+    link = it.guid;
+  }
+
+  return link;
+}
+
 // Convert Google News redirect links to original publisher URLs
 function extractOriginalLink(link = '') {
   try {
@@ -102,9 +136,8 @@ export default async function handler(req, res) {
         const summary = it.contentSnippet || it.content || '';
 
         // Normalize link and source
-        let link = it.link || '';
-        link = extractOriginalLink(link);
-        link = cleanUrl(link);
+        let link = resolveLink(it);      // NEW: stronger resolver (handles feedburner/links/guid)
+        link = cleanUrl(link);           // keep your deduper
 
         let host = '';
         try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
