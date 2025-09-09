@@ -36,7 +36,6 @@ const SOURCE_BADGES = {
   'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'}
 };
 
-// Paywall-ish publishers
 const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
 
 function prettyHost(host=''){
@@ -121,6 +120,7 @@ function applyFilter(tag='All'){
 async function loadFeed(){
   try{
     const res = await fetch(API, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Feed HTTP ${res.status}`);
     const data = await res.json();
     _items = (data.items || []).map(i => {
       const baseTags = toTagArray(i.tags);
@@ -129,7 +129,10 @@ async function loadFeed(){
       return { ...i, tags: merged };
     }).sort((a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate));
     applyFilter('All');
-  }catch(e){ console.error('Feed load error', e); }
+  }catch(e){
+    console.error('Feed load error', e);
+    document.getElementById('feed').innerHTML = `<div style="color:#b91c1c">⚠️ Failed to load feed: ${e.message}</div>`;
+  }
 }
 
 function updateLastUpdated() {
