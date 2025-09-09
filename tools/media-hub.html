@@ -155,6 +155,46 @@
     return `<span class="card-tags">${tags.join(' · ')}</span>`;
   }
 
+  <script>
+  // === existing code like TAG_ALIASES etc. ===
+  
+  // 🔽 paste badge mapping + helpers here
+  const SOURCE_BADGES = {
+    'privatedebtinvestor.com': {label:'PDI', cls:'pdi'},
+    'hedgeweek.com': {label:'Hedgeweek', cls:'hedgeweek'},
+    'alpha-week.com': {label:'AlphaWeek', cls:'alphaweek'},
+    'livewiremarkets.com': {label:'Livewire', cls:'livewire'},
+    'privatemarketsreview.substack.com': {label:'PM Review', cls:'pmreview'},
+    'privatemarketsmagazine.com': {label:'PM Magazine', cls:'pmmag'},
+    'globalcapital.com': {label:'GlobalCapital', cls:'globalcapital'},
+    'reuters.com': {label:'Reuters', cls:'reuters'},
+    'bloomberg.com': {label:'Bloomberg', cls:'bloomberg'},
+    'ft.com': {label:'FT', cls:'ft'},
+    'wsj.com': {label:'WSJ', cls:'wsj'},
+    'barrons.com': {label:"Barron's", cls:'barrons'},
+    'spglobal.com': {label:'S&P Global', cls:'spglobal'},
+    'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'}
+  };
+  
+  const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
+  
+  function prettyHost(host=''){
+    return String(host||'').replace(/^www\./,'');
+  }
+  
+  function badgeHTML(host=''){
+    const key = prettyHost(host);
+    const meta = SOURCE_BADGES[key] || {label: key || 'Source', cls: 'other'};
+    const lock = PAYWALLED.has(key) ? '<span class="lock">🔒</span>' : '';
+    return `<span class="badge badge--${meta.cls}" title="${meta.label}">${meta.label}${lock}</span>`;
+  }
+  
+  // === then your render functions come next ===
+  function renderTop10(items) {
+    // ...
+  }
+
+    
   function renderTop10(items){
     const el = document.getElementById('top10');
     el.innerHTML = items.slice(0,10).map(i => `
