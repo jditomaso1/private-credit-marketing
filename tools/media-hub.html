@@ -181,6 +181,30 @@
     try { return new URL(i.url).hostname.replace(/^www\./,''); } catch { return s || ''; }
   }
 
+  // -- Canonicalize GN links on the client (belt-and-suspenders) --
+  function rewriteGoogleNewsUrl(u=''){
+    try{
+      const url = new URL(u);
+      if (url.hostname.endsWith('news.google.com')){
+        const orig = url.searchParams.get('url') || url.searchParams.get('q');
+        if (orig){
+          try { return decodeURIComponent(orig); } catch { return orig; }
+        }
+      }
+    }catch{}
+    return u;
+  }
+  
+  function massageItem(i){
+    // If API left a GN URL, rewrite it here and recompute source
+    const newUrl = rewriteGoogleNewsUrl(i.url || '');
+    if (newUrl !== (i.url || '')){
+      i = { ...i, url: newUrl };
+      try { i.source = new URL(newUrl).hostname.replace(/^www\./,''); } catch {}
+    }
+    return i;
+  }
+    
   // ===== Renderers =====
   function renderTop10(items){
     const el = document.getElementById('top10');
@@ -199,7 +223,7 @@
 function renderFeed(items){
   const el = document.getElementById('feed');
   el.innerHTML = items.map(i => {
-    const host = hostFromItem(i); // <- use canonical host (falls back from GN)
+    const host = hostFromItem(i); // use canonical host derived from i.url
     return `
       <a href="${i.url}" target="_blank" rel="noopener">
         <span>${badgeHTML(host)}${i.title}</span>
@@ -256,7 +280,7 @@ function renderFeed(items){
         const baseTags = toTagArray(i.tags);
         const inferred = inferTagsFromText([i.title, i.summary, i.description].filter(Boolean).join(' '));
         const merged = Array.from(new Set([...baseTags, ...inferred]));
-        return { ...i, tags: merged };
+        return massageItem({ ...i, tags: merged });
       }).sort((a,b)=> new Date(b.published_at||b.pubDate) - new Date(a.published_at||a.pubDate));
       applyFilter('All');
     }catch(e){
