@@ -209,7 +209,7 @@
   function renderTop10(items){
     const el = document.getElementById('top10');
     el.innerHTML = items.slice(0,10).map(i => {
-      const host = hostFromItem(i); // prefer publisher hostname from i.url
+      const host = hostFromItem(i); // ✅ canonical host, not news.google.com
       const when = timeAgo(i.published_at || i.pubDate || Date.now());
       return `
         <a class="card" href="${i.url}" target="_blank" rel="noopener">
@@ -220,20 +220,20 @@
       `;
     }).join('');
   }
-
-function renderFeed(items){
-  const el = document.getElementById('feed');
-  el.innerHTML = items.map(i => {
-    const host = hostFromItem(i);
-    const when = timeAgo(i.published_at || i.pubDate || Date.now());
-    return `
-      <a href="${i.url}" target="_blank" rel="noopener">
-        <span>${badgeHTML(host)}${i.title}</span>
-        <span class="right">${host} · ${when}</span>
-      </a>
-    `;
-  }).join('');
-}
+  
+  function renderFeed(items){
+    const el = document.getElementById('feed');
+    el.innerHTML = items.map(i => {
+      const host = hostFromItem(i); // ✅ canonical host
+      const when = timeAgo(i.published_at || i.pubDate || Date.now());
+      return `
+        <a href="${i.url}" target="_blank" rel="noopener">
+          <span>${badgeHTML(host)}${i.title}</span>
+          <span class="right">${host} · ${when}</span>
+        </a>
+      `;
+    }).join('');
+  }
 
   // ===== Tag normalization =====
   const TAG_ALIASES = {
