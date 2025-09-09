@@ -70,6 +70,29 @@ function cleanUrl(u='') {
   }
 }
 
+// Try to convert a Google News redirect link to the original publisher URL
+function extractOriginalLink(link = '') {
+  try {
+    const u = new URL(link);
+    if (u.hostname.endsWith('news.google.com')) {
+      // Google News often stuffs the real URL into ?url= or ?q=
+      const orig = u.searchParams.get('url') || u.searchParams.get('q');
+      if (orig) return orig;
+    }
+  } catch {}
+  return link;
+}
+
+function cleanUrl(u='') {
+  try {
+    const url = new URL(u);
+    url.hash = '';
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id','fbclid','gclid']
+      .forEach(p => url.searchParams.delete(p));
+    return url.toString();
+  } catch { return u; }
+}
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -88,17 +111,18 @@ export default async function handler(req, res) {
         }
 
         const summary = it.contentSnippet || it.content || '';
+        
         let link = it.link || '';
+        link = extractOriginalLink(link);  // NEW: rewrite Google News redirect
+        link = cleanUrl ? cleanUrl(link) : link; // OK if you didn't add cleanUrl()
+        
         let host = '';
-        try {
-          link = cleanUrl(link);
-          host = new URL(link).hostname.replace(/^www\./,'');
-        } catch {}
-
+        try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
+        
         all.push({
           title: it.title,
-          url: link,
-          source: host,
+          url: link,         // use the rewritten link
+          source: host,      // now shows reuters.com / bloomberg.com / etc.
           published_at: it.isoDate || it.pubDate || new Date().toISOString(),
           summary,
           tags: tagger(`${it.title} ${summary}`)
@@ -121,8 +145,31 @@ export default async function handler(req, res) {
 
   // Top10 = last 24h (fallback to most recent if fewer than 10)
   const cutoff = Date.now() - 24*3600*1000;
-  const last24 = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
-  const top10 = (last24.length >= 10 ? last24 : items).slice(0, 10);
+  const pool = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
+  const base = (pool.length ? pool : items);
+  
+  function topNWithDomainCap(list, n = 10, cap = 3) {
+    const seenByDomain = new Map();
+    const out = [];
+    for (const it of list) {
+      const d = it.source || 'unknown';
+      const c = seenByDomain.get(d) || 0;
+      if (c < cap) {
+        out.push(it);
+        seenByDomain.set(d, c + 1);
+        if (out.length === n) break;
+      }
+    }
+    if (out.length < n) {
+      for (const it of list) {
+        if (out.length === n) break;
+        if (!out.includes(it)) out.push(it);
+      }
+    }
+    return out.slice(0, n);
+  }
+  
+  const top10 = topNWithDomainCap(base, 10, 3);
 
   // Edge cache (fast + auto refresh)
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800'); // 1h
