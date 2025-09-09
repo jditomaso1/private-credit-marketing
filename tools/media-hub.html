@@ -224,13 +224,12 @@
 function renderFeed(items){
   const el = document.getElementById('feed');
   el.innerHTML = items.map(i => {
-    // Always prefer the hostname of the actual article URL
-    let host = '';
-    try { host = new URL(i.url).hostname.replace(/^www\./,''); } catch {}
+    const host = hostFromItem(i);
+    const when = timeAgo(i.published_at || i.pubDate || Date.now());
     return `
       <a href="${i.url}" target="_blank" rel="noopener">
         <span>${badgeHTML(host)}${i.title}</span>
-        <span class="right">${host} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
+        <span class="right">${host} · ${when}</span>
       </a>
     `;
   }).join('');
