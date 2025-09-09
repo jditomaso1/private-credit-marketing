@@ -213,7 +213,9 @@
       return `
         <a class="card" href="${i.url}" target="_blank" rel="noopener">
           <div class="card-title">${i.title}</div>
-          <div class="card-meta">${badgeHTML(host)} ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
+          let host = '';
+          try { host = new URL(i.url).hostname.replace(/^www\./,''); } catch {}
+          <div class="card-meta">${badgeHTML(host)} ${timeAgo(...)} </div>
           ${tagPills(i.tags)}
         </a>
       `;
