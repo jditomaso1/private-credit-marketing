@@ -209,7 +209,7 @@
   function renderTop10(items){
     const el = document.getElementById('top10');
     el.innerHTML = items.slice(0,10).map(i => {
-      const host = hostFromItem(i); // ✅ canonical host, not news.google.com
+      const host = publisherHost(i);
       const when = timeAgo(i.published_at || i.pubDate || Date.now());
       return `
         <a class="card" href="${i.url}" target="_blank" rel="noopener">
@@ -224,7 +224,7 @@
   function renderFeed(items){
     const el = document.getElementById('feed');
     el.innerHTML = items.map(i => {
-      const host = hostFromItem(i); // ✅ canonical host
+      const host = publisherHost(i);
       const when = timeAgo(i.published_at || i.pubDate || Date.now());
       return `
         <a href="${i.url}" target="_blank" rel="noopener">
@@ -235,6 +235,55 @@
     }).join('');
   }
 
+  // --- helpers to resolve a human publisher for the badge ---
+  
+  // If the URL is a Google News redirect, try to pull the original target.
+  function rewriteGoogleNewsUrl(u=''){
+    try{
+      const url = new URL(u);
+      if (url.hostname.endsWith('news.google.com')){
+        const orig = url.searchParams.get('url') || url.searchParams.get('q');
+        if (orig){
+          try { return decodeURIComponent(orig); } catch { return orig; }
+        }
+      }
+    }catch{}
+    return u;
+  }
+  
+  // Titles often end with " - Bloomberg.com" or " — Reuters".
+  function extractPublisherFromTitle(title=''){
+    const t = String(title);
+    const parts = t.split(/\s[-–—]\s/); // hyphen/en dash/em dash
+    if (parts.length >= 2){
+      const tail = parts[parts.length - 1].trim();
+      // guard against odd long tails or "Google" artifacts
+      if (tail && tail.length <= 50 && !/google/i.test(tail)) return tail;
+    }
+    return '';
+  }
+  
+  // Final resolver used by the UI badge.
+  // Priority: i.source (if not news.google.com) → hostname(i.url or rewritten) → publisher parsed from title.
+  function publisherHost(i){
+    const pretty = (h='') => String(h||'').replace(/^www\./,'');
+    const source = pretty(i?.source || '');
+  
+    if (source && source !== 'news.google.com') return source;
+  
+    // Try the actual URL (rewritten if it's a GN redirect)
+    let host = '';
+    try { host = new URL(rewriteGoogleNewsUrl(i?.url || '')).hostname; } catch {}
+    host = pretty(host);
+    if (host && host !== 'news.google.com') return host;
+  
+    // Last resort: parse from title
+    const fromTitle = extractPublisherFromTitle(i?.title || '');
+    return fromTitle || (source || host || 'Source');
+  }
+
+
+    
   // ===== Tag normalization =====
   const TAG_ALIASES = {
     "pe":"Private Equity","private-equity":"Private Equity","private equity":"Private Equity",
