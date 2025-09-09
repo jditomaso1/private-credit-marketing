@@ -209,13 +209,12 @@
   function renderTop10(items){
     const el = document.getElementById('top10');
     el.innerHTML = items.slice(0,10).map(i => {
-      const host = hostFromItem(i);
+      const host = hostFromItem(i); // prefer publisher hostname from i.url
+      const when = timeAgo(i.published_at || i.pubDate || Date.now());
       return `
         <a class="card" href="${i.url}" target="_blank" rel="noopener">
           <div class="card-title">${i.title}</div>
-          let host = '';
-          try { host = new URL(i.url).hostname.replace(/^www\./,''); } catch {}
-          <div class="card-meta">${badgeHTML(host)} ${timeAgo(...)} </div>
+          <div class="card-meta">${badgeHTML(host)} ${when}</div>
           ${tagPills(i.tags)}
         </a>
       `;
