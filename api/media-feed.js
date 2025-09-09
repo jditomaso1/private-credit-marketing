@@ -1,7 +1,7 @@
 // api/media-feed.js
 import Parser from 'rss-parser';
 
-// Define parser once, with a friendly UA (some publishers prefer this)
+// Define parser once with a friendly UA (some publishers care)
 const parser = new Parser({
   requestOptions: {
     headers: {
@@ -22,7 +22,7 @@ const SOURCES = [
   // === GlobalCapital ===
   // Articles (via Google News site filter)
   'https://news.google.com/rss/search?q=site:globalcapital.com%20(securitization%20OR%20CLO%20OR%20%22private%20credit%22)&hl=en-US&gl=US&ceid=US:en',
-  // Podcast (optional feed; audio-only entries will be skipped by the guard below)
+  // Podcast (optional; audio-only entries will be skipped)
   'https://feeds.buzzsprout.com/1811593.rss',
 
   // === Catch-all for breadth ===
@@ -35,8 +35,8 @@ const SOURCES = [
   'https://news.google.com/rss/search?q=site:bloomberg.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
   // Reuters
   'https://news.google.com/rss/search?q=site:reuters.com%20(private%20credit%20OR%20%22direct%20lending%22%20OR%20CLO)&hl=en-US&gl=US&ceid=US:en',
-  // S&P Global
-  'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US:en&ceid=US:en',
+  // S&P Global (fixed gl/ceid)
+  'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
   // WSJ / FT / Barron’s (headlines only; paywalled content)
   'https://news.google.com/rss/search?q=site:wsj.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:ft.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
@@ -44,11 +44,11 @@ const SOURCES = [
 ];
 
 const TAGS = [
-  { tag: 'CLO', kws: [' clo ', ' aaa ', ' equity tranche', ' reset', ' refi', ' manager'] },
-  { tag: 'Direct Lending', kws: ['unitranche','direct lending','private debt','sponsor','club deal'] },
-  { tag: 'NAV', kws: ['nav loan','nav financing'] },
-  { tag: 'BDC', kws: [' bdc ','arcc','bxsl','ocsl','main','psec','cgbd','fdus'] },
-  { tag: 'ABS', kws: ['securitization','warehouse','term abs','asset-backed'] },
+  { tag: 'CLO',           kws: [' clo ', ' aaa ', ' equity tranche', ' reset', ' refi', ' manager'] },
+  { tag: 'Direct Lending',kws: ['unitranche','direct lending','private debt','sponsor','club deal'] },
+  { tag: 'NAV',           kws: ['nav loan','nav financing'] },
+  { tag: 'BDC',           kws: [' bdc ','arcc','bxsl','ocsl','main','psec','cgbd','fdus'] },
+  { tag: 'ABS',           kws: ['securitization','warehouse','term abs','asset-backed'] },
 ];
 
 function tagger(str='') {
@@ -63,34 +63,25 @@ function cleanUrl(u='') {
   try {
     const url = new URL(u);
     url.hash = '';
-    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id','fbclid','gclid'].forEach(p => url.searchParams.delete(p));
-    return url.toString();
-  } catch {
-    return u;
-  }
-}
-
-// Try to convert a Google News redirect link to the original publisher URL
-function extractOriginalLink(link = '') {
-  try {
-    const u = new URL(link);
-    if (u.hostname.endsWith('news.google.com')) {
-      // Google News often stuffs the real URL into ?url= or ?q=
-      const orig = u.searchParams.get('url') || u.searchParams.get('q');
-      if (orig) return orig;
-    }
-  } catch {}
-  return link;
-}
-
-function cleanUrl(u='') {
-  try {
-    const url = new URL(u);
-    url.hash = '';
     ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id','fbclid','gclid']
       .forEach(p => url.searchParams.delete(p));
     return url.toString();
   } catch { return u; }
+}
+
+// Convert Google News redirect links to original publisher URLs
+function extractOriginalLink(link = '') {
+  try {
+    const u = new URL(link);
+    if (u.hostname.endsWith('news.google.com')) {
+      let orig = u.searchParams.get('url') || u.searchParams.get('q');
+      if (orig) {
+        try { orig = decodeURIComponent(orig); } catch {}
+        return orig;
+      }
+    }
+  } catch {}
+  return link;
 }
 
 export default async function handler(req, res) {
@@ -105,34 +96,36 @@ export default async function handler(req, res) {
       const feed = await parser.parseURL(url);
 
       for (const it of (feed.items || [])) {
-        // --- Podcast guard: skip audio-only entries ---
-        if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) {
-          continue;
-        }
+        // Podcast guard: skip audio-only items
+        if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) continue;
 
         const summary = it.contentSnippet || it.content || '';
-        
+
+        // Normalize link and source
         let link = it.link || '';
-        link = extractOriginalLink(link);  // NEW: rewrite Google News redirect
-        link = cleanUrl ? cleanUrl(link) : link; // OK if you didn't add cleanUrl()
-        
+        link = extractOriginalLink(link);
+        link = cleanUrl(link);
+
         let host = '';
         try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
-        
+
         all.push({
           title: it.title,
-          url: link,         // use the rewritten link
-          source: host,      // now shows reuters.com / bloomberg.com / etc.
+          url: link,
+          source: host,
           published_at: it.isoDate || it.pubDate || new Date().toISOString(),
           summary,
           tags: tagger(`${it.title} ${summary}`)
         });
       }
     } catch (e) {
-      // Swallow source errors to keep the whole feed resilient
+      // Keep the whole feed resilient even if one source fails
       // console.error('Source error', url, e);
     }
   }
+
+  // Sort newest → oldest
+  all.sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
 
   // De-dupe by cleaned URL (fallback to title)
   const seen = new Set();
@@ -141,25 +134,26 @@ export default async function handler(req, res) {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
-  }).sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
+  });
 
-  // Top10 = last 24h (fallback to most recent if fewer than 10)
+  // Top10 = last 24h with domain diversity (cap)
   const cutoff = Date.now() - 24*3600*1000;
-  const pool = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
-  const base = (pool.length ? pool : items);
-  
+  const within24h = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
+  const base = (within24h.length ? within24h : items);
+
   function topNWithDomainCap(list, n = 10, cap = 3) {
-    const seenByDomain = new Map();
+    const byDomain = new Map();
     const out = [];
     for (const it of list) {
       const d = it.source || 'unknown';
-      const c = seenByDomain.get(d) || 0;
+      const c = byDomain.get(d) || 0;
       if (c < cap) {
         out.push(it);
-        seenByDomain.set(d, c + 1);
+        byDomain.set(d, c + 1);
         if (out.length === n) break;
       }
     }
+    // top-up if we didn’t reach N due to caps
     if (out.length < n) {
       for (const it of list) {
         if (out.length === n) break;
@@ -168,7 +162,7 @@ export default async function handler(req, res) {
     }
     return out.slice(0, n);
   }
-  
+
   const top10 = topNWithDomainCap(base, 10, 3);
 
   // Edge cache (fast + auto refresh)
