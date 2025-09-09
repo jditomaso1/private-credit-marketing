@@ -2,11 +2,10 @@
 import Parser from 'rss-parser';
 
 // Define parser once with a friendly UA (some publishers care)
+const UA = 'PrivateCreditAI/1.0 (+https://private-credit.ai)';
 const parser = new Parser({
   requestOptions: {
-    headers: {
-      'User-Agent': 'PrivateCreditAI/1.0 (+https://private-credit.ai)'
-    }
+    headers: { 'User-Agent': UA }
   }
 });
 
@@ -29,15 +28,10 @@ const SOURCES = [
   'https://news.google.com/rss/search?q=(private+credit%20OR%20%22direct%20lending%22%20OR%20CLO%20OR%20BDC%20OR%20%22NAV%20loan%22%20OR%20securitization)&hl=en-US&gl=US&ceid=US:en',
 
   // === Publisher-specific site filters ===
-  // PitchBook (public mentions only; full API upgrade later)
   'https://news.google.com/rss/search?q=site:pitchbook.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
-  // Bloomberg (free articles via GN; Digest = manual/paid API later)
   'https://news.google.com/rss/search?q=site:bloomberg.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
-  // Reuters
   'https://news.google.com/rss/search?q=site:reuters.com%20(private%20credit%20OR%20%22direct%20lending%22%20OR%20CLO)&hl=en-US&gl=US&ceid=US:en',
-  // S&P Global (fixed gl/ceid)
   'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
-  // WSJ / FT / Barron’s (headlines only; paywalled content)
   'https://news.google.com/rss/search?q=site:wsj.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:ft.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:barrons.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en'
@@ -69,41 +63,7 @@ function cleanUrl(u='') {
   } catch { return u; }
 }
 
-function resolveLink(it) {
-  // 1) Start from the item link
-  let link = it?.link || '';
-
-  // 2) If it's a Google News URL with a ?url= or ?q= param, use that
-  try {
-    const u = new URL(link);
-    if (u.hostname.endsWith('news.google.com')) {
-      const q = u.searchParams.get('url') || u.searchParams.get('q');
-      if (q) {
-        try { link = decodeURIComponent(q); } catch { link = q; }
-      }
-    }
-  } catch { /* ignore */ }
-
-  // 3) feedburner:origLink (commonly carries the publisher URL)
-  if ((!link || link.includes('news.google.com')) && it && it['feedburner:origLink']) {
-    link = it['feedburner:origLink'];
-  }
-
-  // 4) rss-parser "links" array – pick the first non-Google URL
-  if ((!link || link.includes('news.google.com')) && Array.isArray(it?.links)) {
-    const alt = it.links.find(l => l?.url && !/news\.google\.com$/.test(new URL(l.url).hostname));
-    if (alt?.url) link = alt.url;
-  }
-
-  // 5) GUID sometimes contains the canonical
-  if ((!link || link.includes('news.google.com')) && typeof it?.guid === 'string' && it.guid.startsWith('http')) {
-    link = it.guid;
-  }
-
-  return link;
-}
-
-// Convert Google News redirect links to original publisher URLs
+// Convert GN redirect query (?url= / ?q=) to publisher URL if present
 function extractOriginalLink(link = '') {
   try {
     const u = new URL(link);
@@ -118,12 +78,60 @@ function extractOriginalLink(link = '') {
   return link;
 }
 
+// Strong resolver that checks multiple item fields
+function resolveLink(it) {
+  // 1) Start from item link (and try query param extraction)
+  let link = extractOriginalLink(it?.link || '');
+
+  // 2) feedburner:origLink
+  if ((!link || link.includes('news.google.com')) && it && it['feedburner:origLink']) {
+    link = it['feedburner:origLink'];
+  }
+
+  // 3) rss-parser "links" array – pick first non-Google URL
+  if ((!link || link.includes('news.google.com')) && Array.isArray(it?.links)) {
+    const alt = it.links.find(l => {
+      try { return l?.url && !new URL(l.url).hostname.endsWith('news.google.com'); }
+      catch { return false; }
+    });
+    if (alt?.url) link = alt.url;
+  }
+
+  // 4) GUID sometimes contains canonical URL
+  if ((!link || link.includes('news.google.com')) && typeof it?.guid === 'string' && it.guid.startsWith('http')) {
+    link = it.guid;
+  }
+
+  return link;
+}
+
+// Follow GN /articles/... redirects to the real publisher (cap to avoid latency spikes)
+const MAX_EXPANDS = 25;
+async function expandGoogleNewsUrl(url) {
+  try {
+    const u = new URL(url);
+    if (!u.hostname.endsWith('news.google.com')) return url;
+    if (!/\/articles\//.test(u.pathname)) return url;
+
+    // Follow redirects; final response URL should be the publisher
+    const res = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: { 'User-Agent': UA }
+    });
+    return res.url || url;
+  } catch {
+    return url;
+  }
+}
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
   const all = [];
+  let expandedCount = 0;
 
   for (const url of SOURCES) {
     try {
@@ -135,9 +143,24 @@ export default async function handler(req, res) {
 
         const summary = it.contentSnippet || it.content || '';
 
-        // Normalize link and source
-        let link = resolveLink(it);      // NEW: stronger resolver (handles feedburner/links/guid)
-        link = cleanUrl(link);           // keep your deduper
+        // Normalize link (resolve + optional expansion) and compute host
+        let link = resolveLink(it);
+
+        // Expand stubborn GN article URLs (cap to avoid slowdowns)
+        if (expandedCount < MAX_EXPANDS) {
+          try {
+            const hostNow = new URL(link).hostname;
+            if (hostNow.endsWith('news.google.com') && /\/articles\//.test(new URL(link).pathname)) {
+              const expanded = await expandGoogleNewsUrl(link);
+              if (expanded && expanded !== link) {
+                link = expanded;
+                expandedCount++;
+              }
+            }
+          } catch { /* ignore bad URLs */ }
+        }
+
+        link = cleanUrl(link);
 
         let host = '';
         try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
@@ -186,7 +209,6 @@ export default async function handler(req, res) {
         if (out.length === n) break;
       }
     }
-    // top-up if we didn’t reach N due to caps
     if (out.length < n) {
       for (const it of list) {
         if (out.length === n) break;
