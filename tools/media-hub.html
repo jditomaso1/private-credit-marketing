@@ -196,16 +196,18 @@
     }).join('');
   }
 
-
-  function renderFeed(items){
-    const el = document.getElementById('feed');
-    el.innerHTML = items.map(i => `
+function renderFeed(items){
+  const el = document.getElementById('feed');
+  el.innerHTML = items.map(i => {
+    const host = hostFromItem(i); // <- use canonical host (falls back from GN)
+    return `
       <a href="${i.url}" target="_blank" rel="noopener">
-        <span>${badgeHTML(i.source||'')}${i.title}</span>
-        <span class="right">${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
+        <span>${badgeHTML(host)}${i.title}</span>
+        <span class="right">${host} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
       </a>
-    `).join('');
-  }
+    `;
+  }).join('');
+}
 
   // ===== Tag normalization =====
   const TAG_ALIASES = {
