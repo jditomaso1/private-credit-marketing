@@ -5,6 +5,12 @@ const SOURCES = [
   // Private Debt Investor (direct feed)
   'https://www.privatedebtinvestor.com/feed/',
 
+  // Hedgeweek (direct feed)
+  'https://www.hedgeweek.com/feed/',
+
+  // AlphaWeek (direct feed)
+  'https://alpha-week.com/rss.xml',
+
   // Catch-all (private credit / direct lending / CLO / BDC / NAV / securitization)
   'https://news.google.com/rss/search?q=(private+credit%20OR%20%22direct%20lending%22%20OR%20CLO%20OR%20BDC%20OR%20%22NAV%20loan%22%20OR%20securitization)&hl=en-US&gl=US&ceid=US:en',
 
