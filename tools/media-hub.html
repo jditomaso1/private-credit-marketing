@@ -166,6 +166,7 @@
     'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'}
   };
   const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
+
   function prettyHost(host=''){ return String(host||'').replace(/^www\./,''); }
   function badgeHTML(host=''){
     const key = prettyHost(host);
@@ -173,6 +174,7 @@
     const lock = PAYWALLED.has(key) ? '<span class="lock">🔒</span>' : '';
     return `<span class="badge badge--${meta.cls}" title="${meta.label}">${meta.label}${lock}</span>`;
   }
+  // Fallback to the article URL’s hostname if source is news.google.com
   function hostFromItem(i){
     const s = prettyHost(i.source || '');
     if (s && s !== 'news.google.com') return s;
@@ -180,18 +182,20 @@
   }
 
   // ===== Renderers =====
-  function renderFeed(items){
-    const el = document.getElementById('feed');
-    el.innerHTML = items.map(i => {
+  function renderTop10(items){
+    const el = document.getElementById('top10');
+    el.innerHTML = items.slice(0,10).map(i => {
       const host = hostFromItem(i);
       return `
-        <a href="${i.url}" target="_blank" rel="noopener">
-          <span>${badgeHTML(host)}${i.title}</span>
-          <span class="right">${host} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
+        <a class="card" href="${i.url}" target="_blank" rel="noopener">
+          <div class="card-title">${i.title}</div>
+          <div class="card-meta">${badgeHTML(host)} ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
+          ${tagPills(i.tags)}
         </a>
       `;
     }).join('');
   }
+
 
   function renderFeed(items){
     const el = document.getElementById('feed');
