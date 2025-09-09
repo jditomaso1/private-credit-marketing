@@ -2,8 +2,12 @@
 import Parser from 'rss-parser';
 
 const SOURCES = [
+  // Private Debt Investor (direct feed)
+  'https://www.privatedebtinvestor.com/feed/',
+
   // Catch-all (private credit / direct lending / CLO / BDC / NAV / securitization)
   'https://news.google.com/rss/search?q=(private+credit%20OR%20%22direct%20lending%22%20OR%20CLO%20OR%20BDC%20OR%20%22NAV%20loan%22%20OR%20securitization)&hl=en-US&gl=US&ceid=US:en',
+
   // Specific publishers (headlines only; many will be gated — that’s fine, you link out)
   'https://news.google.com/rss/search?q=site:reuters.com%20(private%20credit%20OR%20%22direct%20lending%22%20OR%20CLO)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:bloomberg.com%20(CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
