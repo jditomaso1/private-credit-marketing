@@ -173,17 +173,24 @@
     const lock = PAYWALLED.has(key) ? '<span class="lock">🔒</span>' : '';
     return `<span class="badge badge--${meta.cls}" title="${meta.label}">${meta.label}${lock}</span>`;
   }
+  function hostFromItem(i){
+    const s = prettyHost(i.source || '');
+    if (s && s !== 'news.google.com') return s;
+    try { return new URL(i.url).hostname.replace(/^www\./,''); } catch { return s || ''; }
+  }
 
   // ===== Renderers =====
-  function renderTop10(items){
-    const el = document.getElementById('top10');
-    el.innerHTML = items.slice(0,10).map(i => `
-      <a class="card" href="${i.url}" target="_blank" rel="noopener">
-        <div class="card-title">${i.title}</div>
-        <div class="card-meta">${badgeHTML(i.source||'')} ${timeAgo(i.published_at||i.pubDate||Date.now())}</div>
-        ${tagPills(i.tags)}
-      </a>
-    `).join('');
+  function renderFeed(items){
+    const el = document.getElementById('feed');
+    el.innerHTML = items.map(i => {
+      const host = hostFromItem(i);
+      return `
+        <a href="${i.url}" target="_blank" rel="noopener">
+          <span>${badgeHTML(host)}${i.title}</span>
+          <span class="right">${host} · ${timeAgo(i.published_at||i.pubDate||Date.now())}</span>
+        </a>
+      `;
+    }).join('');
   }
 
   function renderFeed(items){
@@ -236,7 +243,7 @@
   // ===== Data load =====
   async function loadFeed(){
     try{
-      const res = await fetch(API, { cache: 'no-store' });
+      const res = await fetch(`${API}?ts=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error(`Feed HTTP ${res.status}`);
       const data = await res.json();
       _items = (data.items || []).map(i => {
