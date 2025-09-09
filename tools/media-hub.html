@@ -223,7 +223,9 @@
 function renderFeed(items){
   const el = document.getElementById('feed');
   el.innerHTML = items.map(i => {
-    const host = hostFromItem(i); // use canonical host derived from i.url
+    // Always prefer the hostname of the actual article URL
+    let host = '';
+    try { host = new URL(i.url).hostname.replace(/^www\./,''); } catch {}
     return `
       <a href="${i.url}" target="_blank" rel="noopener">
         <span>${badgeHTML(host)}${i.title}</span>
