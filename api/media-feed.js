@@ -1,6 +1,14 @@
 // api/media-feed.js
 import Parser from 'rss-parser';
 
+const parser = new Parser({
+  requestOptions: {
+    headers: {
+      'User-Agent': 'PrivateCreditAI/1.0 (+https://private-credit.ai)'
+    }
+  }
+});
+
 const SOURCES = [
   // === Direct industry feeds ===
   'https://www.privatedebtinvestor.com/feed/',
@@ -58,7 +66,6 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const parser = new Parser();
   const all = [];
 
   for (const url of SOURCES) {
