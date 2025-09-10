@@ -436,13 +436,23 @@
 
     // --- Init ---
     document.addEventListener('DOMContentLoaded', () => {
+      // tag pills
       document.querySelectorAll('#filters .pill').forEach(btn=>{
         btn.addEventListener('click', () => {
           document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
           btn.classList.add('pill--active');
-          applyFilter(btn.dataset.tag);
+          applyFilter(btn.dataset.tag);    // re-render on tag change
         });
       });
+    
+      // SEC toggle
+      const secToggle = document.getElementById('toggle-sec');
+      if (secToggle) {
+        secToggle.addEventListener('change', () => {
+          applyFilter(getSelectedTag());   // re-render using current tag
+        });
+      }
+    
       loadFeed().then(updateLastUpdated);
     });
   </script>
