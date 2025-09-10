@@ -197,7 +197,7 @@ function extractSecCompany(summary='', content='', title='') {
   m = blob.match(/Registrant(?: Name)?:\s*([^\n<]{3,120})/i);
   if (m) return m[1].trim();
 
-  m = blob.match/\bIssuer:\s*([^\n<]{3,120})/i;
+  m = blob.match(/\bIssuer:\s*([^\n<]{3,120})/i);
   if (m) return m[1].trim();
 
   m = blob.match(/For:\s*([^\n<]{3,120})/i);
