@@ -1,1 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compliance Tracking | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Track covenant tests and compliance certificates. Paste or upload CSV, see breaches and alerts instantly." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <style>
+    body{font-family:Poppins,sans-serif;margin:0;background:#f4f4f4;color:#333}
+    .page{max-width:1100px;margin:24px auto;padding:20px}
+    .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tool-tab.active{background:#111;color:#fff;border-color:#111}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:18px;margin:12px 0}
+    .metric{background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
+    .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
+    .metric .v{font-size:1.25rem;font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+    .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+    .btn.alt{background:#10b981}
+    .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+    input,textarea,select{padding:8px;border:1px solid #ddd;border-radius:10px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #f0f0f0;font-size:.95rem}
+    th{background:#f7f7f7;text-align:left}
+    .alert{padding:10px;margin:8px 0;border:1px solid #fde68a;background:#fffbeb;border-radius:10px}
+    .alert.danger{border-color:#fecaca;background:#fff1f2}
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
 
+  <main class="page">
+    <!-- Tabs ABOVE heading -->
+    <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/tools/index.html">Tools</a>
+      <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
+      <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
+      <a class="tool-tab" href="/tools/yield-curve.html">Yield Curve</a>
+      <a class="tool-tab" href="/tools/credit-decoder.html">Credit Decoder</a>
+      <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
+      <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
+      <a class="tool-tab" href="/tools/shadow-ratings-basic.html">Shadow Ratings</a>
+      <a class="tool-tab" href="/tools/portfolio-monitor.html">Portfolio Monitor</a>
+      <a class="tool-tab" href="/tools/compliance-tracking.html">Compliance Tracking</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
+        });
+      })();
+    </script>
+
+    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Compliance Tracking</h1>
+    <p style="margin:0 0 16px;color:#666;">Paste/upload compliance certificate data to monitor covenant tests and flag breaches automatically.</p>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <div>
+          <label for="file">Upload CSV</label><br>
+          <input id="file" type="file" accept=".csv">
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button id="loadSample" class="btn alt">Load Sample</button>
+          <button id="parse" class="btn">Parse Data</button>
+          <button id="download" class="btn ghost">Download CSV</button>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label for="raw">Or paste CSV here</label>
+        <textarea id="raw" rows="6" placeholder="Borrower,Test,Threshold,Actual,Status,AsOf
+Acme Corp,Net Leverage,4.5x,3.8x,In Compliance,2025-08-15
+Bravo LLC,FCCR,1.20x,1.25x,At Risk,2025-07-20
+Charlie Inc,Net Leverage,4.5x,5.1x,Breach,2025-06-30" style="width:100%;"></textarea>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div id="alerts"></div>
+
+    <!-- Metrics -->
+    <div class="grid" style="margin:12px 0;">
+      <div class="metric"><div class="k">Total Tests</div><div id="m_total" class="v">–</div></div>
+      <div class="metric"><div class="k">In Compliance</div><div id="m_ok" class="v">–</div></div>
+      <div class="metric"><div class="k">At Risk</div><div id="m_risk" class="v">–</div></div>
+      <div class="metric"><div class="k">Breaches</div><div id="m_breaches" class="v">–</div></div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div style="overflow:auto">
+        <table id="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Borrower</th>
+              <th>Test</th>
+              <th>Threshold</th>
+              <th>Actual</th>
+              <th>Status</th>
+              <th>As Of</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
+
+  <script>
+  (function(){
+    const $ = id=>document.getElementById(id);
+    const tbody = $('tbody');
+    let rows = [];
+
+    $('loadSample').onclick = ()=>{
+      $('raw').value = `Borrower,Test,Threshold,Actual,Status,AsOf
+Acme Corp,Net Leverage,4.5x,3.8x,In Compliance,2025-08-15
+Bravo LLC,FCCR,1.20x,1.25x,At Risk,2025-07-20
+Charlie Inc,Net Leverage,4.5x,5.1x,Breach,2025-06-30`;
+    };
+
+    $('parse').onclick = ()=>{
+      const txt = $('raw').value.trim();
+      if(!txt && $('file').files[0]){
+        const reader = new FileReader();
+        reader.onload = e=>{ $('raw').value = e.target.result; parseNow(); };
+        reader.readAsText($('file').files[0]);
+      }else{
+        parseNow();
+      }
+    };
+
+    function parseNow(){
+      const lines = $('raw').value.trim().split(/\r?\n/);
+      const headers = lines[0].split(',').map(h=>h.trim());
+      const idx = Object.fromEntries(headers.map((h,i)=>[h,i]));
+      rows = lines.slice(1).map(l=>{
+        const c = l.split(',');
+        return {
+          Borrower: c[idx['Borrower']]||'',
+          Test: c[idx['Test']]||'',
+          Threshold: c[idx['Threshold']]||'',
+          Actual: c[idx['Actual']]||'',
+          Status: c[idx['Status']]||'',
+          AsOf: c[idx['AsOf']]||''
+        };
+      });
+      render();
+    }
+
+    $('download').onclick = ()=>{
+      if(!rows.length) return;
+      const headers = ['Borrower','Test','Threshold','Actual','Status','AsOf'];
+      const csv = [headers.join(',')].concat(rows.map(r=>headers.map(h=>r[h]||'').join(','))).join('\n');
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='compliance_tracking.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+
+    function render(){
+      tbody.innerHTML='';
+      rows.forEach((r,i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${i+1}</td>
+          <td>${r.Borrower}</td>
+          <td>${r.Test}</td>
+          <td>${r.Threshold}</td>
+          <td>${r.Actual}</td>
+          <td>${r.Status}</td>
+          <td>${r.AsOf}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      const total=rows.length;
+      const ok=rows.filter(r=>/compliance/i.test(r.Status)).length;
+      const risk=rows.filter(r=>/risk/i.test(r.Status)).length;
+      const breaches=rows.filter(r=>/breach/i.test(r.Status)).length;
+
+      $('m_total').textContent=total;
+      $('m_ok').textContent=ok;
+      $('m_risk').textContent=risk;
+      $('m_breaches').textContent=breaches;
+
+      renderAlerts(breaches, risk);
+    }
+
+    function renderAlerts(breaches,risk){
+      const alerts=$('alerts'); alerts.innerHTML='';
+      if(breaches>0){
+        const d=document.createElement('div');
+        d.className='alert danger';
+        d.textContent=`⛔ ${breaches} breach(es) detected — immediate action required.`;
+        alerts.appendChild(d);
+      }
+      if(risk>0){
+        const d=document.createElement('div');
+        d.className='alert';
+        d.textContent=`⚠️ ${risk} test(s) flagged At Risk.`;
+        alerts.appendChild(d);
+      }
+      if(!breaches && !risk){
+        const d=document.createElement('div');
+        d.className='alert';
+        d.textContent='✅ All tests in compliance.';
+        alerts.appendChild(d);
+      }
+    }
+  })();
+  </script>
+</body>
+</html>
