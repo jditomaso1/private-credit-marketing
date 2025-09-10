@@ -197,6 +197,8 @@
       <button data-tag="Real Estate" class="pill">Real Estate</button>
       <button data-tag="Infrastructure" class="pill">Infrastructure</button>
       <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
+      <button data-tag="Ratings" class="pill">Ratings</button>
+      <button data-tag="Bankruptcy" class="pill">Bankruptcy</button>
     </nav>
 
     <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
@@ -234,6 +236,8 @@
 
   // ===== Source badge helpers =====
   const SOURCE_BADGES = {
+  const SOURCE_BADGES = {
+    // existing…
     'privatedebtinvestor.com': {label:'PDI', cls:'pdi'},
     'hedgeweek.com': {label:'Hedgeweek', cls:'hedgeweek'},
     'alpha-week.com': {label:'AlphaWeek', cls:'alphaweek'},
@@ -247,7 +251,33 @@
     'wsj.com': {label:'WSJ', cls:'wsj'},
     'barrons.com': {label:"Barron's", cls:'barrons'},
     'spglobal.com': {label:'S&P Global', cls:'spglobal'},
-    'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'}
+    'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'},
+  
+    // NEW wires
+    'prnewswire.com': {label:'PR Newswire', cls:'other'},
+    'businesswire.com': {label:'BusinessWire', cls:'other'},
+    'globenewswire.com': {label:'GlobeNewswire', cls:'other'},
+  
+    // NEW ratings
+    'moodys.com': {label:"Moody's", cls:'other'},
+    'ratings.spglobal.com': {label:'S&P Ratings', cls:'spglobal'},
+  
+    // NEW regulators/courts
+    'sec.gov': {label:'SEC EDGAR', cls:'other'},
+    'courtlistener.com': {label:'CourtListener', cls:'other'},
+  
+    // NEW sponsors/lenders (these show host name nicely)
+    'kkr.com': {label:'KKR', cls:'other'},
+    'apollo.com': {label:'Apollo', cls:'other'},
+    'blackstone.com': {label:'Blackstone', cls:'other'},
+    'carlyle.com': {label:'Carlyle', cls:'other'},
+    'aresmgmt.com': {label:'Ares', cls:'other'},
+    'barings.com': {label:'Barings', cls:'other'},
+    'golubcapital.com': {label:'Golub', cls:'other'},
+    'blueowl.com': {label:'Blue Owl', cls:'other'},
+    'hpspartners.com': {label:'HPS', cls:'other'},
+    'antares.com': {label:'Antares', cls:'other'},
+    'monroecap.com': {label:'Monroe', cls:'other'}
   };
   const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
 
