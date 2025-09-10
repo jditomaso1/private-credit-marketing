@@ -1,1 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loan Pricing | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Translate target returns into coupons/fees and payment profiles. Useful for term sheets and quick comps." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <style>
+    body{font-family:Poppins,sans-serif;margin:0;background:#f4f4f4;color:#333}
+    .page{max-width:1100px;margin:24px auto;padding:20px}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:20px;text-align:left}
+    .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tool-tab.active{background:#111;color:#fff;border-color:#111}
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
 
+  <main class="page">
+    <!-- Tabs ABOVE heading -->
+    <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/tools/index.html">Tools</a>
+      <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
+      <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
+      <a class="tool-tab" href="/tools/yield-curve.html">Yield Curve</a>
+      <a class="tool-tab" href="/tools/credit-decoder.html">Credit Decoder</a>
+      <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
+      <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
+      <a class="tool-tab" href="/tools/shadow-ratings-basic.html">Shadow Ratings</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tool-tab').forEach(a=>{
+          if(a.getAttribute('href')===here){
+            a.classList.add('active');
+            a.setAttribute('aria-current','page');
+          }
+        });
+      })();
+    </script>
+
+    <!-- Page content -->
+    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Loan Pricing</h1>
+    <p style="margin:0 0 16px;color:#666;">Track new-issue economics: coupon, proceeds, all-in yield, fees — with IO/AM schedules, PIK, and optional prepay.</p>
+
+    <!-- ===== Loan Pricing Tool ===== -->
+    <div id="pricing-tool" style="max-width:1100px;margin:0 auto;">
+      <!-- Controls -->
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:18px;margin:12px 0;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div>
+            <label>Amount</label><br>
+            <input id="p_amount" type="number" value="1000000" step="1000" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:160px">
+          </div>
+          <div>
+            <label>Base (e.g., SOFR %)</label><br>
+            <input id="p_base" type="number" value="5.25" step="0.01" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
+          </div>
+          <div>
+            <label>Spread (bps)</label><br>
+            <input id="p_spread" type="number" value="450" step="5" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
+          </div>
+          <div>
+            <label>Floor (%)</label><br>
+            <input id="p_floor" type="number" value="0.00" step="0.05" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
+          </div>
+          <div>
+            <label>OID (%)</label><br>
+            <input id="p_oid" type="number" value="2.00" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
+          </div>
+          <div>
+            <label>Upfront Fee (%)</label><br>
+            <input id="p_upfront" type="number" value="0.50" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
+          </div>
+          <div>
+            <label>Exit Fee (%)</label><br>
+            <input id="p_exit" type="number" value="1.00" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
+          </div>
+          <div>
+            <label>PIK (%)</label><br>
+            <input id="p_pik" type="number" value="0.00" step="0.25" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
+          </div>
+          <div>
+            <label>Term (months)</label><br>
+            <input id="p_term" type="number" value="36" step="1" min="1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
+          </div>
+          <div>
+            <label>Frequency</label><br>
+            <select id="p_freq" style="padding:8px;border:1px solid #ddd;border-radius:10px">
+              <option value="12" selected>Monthly</option>
+              <option value="4">Quarterly</option>
+              <option value="2">Semi-Annual</option>
+              <option value="1">Annual</option>
+            </select>
+          </div>
+          <div>
+            <label>Amortization</label><br>
+            <select id="p_amort" style="padding:8px;border:1px solid #ddd;border-radius:10px">
+              <option value="io" selected>Interest-Only + Bullet</option>
+              <option value="am">Level-Payment Amortizing</option>
+            </select>
+          </div>
+          <div>
+            <label>Prepay at month (optional)</label><br>
+            <input id="p_prepay" type="number" placeholder="e.g., 18" step="1" min="1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:130px">
+          </div>
+
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button id="p_build" class="btn">Price / Refresh</button>
+            <button id="p_addRow" class="btn alt">+ Cash Flow</button>
+            <button id="p_download" class="btn ghost">Download CSV</button>
+          </div>
+        </div>
+        <p style="margin:10px 2px 0;color:#666"><small>
+          Coupon = max(Base, Floor) + Spread. All-in Yield = annualized IRR from generated cash-flows (incl. OID, fees, exit, PIK, amortization, prepay).
+        </small></p>
+      </div>
+
+      <!-- Headline metrics -->
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px;margin:12px 0;">
+        <div class="metric"><div class="k">All-in Coupon</div><div id="m_coupon" class="v">–</div></div>
+        <div class="metric"><div class="k">Upfront Proceeds (net OID &amp; upfront)</div><div id="m_proceeds" class="v">–</div></div>
+        <div class="metric"><div class="k">All-in Yield (IRR, annual)</div><div id="m_yield" class="v">–</div></div>
+        <div class="metric"><div class="k">MOIC</div><div id="m_moic" class="v">–</div></div>
+        <div class="metric"><div class="k">Total Interest</div><div id="m_totint" class="v">–</div></div>
+        <div class="metric"><div class="k">Total Fees (OID + Upfront + Exit)</div><div id="m_totfee" class="v">–</div></div>
+      </div>
+
+      <!-- Table -->
+      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:16px;margin:12px 0;">
+        <div style="overflow:auto">
+          <table id="p_table" style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr style="background:#f7f7f7">
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">#</th>
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Month</th>
+                <th style="text-align:right;padding:10px;border-bottom:1px solid #eee">Cash Flow</th>
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Note</th>
+                <th style="padding:10px;border-bottom:1px solid #eee"></th>
+              </tr>
+            </thead>
+            <tbody id="p_body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      #pricing-tool label{font-size:.86rem;color:#444}
+      #pricing-tool .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+      #pricing-tool .btn.alt{background:#10b981}
+      #pricing-tool .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+      #pricing-tool .metric{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
+      #pricing-tool .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
+      #pricing-tool .metric .v{font-size:1.25rem;font-weight:700}
+      #pricing-tool td{border-bottom:1px solid #f0f0f0}
+    </style>
+
+    <script>
+    (function(){
+      const $ = id => document.getElementById(id);
+      const body = $('p_body');
+      const fmt = n => isFinite(n) ? (Math.abs(n)>=1000 ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : n.toFixed(2)) : '–';
+      const pct = p => (p*100).toFixed(2)+'%';
+
+      // periodic IRR solver (annualize by freq)
+      function irrPeriodic(cfs){
+        const f = r => cfs.reduce((s,x)=> s + x.cf/Math.pow(1+r,x.t), 0);
+        const df= r => cfs.reduce((s,x)=> s + (-x.t*x.cf)/Math.pow(1+r,x.t+1), 0);
+        let r = 0.02;
+        for(let i=0;i<50;i++){ const fr=f(r), dfr=df(r); if(!isFinite(fr)||!isFinite(dfr)) break; const nr=r-fr/dfr; if(Math.abs(nr-r)<1e-8) return r; r=nr; if(!isFinite(r) || r<=-0.99 || r>10){ r=0.02; break; } }
+        let lo=-0.9999, hi=10, flo=f(lo), fhi=f(hi);
+        for(let k=0;k<60 && flo*fhi>0;k++){ hi/=2; fhi=f(hi); }
+        if(flo*fhi>0) return NaN;
+        for(let i=0;i<200;i++){ const mid=(lo+hi)/2, fm=f(mid); if(Math.abs(fm)<1e-8) return mid; if(flo*fm<0){ hi=mid; fhi=fm; } else { lo=mid; flo=fm; } }
+        return (lo+hi)/2;
+      }
+
+      function addRow(t=0, cf=0, note=''){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="padding:8px"></td>
+          <td style="padding:8px"><input class="t" type="number" value="${t}" step="1" min="0" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100px"></td>
+          <td style="padding:8px"><input class="cf" type="number" value="${cf.toFixed(2)}" step="0.01" style="padding:6px;border:1px solid #ddd;border-radius:8px;text-align:right;width:160px"></td>
+          <td style="padding:8px"><input class="note" type="text" value="${note}" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100%"></td>
+          <td style="padding:8px;text-align:right"><button class="btn ghost del">Delete</button></td>
+        `;
+        body.appendChild(tr);
+        renumber();
+        tr.querySelector('.del').onclick = ()=>{ tr.remove(); renumber(); recalc(); };
+        tr.querySelector('.t').oninput = recalc;
+        tr.querySelector('.cf').oninput = recalc;
+      }
+
+      function renumber(){
+        [...body.querySelectorAll('tr')].forEach((tr,i)=> tr.firstElementChild.textContent = i+1);
+      }
+
+      function schedule(){
+        const amt = +$('p_amount').value||0;
+        const base = (+$('p_base').value||0)/100;
+        const spread = (+$('p_spread').value||0)/10000; // bps
+        const floor = (+$('p_floor').value||0)/100;
+        const oid = (+$('p_oid').value||0)/100;
+        const upfront = (+$('p_upfront').value||0)/100;
+        const exit = (+$('p_exit').value||0)/100;
+        const pik = (+$('p_pik').value||0)/100;
+        const termM = +$('p_term').value||0;
+        const freq = +$('p_freq').value;
+        const amort = $('p_amort').value;
+        const prepayM = +$('p_prepay').value||null;
+
+        const periodM = 12/freq;
+        const cutoff = prepayM ? Math.min(prepayM, termM) : termM;
+        const n = Math.max(1, Math.round(cutoff/periodM));
+        const coupon = Math.max(base, floor) + spread;
+
+        body.innerHTML = '';
+
+        // funding at t=0 (negative), net of OID + upfront fee
+        const proceeds = amt * (1 - oid - upfront);
+        addRow(0, -proceeds, `Funded (OID ${(oid*100).toFixed(2)}% + Upfront ${(upfront*100).toFixed(2)}%)`);
+
+        if(amort==='io'){
+          let bal = amt;
+          for(let k=1;k<=n;k++){
+            const tM = Math.round(k*periodM);
+            const cashInterest = bal * (coupon/freq) * (1 - pik);
+            const pikAmt = bal * (coupon/freq) * pik;
+            bal += pikAmt; // capitalize PIK
+            const isFinal = (!prepayM && k===Math.round(termM/periodM)) || (prepayM && tM===prepayM);
+
+            if(!isFinal){
+              addRow(tM, cashInterest, pikAmt>0 ? `Cash Interest (PIK ${(pik*100).toFixed(2)}% cap'd)` : 'Cash Interest');
+            }else{
+              const exitFee = amt * exit;
+              const payoff = cashInterest + bal + exitFee;
+              addRow(tM, payoff, (prepayM?'Prepay + ':'') + `Interest + Principal + Exit (${(exit*100).toFixed(2)}%)`);
+            }
+          }
+        }else{
+          const i = coupon/freq;
+          const nTot = Math.round(termM/periodM);
+          const pmt = (i===0) ? amt/nTot : amt * (i*Math.pow(1+i,nTot))/(Math.pow(1+i,nTot)-1);
+          let bal = amt;
+
+          for(let k=1;k<=n;k++){
+            const tM = Math.round(k*periodM);
+            const interest = bal * i;
+            const pikAmt = interest * pik;
+            const cashInt = interest - pikAmt;
+            let principal = Math.min(pmt - cashInt, bal);
+            bal = bal + pikAmt - principal;
+
+            const isFinal = (!prepayM && k===nTot) || (prepayM && tM===prepayM);
+            if(!isFinal){
+              addRow(tM, cashInt + principal, pikAmt>0 ? 'Level payment (part PIK)' : 'Level payment');
+            }else{
+              const exitFee = amt * exit;
+              addRow(tM, cashInt + principal + bal + exitFee, (prepayM?'Prepay + ':'') + `Final Payment + Exit (${(exit*100).toFixed(2)}%)`);
+              bal = 0;
+            }
+          }
+        }
+
+        recalc(true, {amt, oid, upfront, exit, coupon, freq});
+      }
+
+      function tableCfs(){
+        return [...body.querySelectorAll('tr')].map(r=>({
+          t: +r.querySelector('.t').value,
+          cf: +r.querySelector('.cf').value,
+          note: r.querySelector('.note').value || ''
+        })).sort((a,b)=>a.t-b.t);
+      }
+
+      function recalc(fromBuild=false, meta={}){
+        const freq = +$('p_freq').value;
+        const rows = tableCfs();
+        if(rows.length===0){ showMetrics(NaN,NaN,0,0); return; }
+
+        const monthsToPeriods = m => m*(freq/12);
+        const cfs = rows.map(r=>({t: monthsToPeriods(r.t), cf:r.cf}));
+
+        const ann = r => isFinite(r)? (Math.pow(1+r,freq)-1) : NaN;
+        const rPer = irrPeriodic(cfs);
+        const irrAnn = ann(rPer);
+
+        const totalIn = cfs.filter(x=>x.cf>0).reduce((s,x)=>s+x.cf,0);
+        const totalOut= cfs.filter(x=>x.cf<0).reduce((s,x)=>s+x.cf,0);
+        const moic = totalIn/Math.abs(totalOut||1);
+
+        const upfrontFees = (meta.amt||0)*((meta.oid||0)+(meta.upfront||0));
+        const exitFee = (meta.amt||0)*(meta.exit||0);
+        const biggestOut = Math.abs(Math.min(...cfs.map(x=>x.cf)));
+        const interestApprox = totalIn - (biggestOut + exitFee);
+
+        if(fromBuild){
+          $('m_coupon').textContent = pct(meta.coupon||0);
+          const proceeds = (meta.amt||0) * (1 - (meta.oid||0) - (meta.upfront||0));
+          $('m_proceeds').textContent = '$'+fmt(proceeds);
+          $('m_totfee').textContent = '$'+fmt(upfrontFees + exitFee);
+        }
+        showMetrics(irrAnn, moic, interestApprox, upfrontFees+exitFee);
+      }
+
+      function showMetrics(irrAnn, moic, totalInt, totalFees){
+        $('m_yield').textContent = isFinite(irrAnn)? (irrAnn*100).toFixed(2)+'%':'–';
+        $('m_moic').textContent = isFinite(moic)? moic.toFixed(3):'–';
+        $('m_totint').textContent = isFinite(totalInt)? '$'+fmt(totalInt):'–';
+        $('m_totfee').textContent = isFinite(totalFees)? '$'+fmt(totalFees):$('m_totfee').textContent;
+      }
+
+      function downloadCSV(){
+        const rows = tableCfs(); if(rows.length===0) return;
+        const lines = [['Index','Month','CashFlow','Note']].concat(rows.map((r,i)=>[i+1,r.t,r.cf,r.note]));
+        const csv = lines.map(r=>r.map(x=>{
+          const s=(''+x).replace(/"/g,'""'); return /[",\n]/.test(s)? `"${s}"`: s;
+        }).join(',')).join('\n');
+        const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+        const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='loan_pricing_cashflows.csv'; a.click(); URL.revokeObjectURL(a.href);
+      }
+
+      // Wire up
+      document.getElementById('p_build').onclick = schedule;
+      document.getElementById('p_addRow').onclick = ()=> addRow();
+      document.getElementById('p_download').onclick = downloadCSV;
+
+      // initial build
+      schedule();
+    })();
+    </script>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
+</body>
+</html>
