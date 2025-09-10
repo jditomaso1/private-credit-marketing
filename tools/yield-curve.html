@@ -19,23 +19,24 @@
   <div id="site-header"></div>
 
   <main class="page">
-    <!-- Tabs ABOVE the page heading -->
+    <!-- Tabs ABOVE heading -->
     <nav class="tool-tabs" aria-label="Tools">
+      <a class="tool-tab" href="/tools/index.html">Tools</a>
       <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
       <a class="tool-tab" href="/tools/irr-calculator.html">IRR Calculator</a>
       <a class="tool-tab" href="/tools/yield-curve.html">Yield Curve</a>
-      <a class="tool-tab" href="/tools/credit-decoder.html">Jargon Decoder</a>
+      <a class="tool-tab" href="/tools/credit-decoder.html">Credit Decoder</a>
       <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
       <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
       <a class="tool-tab" href="/tools/shadow-ratings-basic.html">Shadow Ratings</a>
+      <a class="tool-tab" href="/tools/portfolio-monitor.html">Portfolio Monitor</a>
+      <a class="tool-tab" href="/tools/compliance-tracking.html">Compliance Tracking</a>
     </nav>
     <script>
       (function(){
         const here = location.pathname.replace(/\/+$/,'');
         document.querySelectorAll('.tool-tab').forEach(a=>{
-          if(a.getAttribute('href')===here){
-            a.classList.add('active');
-          }
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
         });
       })();
     </script>
