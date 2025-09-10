@@ -51,47 +51,29 @@
     .tool-tab.active{background:#111;color:#fff;border-color:#111}
 
     /* === Media Hub === */
-    #media-hub { margin:0; padding:0 0 40px; }  /* no extra max-width/auto centering */
+    #media-hub { margin:0; padding:0 0 40px; }
     #media-hub a { color:#111; text-decoration:none; }
     #media-hub a:hover { color:#2c7cf1; text-decoration:underline; }
-    
-    /* Make the Media Hub heading hug the same left edge as the sub-nav */
-    #media-hub header, 
-    #media-hub h1 { margin-top:0; }
+
+    #media-hub header, #media-hub h1 { margin-top:0; }
 
     .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
     .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
+
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
     @media (max-width: 820px){ .grid{grid-template-columns:1fr} }
+
     .card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px;display:block;color:#111}
     .card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-1px);transition:all .15s}
     .card-title{font-weight:600;margin:0 0 6px 0;line-height:1.3}
     .card-meta{font-size:12px;color:#666;margin:0 0 6px 0}
     .card-tags{font-size:12px;color:#666}
+
     .list a{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #eee;padding:10px 0;color:#111}
     .list a:hover{background:#fafbfc}
     .list .right{white-space:nowrap;color:#666;font-size:12px}
-    /* #refresh-btn{display:inline-block !important;} */
 
-    /* Source badges */
-    /*.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;line-height:1.6;border:1px solid #e5e7eb;background:#fff;color:#374151;margin-right:8px;vertical-align:middle}
-    .badge--pdi{background:#fff7ed;border-color:#fdba74;color:#9a3412}
-    .badge--hedgeweek{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8}
-    .badge--alphaweek{background:#eef2ff;border-color:#c7d2fe;color:#3730a3}
-    .badge--livewire{background:#ecfdf5;border-color:#6ee7b7;color:#065f46}
-    .badge--pmreview{background:#faf5ff;border-color:#e9d5ff;color:#6b21a8}
-    .badge--pmmag{background:#f0f9ff;border-color:#bae6fd;color:#0c4a6e}
-    .badge--globalcapital{background:#fefce8;border-color:#fde68a;color:#854d0e}
-    .badge--reuters{background:#fff1f2;border-color:#fecdd3;color:#be123c}
-    .badge--bloomberg{background:#f5f3ff;border-color:#ddd6fe;color:#5b21b6}
-    .badge--ft{background:#fff7ed;border-color:#fed7aa;color:#b45309}
-    .badge--wsj{background:#ecfeff;border-color:#a5f3fc;color:#155e75}
-    .badge--barrons{background:#eef2ff;border-color:#c7d2fe;color:#3730a3}
-    .badge--spglobal{background:#fee2e2;border-color:#fecaca;color:#991b1b}
-    .badge--aci{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
-    .badge--other{background:#f9fafb;border-color:#e5e7eb;color:#374151}
-    .badge .lock{margin-left:4px;opacity:.7}*/
-    /* Source badges */
+    /* Source badges (neutral palette) */
     .badge {
       display:inline-block;
       padding:2px 8px;
@@ -104,19 +86,15 @@
       margin-right:8px;
       vertical-align:middle;
     }
-    .badge .lock {
-      margin-left:4px;
-      opacity:.7;
-    }
+    .badge .lock { margin-left:4px; opacity:.7; }
+
     /* Kill any injected refresh button, regardless of how it's added */
-    #refresh-btn,
-    button#refresh-btn,
-    .refresh-button,
-    [data-role="refresh"],
-    button[aria-label="Refresh News"] {
+    #refresh-btn, button#refresh-btn, .refresh-button, [data-role="refresh"], button[aria-label="Refresh News"] {
       display:none !important;
     }
   </style>
+
+  <!-- Structured data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -150,16 +128,14 @@
     gtag('js', new Date());
     gtag('config', 'G-6GY4CQ6ZFH');
   </script>
-
 </head>
 <body>
 
-  <!-- Shared header (master-header-basic) -->
+  <!-- Shared header -->
   <div id="site-header"></div>
 
   <!-- Tools sub-nav -->
   <main class="page">
-    <!-- Tabs ABOVE heading -->
     <nav class="tool-tabs" aria-label="Tools">
       <a class="tool-tab" href="/tools/index.html">Tools</a>
       <a class="tool-tab" href="/tools/media-hub.html">Media Hub</a>
@@ -180,315 +156,281 @@
         });
       })();
     </script>
-  <!-- Media Hub -->
-  <section id="media-hub">
-    <header style="margin-bottom:16px;">
-      <h1 style="margin:0 0 6px 0;font-size:32px;font-weight:700;">Media Hub</h1>
-      <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
-      <p id="last-updated" style="margin-top:8px; color:#666; font-size:13px;"></p>
-    </header>
 
-    <!-- Filters -->
-    <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
-      <button data-tag="All" class="pill pill--active">All</button>
-      <button data-tag="Direct Lending" class="pill">Direct Lending</button>
-      <button data-tag="CLO" class="pill">CLO</button>
-      <button data-tag="NAV" class="pill">NAV</button>
-      <button data-tag="BDC" class="pill">BDC</button>
-      <button data-tag="ABS" class="pill">ABS</button>
-      <button data-tag="Private Equity" class="pill">Private Equity</button>
-      <button data-tag="Real Estate" class="pill">Real Estate</button>
-      <button data-tag="Infrastructure" class="pill">Infrastructure</button>
-      <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
-      <button data-tag="Ratings" class="pill">Ratings</button>
-      <button data-tag="Bankruptcy" class="pill">Bankruptcy</button>
-    </nav>
+    <!-- Media Hub -->
+    <section id="media-hub">
+      <header style="margin-bottom:16px;">
+        <h1 style="margin:0 0 6px 0;font-size:32px;font-weight:700;">Media Hub</h1>
+        <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
+        <p id="last-updated" style="margin-top:8px; color:#666; font-size:13px;"></p>
+      </header>
 
-    <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
-    <div id="top10" class="grid"></div>
+      <!-- Filters -->
+      <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
+        <button data-tag="All" class="pill pill--active">All</button>
+        <button data-tag="Direct Lending" class="pill">Direct Lending</button>
+        <button data-tag="CLO" class="pill">CLO</button>
+        <button data-tag="NAV" class="pill">NAV</button>
+        <button data-tag="BDC" class="pill">BDC</button>
+        <button data-tag="ABS" class="pill">ABS</button>
+        <button data-tag="Private Equity" class="pill">Private Equity</button>
+        <button data-tag="Real Estate" class="pill">Real Estate</button>
+        <button data-tag="Infrastructure" class="pill">Infrastructure</button>
+        <button data-tag="Emerging Markets" class="pill">Emerging Markets</button>
+        <button data-tag="Ratings" class="pill">Ratings</button>
+        <button data-tag="Bankruptcy" class="pill">Bankruptcy</button>
+      </nav>
 
-    <h3 style="margin:28px 0 12px;font-size:20px;">All Stories</h3>
-    <div id="feed" class="list"></div>
-  </section>
+      <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
+      <div id="top10" class="grid"></div>
 
-  <!-- Shared footer (master-header-basic) -->
+      <h3 style="margin:28px 0 12px;font-size:20px;">All Stories</h3>
+      <div id="feed" class="list"></div>
+    </section>
+  </main>
+
+  <!-- Shared footer -->
   <div id="site-footer"></div>
   <script src="/includes/include.js"></script>
 
-  <!-- Single app script (no nested <script> inside!) -->
+  <!-- App script (single, no nested <script>) -->
   <script>
+    // ===== Config =====
+    const API = location.origin + '/api/media-feed';
+    let _items = [];
 
-  // Quick debug: ping API and log counts
-  async function debugPing(){
-    try{
-      const r = await fetch(`${API}?ts=${Date.now()}`, { cache:'no-store' });
-      console.log('API status', r.status);
-      const j = await r.json();
-      console.log('API payload', {top10: j.top10?.length || 0, items: j.items?.length || 0}, j);
-      // If empty, show a friendly notice and a link to raw JSON
-      if (!j.items || !j.items.length){
-        document.getElementById('feed').innerHTML =
-          `<div style="color:#6b7280">No stories from API.</div>
-           <div><a href="${API}?ts=${Date.now()}" target="_blank" rel="noopener">Open raw API response</a></div>`;
-      }
-    }catch(err){
-      console.error('API fetch failed', err);
-      document.getElementById('feed').innerHTML =
-        `<div style="color:#b91c1c">⚠️ API fetch failed: ${String(err)}</div>`;
+    // ===== Utilities =====
+    function timeAgo(iso){
+      const d = new Date(iso);
+      const diffMs = Date.now() - d.getTime();
+      const m = Math.round(diffMs/60000);
+      if (m < 60) return `${m}m`;
+      const h = Math.round(m/60);
+      if (h < 24) return `${h}h`;
+      return `${Math.round(h/24)}d`;
     }
-  }
+    function tagPills(tags=[]){ return !tags?.length ? '' : `<span class="card-tags">${tags.join(' · ')}</span>`; }
+    function prettyHost(host=''){ return String(host||'').replace(/^www\./,''); }
 
-    <script>
-      // ===== Config =====
-      const API = location.origin + '/api/media-feed'; // robust to subpaths
-      let _items = [];
-    
-      // ===== Utilities =====
-      function timeAgo(iso){
-        const d = new Date(iso);
-        const diffMs = Date.now() - d.getTime();
-        const m = Math.round(diffMs/60000);
-        if (m < 60) return `${m}m`;
-        const h = Math.round(m/60);
-        if (h < 24) return `${h}h`;
-        return `${Math.round(h/24)}d`;
-      }
-      function tagPills(tags=[]){
-        if (!tags.length) return '';
-        return `<span class="card-tags">${tags.join(' · ')}</span>`;
-      }
-      function prettyHost(host=''){ return String(host||'').replace(/^www\./,''); }
-    
-      // --- Source badges ---
-      const SOURCE_BADGES = {
-        'privatedebtinvestor.com': {label:'PDI', cls:'pdi'},
-        'hedgeweek.com': {label:'Hedgeweek', cls:'hedgeweek'},
-        'alpha-week.com': {label:'AlphaWeek', cls:'alphaweek'},
-        'livewiremarkets.com': {label:'Livewire', cls:'livewire'},
-        'privatemarketsreview.substack.com': {label:'PM Review', cls:'pmreview'},
-        'privatemarketsmagazine.com': {label:'PM Magazine', cls:'pmmag'},
-        'globalcapital.com': {label:'GlobalCapital', cls:'globalcapital'},
-        'reuters.com': {label:'Reuters', cls:'reuters'},
-        'bloomberg.com': {label:'Bloomberg', cls:'bloomberg'},
-        'ft.com': {label:'FT', cls:'ft'},
-        'wsj.com': {label:'WSJ', cls:'wsj'},
-        'barrons.com': {label:"Barron's", cls:'barrons'},
-        'spglobal.com': {label:'S&P Global', cls:'spglobal'},
-        'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'},
-        'prnewswire.com': {label:'PR Newswire', cls:'other'},
-        'businesswire.com': {label:'BusinessWire', cls:'other'},
-        'globenewswire.com': {label:'GlobeNewswire', cls:'other'},
-        'moodys.com': {label:"Moody's", cls:'other'},
-        'ratings.spglobal.com': {label:'S&P Ratings', cls:'spglobal'},
-        'sec.gov': {label:'SEC EDGAR', cls:'other'},
-        'courtlistener.com': {label:'CourtListener', cls:'other'},
-        'kkr.com': {label:'KKR', cls:'other'},
-        'apollo.com': {label:'Apollo', cls:'other'},
-        'blackstone.com': {label:'Blackstone', cls:'other'},
-        'carlyle.com': {label:'Carlyle', cls:'other'},
-        'aresmgmt.com': {label:'Ares', cls:'other'},
-        'barings.com': {label:'Barings', cls:'other'},
-        'golubcapital.com': {label:'Golub', cls:'other'},
-        'blueowl.com': {label:'Blue Owl', cls:'other'},
-        'hpspartners.com': {label:'HPS', cls:'other'},
-        'antares.com': {label:'Antares', cls:'other'},
-        'monroecap.com': {label:'Monroe', cls:'other'}
-      };
-      const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
-      function badgeHTML(host=''){
-        const key = prettyHost(host);
-        const meta = SOURCE_BADGES[key] || {label: key || 'Source', cls: 'other'};
-        const lock = PAYWALLED.has(key) ? '<span class="lock">🔒</span>' : '';
-        return `<span class="badge badge--${meta.cls}" title="${meta.label}">${meta.label}${lock}</span>`;
-      }
-    
-      // --- URL + publisher helpers ---
-      function rewriteGoogleNewsUrl(u=''){
-        try{
-          const url = new URL(u);
-          if (url.hostname.endsWith('news.google.com')){
-            const orig = url.searchParams.get('url') || url.searchParams.get('q');
-            if (orig){ try { return decodeURIComponent(orig); } catch { return orig; } }
-          }
-        }catch{}
-        return u;
-      }
-      function cleanTitle(title=''){
-        const parts = String(title).split(/\s[-–—]\s/);
-        return parts.length >= 2 ? parts.slice(0, -1).join(' - ').trim() : String(title).trim();
-      }
-      function extractPublisherFromTitle(title=''){
-        const parts = String(title).split(/\s[-–—]\s/);
-        if (parts.length >= 2){
-          const tail = parts[parts.length - 1].trim();
-          if (tail && tail.length <= 50 && !/google/i.test(tail)) return tail;
+    // --- Source badges ---
+    const SOURCE_BADGES = {
+      'privatedebtinvestor.com': {label:'PDI', cls:'pdi'},
+      'hedgeweek.com': {label:'Hedgeweek', cls:'hedgeweek'},
+      'alpha-week.com': {label:'AlphaWeek', cls:'alphaweek'},
+      'livewiremarkets.com': {label:'Livewire', cls:'livewire'},
+      'privatemarketsreview.substack.com': {label:'PM Review', cls:'pmreview'},
+      'privatemarketsmagazine.com': {label:'PM Magazine', cls:'pmmag'},
+      'globalcapital.com': {label:'GlobalCapital', cls:'globalcapital'},
+      'reuters.com': {label:'Reuters', cls:'reuters'},
+      'bloomberg.com': {label:'Bloomberg', cls:'bloomberg'},
+      'ft.com': {label:'FT', cls:'ft'},
+      'wsj.com': {label:'WSJ', cls:'wsj'},
+      'barrons.com': {label:"Barron's", cls:'barrons'},
+      'spglobal.com': {label:'S&P Global', cls:'spglobal'},
+      'altcreditinvestor.com': {label:'Alt Credit Investor', cls:'aci'},
+      'prnewswire.com': {label:'PR Newswire', cls:'other'},
+      'businesswire.com': {label:'BusinessWire', cls:'other'},
+      'globenewswire.com': {label:'GlobeNewswire', cls:'other'},
+      'moodys.com': {label:"Moody's", cls:'other'},
+      'ratings.spglobal.com': {label:'S&P Ratings', cls:'spglobal'},
+      'sec.gov': {label:'SEC EDGAR', cls:'other'},
+      'courtlistener.com': {label:'CourtListener', cls:'other'},
+      'kkr.com': {label:'KKR', cls:'other'},
+      'apollo.com': {label:'Apollo', cls:'other'},
+      'blackstone.com': {label:'Blackstone', cls:'other'},
+      'carlyle.com': {label:'Carlyle', cls:'other'},
+      'aresmgmt.com': {label:'Ares', cls:'other'},
+      'barings.com': {label:'Barings', cls:'other'},
+      'golubcapital.com': {label:'Golub', cls:'other'},
+      'blueowl.com': {label:'Blue Owl', cls:'other'},
+      'hpspartners.com': {label:'HPS', cls:'other'},
+      'antares.com': {label:'Antares', cls:'other'},
+      'monroecap.com': {label:'Monroe', cls:'other'}
+    };
+    const PAYWALLED = new Set(['ft.com','wsj.com','barrons.com']);
+    function badgeHTML(host=''){
+      const key = prettyHost(host);
+      const meta = SOURCE_BADGES[key] || {label: key || 'Source', cls: 'other'};
+      const lock = PAYWALLED.has(key) ? '<span class="lock">🔒</span>' : '';
+      return `<span class="badge badge--${meta.cls}" title="${meta.label}">${meta.label}${lock}</span>`;
+    }
+
+    // --- URL + publisher helpers ---
+    function rewriteGoogleNewsUrl(u=''){
+      try{
+        const url = new URL(u);
+        if (url.hostname.endsWith('news.google.com')){
+          const orig = url.searchParams.get('url') || url.searchParams.get('q');
+          if (orig){ try { return decodeURIComponent(orig); } catch { return orig; } }
         }
-        return '';
+      }catch{}
+      return u;
+    }
+    function cleanTitle(title=''){
+      const parts = String(title).split(/\s[-–—]\s/);
+      return parts.length >= 2 ? parts.slice(0, -1).join(' - ').trim() : String(title).trim();
+    }
+    function extractPublisherFromTitle(title=''){
+      const parts = String(title).split(/\s[-–—]\s/);
+      if (parts.length >= 2){
+        const tail = parts[parts.length - 1].trim();
+        if (tail && tail.length <= 50 && !/google/i.test(tail)) return tail;
       }
-      function publisherHost(i){
-        const source = prettyHost(i?.source || '');
-        if (source && source !== 'news.google.com') return source;
-        let host = '';
-        try { host = new URL(rewriteGoogleNewsUrl(i?.url || '')).hostname; } catch {}
-        host = prettyHost(host);
-        if (host && host !== 'news.google.com') return host;
-        const fromTitle = extractPublisherFromTitle(i?.title || '');
-        return fromTitle || (source || host || 'Source');
+      return '';
+    }
+    function publisherHost(i){
+      const source = prettyHost(i?.source || '');
+      if (source && source !== 'news.google.com') return source;
+      let host = '';
+      try { host = new URL(rewriteGoogleNewsUrl(i?.url || '')).hostname; } catch {}
+      host = prettyHost(host);
+      if (host && host !== 'news.google.com') return host;
+      const fromTitle = extractPublisherFromTitle(i?.title || '');
+      return fromTitle || (source || host || 'Source');
+    }
+
+    // --- Tags ---
+    const TAG_ALIASES = {
+      "pe":"Private Equity","private-equity":"Private Equity","private equity":"Private Equity",
+      "re":"Real Estate","real-estate":"Real Estate","real estate":"Real Estate",
+      "infra":"Infrastructure","infrastructure":"Infrastructure",
+      "em":"Emerging Markets","emerging-markets":"Emerging Markets","emerging markets":"Emerging Markets",
+      "direct lending":"Direct Lending","clo":"CLO","nav":"NAV","bdc":"BDC","abs":"ABS"
+    };
+    function normalizeTag(s=""){ const k = String(s).trim().toLowerCase(); return TAG_ALIASES[k] || s; }
+    function toTagArray(t){ if (Array.isArray(t)) return t; if (typeof t === 'string') return t.split(',').map(x=>x.trim()).filter(Boolean); return []; }
+    function inferTagsFromText(text=""){
+      const t = text.toLowerCase(); const out = new Set();
+      if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
+      if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
+      if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
+      if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
+      if (/(direct lending)/.test(t)) out.add("Direct Lending");
+      if (/\bclo\b/.test(t)) out.add("CLO");
+      if (/\bnav\b/.test(t)) out.add("NAV");
+      if (/\bbdc\b/.test(t)) out.add("BDC");
+      if (/\babs\b/.test(t)) out.add("ABS");
+      return Array.from(out);
+    }
+
+    // --- Renderers ---
+    function renderTop10(items){
+      const el = document.getElementById('top10');
+      el.innerHTML = (items||[]).slice(0,10).map(i=>{
+        const host = publisherHost(i);
+        const when = timeAgo(i.published_at || i.pubDate || Date.now());
+        const href = i.url || '#';
+        return `
+          <a class="card" href="${href}" target="_blank" rel="noopener">
+            <div class="card-title">${cleanTitle(i.title||'')}</div>
+            <div class="card-meta">${badgeHTML(host)} ${when}</div>
+            ${tagPills(i.tags)}
+          </a>`;
+      }).join('');
+    }
+    function renderFeed(items){
+      const el = document.getElementById('feed');
+      el.innerHTML = (items||[]).map(i=>{
+        const host = publisherHost(i);
+        const when = timeAgo(i.published_at || i.pubDate || Date.now());
+        const href = i.url || '#';
+        return `
+          <a href="${href}" target="_blank" rel="noopener">
+            <span>${badgeHTML(host)}${cleanTitle(i.title||'')}</span>
+            <span class="right">${host} · ${when}</span>
+          </a>`;
+      }).join('');
+    }
+
+    // --- Filter ---
+    function applyFilter(tag='All'){
+      const selected = normalizeTag(tag);
+      const filtered = selected==='All'
+        ? _items
+        : _items.filter(i => toTagArray(i.tags).map(t=>normalizeTag(t)).includes(selected));
+      renderTop10(filtered);
+      renderFeed(filtered.slice(10, 260));
+    }
+
+    // --- Item normalizer ---
+    function massageItem(raw = {}) {
+      const url = rewriteGoogleNewsUrl(raw.url || '');
+      const published = raw.published_at || raw.pubDate || raw.date || null;
+      let published_at;
+      if (published) {
+        const d = new Date(published);
+        if (!isNaN(d.getTime())) published_at = d.toISOString();
       }
-    
-      // --- Tags ---
-      const TAG_ALIASES = {
-        "pe":"Private Equity","private-equity":"Private Equity","private equity":"Private Equity",
-        "re":"Real Estate","real-estate":"Real Estate","real estate":"Real Estate",
-        "infra":"Infrastructure","infrastructure":"Infrastructure",
-        "em":"Emerging Markets","emerging-markets":"Emerging Markets","emerging markets":"Emerging Markets",
-        "direct lending":"Direct Lending","clo":"CLO","nav":"NAV","bdc":"BDC","abs":"ABS"
-      };
-      function normalizeTag(s=""){ const k = String(s).trim().toLowerCase(); return TAG_ALIASES[k] || s; }
-      function toTagArray(t){ if (Array.isArray(t)) return t; if (typeof t === 'string') return t.split(',').map(x=>x.trim()).filter(Boolean); return []; }
-      function inferTagsFromText(text=""){
-        const t = text.toLowerCase(); const out = new Set();
-        if (/(private\s*equity|\bpe\b|buyout|leveraged buyout|sponsor-backed)/.test(t)) out.add("Private Equity");
-        if (/(real\s*estate|\breit\b|multifamily|office|industrial|property|mortgage|construction loan)/.test(t)) out.add("Real Estate");
-        if (/(infrastructure|data center|renewable|solar|wind|transmission|toll road|airport|port|pipeline)/.test(t)) out.add("Infrastructure");
-        if (/(emerging markets|\bem\b|latam|latin america|india|asean|africa|mena|ceemea|turkey|brazil|mexico)/.test(t)) out.add("Emerging Markets");
-        if (/(direct lending)/.test(t)) out.add("Direct Lending");
-        if (/\bclo\b/.test(t)) out.add("CLO");
-        if (/\bnav\b/.test(t)) out.add("NAV");
-        if (/\bbdc\b/.test(t)) out.add("BDC");
-        if (/\babs\b/.test(t)) out.add("ABS");
-        return Array.from(out);
-      }
-    
-      // --- Renderers ---
-      function renderTop10(items){
-        const el = document.getElementById('top10');
-        el.innerHTML = (items||[]).slice(0,10).map(i=>{
-          const host = publisherHost(i);
-          const when = timeAgo(i.published_at || i.pubDate || Date.now());
-          const href = i.url || '#';
-          return `
-            <a class="card" href="${href}" target="_blank" rel="noopener">
-              <div class="card-title">${cleanTitle(i.title||'')}</div>
-              <div class="card-meta">${badgeHTML(host)} ${when}</div>
-              ${tagPills(i.tags)}
-            </a>`;
-        }).join('');
-      }
-      function renderFeed(items){
-        const el = document.getElementById('feed');
-        el.innerHTML = (items||[]).map(i=>{
-          const host = publisherHost(i);
-          const when = timeAgo(i.published_at || i.pubDate || Date.now());
-          const href = i.url || '#';
-          return `
-            <a href="${href}" target="_blank" rel="noopener">
-              <span>${badgeHTML(host)}${cleanTitle(i.title||'')}</span>
-              <span class="right">${host} · ${when}</span>
-            </a>`;
-        }).join('');
-      }
-    
-      // --- Filter ---
-      function applyFilter(tag='All'){
-        const selected = normalizeTag(tag);
-        const filtered = selected==='All'
-          ? _items
-          : _items.filter(i => toTagArray(i.tags).map(t=>normalizeTag(t)).includes(selected));
-        renderTop10(filtered);
-        renderFeed(filtered.slice(10, 260));
-      }
-    
-      // --- Item normalizer ---
-      function massageItem(raw = {}) {
-        const url = rewriteGoogleNewsUrl(raw.url || '');
-        const published = raw.published_at || raw.pubDate || raw.date || null;
-        let published_at;
-        if (published) {
-          const d = new Date(published);
-          if (!isNaN(d.getTime())) published_at = d.toISOString();
-        }
-        const tags = toTagArray(raw.tags || []);
-        return { ...raw, url, published_at, tags };
-      }
-    
-      // --- Data load (tolerant of payload shapes) ---
-      function normalizeFeedData(data) {
-        if (!data) return [];
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data.items) && data.items.length) return data.items;
-        if (Array.isArray(data.top10) && data.top10.length) return data.top10;
-        if (data.title && data.url) return [data];
-        return [];
-      }
-    
-      async function loadFeed(){
-        try{
-          const url = `${API}?ts=${Date.now()}`;
-          const res = await fetch(url, { cache: 'no-store' });
-          if (!res.ok) throw new Error(`Feed HTTP ${res.status}`);
-          const data = await res.json();
-    
-          const rawItems = normalizeFeedData(data);
-          if (!rawItems.length) {
-            const feed = document.getElementById('feed');
-            if (feed) {
-              feed.innerHTML = `
-                <div style="color:#6b7280">No stories available right now.</div>
-                <div><a href="${url}" target="_blank" rel="noopener">Open raw API response</a></div>
-              `;
-            }
-            const top = document.getElementById('top10');
-            if (top) top.innerHTML = '';
-            return;
-          }
-    
-          _items = rawItems.map(i => {
-            const baseTags = toTagArray(i.tags);
-            const inferred = inferTagsFromText([i.title, i.summary, i.description].filter(Boolean).join(' '));
-            const merged = Array.from(new Set([...baseTags, ...inferred]));
-            return massageItem({ ...i, tags: merged });
-          }).sort((a,b)=> new Date(b.published_at||b.pubDate||0) - new Date(a.published_at||a.pubDate||0));
-    
-          applyFilter('All');
-        }catch(e){
-          console.error('Feed load error', e);
+      const tags = toTagArray(raw.tags || []);
+      return { ...raw, url, published_at, tags };
+    }
+
+    // --- Data load (tolerant of payload shapes) ---
+    function normalizeFeedData(data) {
+      if (!data) return [];
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data.items) && data.items.length) return data.items;
+      if (Array.isArray(data.top10) && data.top10.length) return data.top10;
+      if (data.title && data.url) return [data];
+      return [];
+    }
+
+    async function loadFeed(){
+      try{
+        const url = `${API}?ts=${Date.now()}`;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Feed HTTP ${res.status}`);
+        const data = await res.json();
+
+        const rawItems = normalizeFeedData(data);
+        console.log('Feed counts', { items: rawItems.length, apiKeys: Object.keys(data) });
+
+        if (!rawItems.length) {
           const feed = document.getElementById('feed');
-          if (feed) feed.innerHTML = `<div style="color:#b91c1c">⚠️ Failed to load feed: ${e.message}</div>`;
+          if (feed) {
+            feed.innerHTML = `
+              <div style="color:#6b7280">No stories available right now.</div>
+              <div><a href="${url}" target="_blank" rel="noopener">Open raw API response</a></div>
+            `;
+          }
+          const top = document.getElementById('top10');
+          if (top) top.innerHTML = '';
+          return;
         }
+
+        _items = rawItems.map(i => {
+          const baseTags = toTagArray(i.tags);
+          const inferred = inferTagsFromText([i.title, i.summary, i.description].filter(Boolean).join(' '));
+          const merged = Array.from(new Set([...baseTags, ...inferred]));
+          return massageItem({ ...i, tags: merged });
+        }).sort((a,b)=> new Date(b.published_at||b.pubDate||0) - new Date(a.published_at||a.pubDate||0));
+
+        applyFilter('All');
+      }catch(e){
+        console.error('Feed load error', e);
+        const feed = document.getElementById('feed');
+        if (feed) feed.innerHTML = `<div style="color:#b91c1c">⚠️ Failed to load feed: ${e.message}</div>`;
       }
-    
-      function updateLastUpdated(){
-        const now = new Date();
-        const formatted = now.toLocaleString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, month:'short', day:'numeric' });
-        const el = document.getElementById('last-updated');
-        if (el) el.textContent = `Last updated: ${formatted}`;
-      }
-    
-      // --- Debug (optional) ---
-      async function debugPing(){
-        try{
-          const r = await fetch(`${API}?ts=${Date.now()}`, { cache:'no-store' });
-          console.log('API status', r.status);
-          const j = await r.json();
-          console.log('API payload', {top10: j.top10?.length || 0, items: j.items?.length || 0}, j);
-        }catch(err){
-          console.error('API fetch failed', err);
-        }
-      }
-    
-      // --- Init ---
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('#filters .pill').forEach(btn=>{
-          btn.addEventListener('click', () => {
-            document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
-            btn.classList.add('pill--active');
-            applyFilter(btn.dataset.tag);
-          });
+    }
+
+    function updateLastUpdated(){
+      const now = new Date();
+      const formatted = now.toLocaleString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, month:'short', day:'numeric' });
+      const el = document.getElementById('last-updated');
+      if (el) el.textContent = `Last updated: ${formatted}`;
+    }
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#filters .pill').forEach(btn=>{
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#filters .pill').forEach(b=>b.classList.remove('pill--active'));
+          btn.classList.add('pill--active');
+          applyFilter(btn.dataset.tag);
         });
-        loadFeed().then(updateLastUpdated);
-        // debugPing(); // uncomment if you want console diagnostics
       });
-    </script>
+      loadFeed().then(updateLastUpdated);
+    });
+  </script>
 </body>
 </html>
