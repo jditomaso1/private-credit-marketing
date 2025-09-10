@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Shadow Ratings — Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Rules-based shadow ratings for private credit: leverage, coverage, size, structure, covenants, liquidity, sponsor, and sector." />
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Poppins, sans-serif; margin:0; background:#f7f7f8; color:#111; }
+    .wrap { max-width: 1000px; margin: 24px auto; padding: 0 20px 40px; }
+    h1 { font-size: 28px; margin: 10px 0 4px; }
+    p.sub { color:#555; margin: 0 0 16px; }
+    .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
+    .card { background:#fff; border:1px solid #eee; border-radius:12px; padding:16px; }
+    .card h2 { font-size:16px; margin:0 0 12px; }
+    .row { display:grid; grid-template-columns: 1fr 140px; gap: 12px; align-items:center; margin-bottom:10px; }
+    .row label { font-size:14px; color:#333; }
+    input[type="number"], select {
+      width: 100%; padding:10px 12px; font-size:14px; border:1px solid #ddd; border-radius:8px; background:#fff;
+    }
+    .help { font-size:12px; color:#666; margin-top:2px; }
+    .result { display:flex; align-items:baseline; gap:12px; }
+    .rating { font-weight:700; font-size:28px; }
+    .score { font-size:13px; color:#444; }
+    table { width:100%; border-collapse: collapse; margin-top:10px; font-size:13px; }
+    th, td { text-align:left; padding:8px 6px; border-bottom:1px solid #f0f0f0; }
+    th { font-weight:600; color:#333; }
+    .pill { display:inline-block; padding:4px 8px; border:1px solid #e5e7eb; background:#f9fafb; color:#374151; border-radius:999px; font-size:12px; }
+    .muted { color:#666; font-size:12px; }
+    .footer { margin-top: 8px; color:#666; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Shadow Ratings</h1>
+    <p class="sub">Transparent, rules-based scoring with an easy mapping to letter grades. Designed for private credit workflows.</p>
+
+    <div class="grid">
+      <!-- LEFT: INPUTS -->
+      <div class="card">
+        <h2>Inputs</h2>
+
+        <div class="row">
+          <label>Net Debt / EBITDA (x)</label>
+          <input id="lev" type="number" step="0.1" min="0" placeholder="e.g., 4.2" />
+        </div>
+
+        <div class="row">
+          <label>EBITDA / Interest (x)</label>
+          <input id="icr" type="number" step="0.1" min="0" placeholder="e.g., 3.5" />
+        </div>
+
+        <div class="row">
+          <label>EBITDA Size (USD, $m)</label>
+          <input id="ebitda" type="number" step="1" min="0" placeholder="e.g., 45" />
+        </div>
+
+        <div class="row">
+          <label>EBITDA Margin (%)</label>
+          <input id="margin" type="number" step="1" min="-100" max="100" placeholder="e.g., 22" />
+        </div>
+
+        <div class="row">
+          <label>Revenue Growth YoY (%)</label>
+          <input id="growth" type="number" step="1" min="-100" max="200" placeholder="e.g., 6" />
+        </div>
+
+        <div class="row">
+          <label>Security / Seniority</label>
+          <select id="seniority">
+            <option value="first">1st Lien</option>
+            <option value="unitranche">Unitranche</option>
+            <option value="second">2nd Lien</option>
+            <option value="mezz">Mezz / PIK Pref</option>
+            <option value="unsecured">Unsecured</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Covenants</label>
+          <select id="covs">
+            <option value="full">Maintenance package</option>
+            <option value="incurrence">Incurrence-only</option>
+            <option value="lite">Covenant-lite</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Liquidity Runway (months)</label>
+          <input id="liq" type="number" step="1" min="0" placeholder="e.g., 12" />
+        </div>
+
+        <div class="row">
+          <label>Sponsor Quality</label>
+          <select id="sponsor">
+            <option value="t1">Tier 1</option>
+            <option value="t2">Tier 2</option>
+            <option value="weak">Non-sponsor / Weak</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Industry Risk</label>
+          <select id="sector">
+            <option value="low">Low</option>
+            <option value="mid" selected>Mid</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <p class="footer">Tip: change any field to see the rating update immediately.</p>
+      </div>
+
+      <!-- RIGHT: OUTPUTS -->
+      <div class="card">
+        <h2>Result</h2>
+        <div class="result">
+          <div class="rating" id="finalRating">—</div>
+          <div class="pill" id="pdHint">PD overlay: —</div>
+        </div>
+        <div class="muted" id="explain">Enter inputs to compute a rating.</div>
+
+        <table id="breakdown">
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Points</th>
+              <th>Max</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <th id="totalPoints">0</th>
+              <th>100</th>
+              <th id="guards">—</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <p class="footer">Method: rules grid → 0–100 score → mapped to rating. Guardrails cap extremes. (AI notch overlay optional later.)</p>
+  </div>
+
+  <script>
+    // === Scoring grid (transparent, tweakable) ===
+    const GRID = {
+      // Each factor has max points (≈ weight * 100) and bucket rules returning a point value.
+      leverage: {
+        label: "Net Debt / EBITDA",
+        max: 25,
+        buckets: v => v==null ? 0 :
+          v <= 2.5 ? 25 :
+          v <= 3.5 ? 22 :
+          v <= 4.5 ? 18 :
+          v <= 5.5 ? 14 :
+          v <= 6.5 ? 8  : 2
+      },
+      coverage: {
+        label: "EBITDA / Interest",
+        max: 25,
+        buckets: v => v==null ? 0 :
+          v >= 5.0 ? 25 :
+          v >= 4.0 ? 22 :
+          v >= 3.0 ? 18 :
+          v >= 2.0 ? 12 :
+          v >= 1.5 ? 6  : 0
+      },
+      size: {
+        label: "EBITDA Size ($m)",
+        max: 10,
+        buckets: v => v==null ? 0 :
+          v > 100 ? 10 :
+          v >= 50 ? 8 :
+          v >= 25 ? 6 :
+          v >= 10 ? 4 :
+          v >= 5  ? 2 : 0
+      },
+      margin: {
+        label: "EBITDA Margin (%)",
+        max: 5,
+        buckets: v => v==null ? 0 :
+          v >= 25 ? 5 :
+          v >= 15 ? 4 :
+          v >= 10 ? 2 : 0
+      },
+      growth: {
+        label: "Revenue Growth (%)",
+        max: 5,
+        buckets: v => v==null ? 0 :
+          v > 10 ? 5 :
+          v >= 5 ? 4 :
+          v >= 0 ? 2 : 0
+      },
+      seniority: {
+        label: "Security / Seniority",
+        max: 10,
+        buckets: v =>
+          v==="first" ? 10 :
+          v==="unitranche" ? 8 :
+          v==="second" ? 5 :
+          v==="mezz" ? 2 :
+          v==="unsecured" ? 0 : 0
+      },
+      covenants: {
+        label: "Covenants",
+        max: 5,
+        buckets: v =>
+          v==="full" ? 5 :
+          v==="incurrence" ? 2 :
+          v==="lite" ? 1 : 0
+      },
+      liquidity: {
+        label: "Liquidity Runway (months)",
+        max: 5,
+        buckets: v => v==null ? 0 :
+          v > 18 ? 5 :
+          v >= 12 ? 4 :
+          v >= 6 ? 2 : 0
+      },
+      sponsor: {
+        label: "Sponsor Quality",
+        max: 5,
+        buckets: v =>
+          v==="t1" ? 5 :
+          v==="t2" ? 3 :
+          v==="weak" ? 1 : 0
+      },
+      sector: {
+        label: "Industry Risk",
+        max: 5,
+        buckets: v =>
+          v==="low" ? 5 :
+          v==="mid" ? 3 :
+          v==="high" ? 1 : 0
+      }
+    };
+
+    // Rating mapping (tune bands to taste)
+    function toLetter(total, guards) {
+      // Cap if hard guardrails triggered
+      let capped = total;
+      if (guards.capAtBminus) capped = Math.min(capped, 62); // ~B-
+      if (guards.capAtCCC) capped = Math.min(capped, 52);   // ~CCC+
+
+      return (
+        capped >= 85 ? "BB+" :
+        capped >= 80 ? "BB"  :
+        capped >= 75 ? "BB-" :
+        capped >= 70 ? "B+"  :
+        capped >= 65 ? "B"   :
+        capped >= 60 ? "B-"  :
+        capped >= 50 ? "CCC+": 
+        capped >= 40 ? "CCC" :
+                       "CCC-"
+      );
+    }
+
+    // Simple “PD hint” stub (placeholder for ML overlay later)
+    function pdHint(letter, total){
+      // crude heuristic band → replace with ML PD later
+      const map = {
+        "BB+": "≈1–2% PD",
+        "BB":  "≈2–3% PD",
+        "BB-": "≈3–4% PD",
+        "B+":  "≈4–6% PD",
+        "B":   "≈6–8% PD",
+        "B-":  "≈8–12% PD",
+        "CCC+":"≈12–20% PD",
+        "CCC": "≈20–30% PD",
+        "CCC-":"≈30%+ PD"
+      };
+      return map[letter] || "—";
+    }
+
+    // Guardrails (deterministic “policy” brakes)
+    function guardrails(inputs){
+      const g = { notes: [] };
+      if (inputs.lev != null && inputs.lev > 6.5) { g.capAtBminus = true; g.notes.push("Leverage > 6.5x cap"); }
+      if (inputs.icr != null && inputs.icr < 1.5)  { g.capAtBminus = true; g.notes.push("Coverage < 1.5x cap"); }
+      if ((inputs.growth != null && inputs.growth < 0) && (inputs.icr != null && inputs.icr < 2)) {
+        g.capAtCCC = true; g.notes.push("Neg. growth + low coverage cap");
+      }
+      return g;
+    }
+
+    function getInputs(){
+      const v = id => document.getElementById(id);
+      const num = x => {
+        const n = Number(x); return Number.isFinite(n) ? n : null;
+      };
+      return {
+        lev:     num(v('lev').value),
+        icr:     num(v('icr').value),
+        ebitda:  num(v('ebitda').value),
+        margin:  num(v('margin').value),
+        growth:  num(v('growth').value),
+        seniority: v('seniority').value,
+        covs:      v('covs').value,
+        liq:     num(v('liq').value),
+        sponsor: v('sponsor').value,
+        sector:  v('sector').value
+      };
+    }
+
+    function score(inputs){
+      const rows = [];
+      let total = 0;
+
+      const push = (key, val, note) => {
+        const f = GRID[key];
+        const pts = f.buckets(val);
+        rows.push({ factor: f.label, pts, max: f.max, note: note || "" });
+        total += Math.min(pts, f.max); // safety
+      };
+
+      push("leverage", inputs.lev, inputs.lev!=null ? `${inputs.lev.toFixed(1)}x` : "");
+      push("coverage", inputs.icr, inputs.icr!=null ? `${inputs.icr.toFixed(1)}x` : "");
+      push("size",     inputs.ebitda, inputs.ebitda!=null ? `$${inputs.ebitda.toFixed(0)}m` : "");
+      push("margin",   inputs.margin, inputs.margin!=null ? `${inputs.margin.toFixed(0)}%` : "");
+      push("growth",   inputs.growth, inputs.growth!=null ? `${inputs.growth.toFixed(0)}%` : "");
+      push("seniority",inputs.seniority, toLabel(inputs.seniority));
+      push("covenants",inputs.covs, toCov(inputs.covs));
+      push("liquidity",inputs.liq, inputs.liq!=null ? `${inputs.liq.toFixed(0)} mo` : "");
+      push("sponsor",  inputs.sponsor, toSponsor(inputs.sponsor));
+      push("sector",   inputs.sector, toSector(inputs.sector));
+
+      return { total: Math.round(total), rows };
+    }
+
+    function toLabel(v){
+      return v==="first"?"1st Lien":v==="unitranche"?"Unitranche":v==="second"?"2nd Lien":v==="mezz"?"Mezz/PIK":v==="unsecured"?"Unsecured":"";
+    }
+    function toCov(v){ return v==="full"?"Maintenance":v==="incurrence"?"Incurrence-only":v==="lite"?"Cov-lite":""; }
+    function toSponsor(v){ return v==="t1"?"Tier 1":v==="t2"?"Tier 2":v==="weak"?"Non/Weak":""; }
+    function toSector(v){ return v==="low"?"Low":v==="mid"?"Mid":"High"; }
+
+    function render(){
+      const inputs = getInputs();
+      const guards = guardrails(inputs);
+      const s = score(inputs);
+      const letter = toLetter(s.total, guards);
+
+      // rating header
+      document.getElementById('finalRating').textContent = letter;
+      document.getElementById('pdHint').textContent = `PD overlay: ${pdHint(letter, s.total)}`;
+      document.getElementById('explain').textContent = `Base score ${s.total}/100 via rules grid. ${guards.notes?.length ? "Guardrails: " + guards.notes.join("; ") : "No caps"}.`;
+
+      // breakdown table
+      const tbody = document.querySelector('#breakdown tbody');
+      tbody.innerHTML = s.rows.map(r => `
+        <tr>
+          <td>${r.factor}</td>
+          <td>${r.pts}</td>
+          <td>${r.max}</td>
+          <td>${r.note || ""}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('totalPoints').textContent = s.total;
+      document.getElementById('guards').textContent = guards.notes?.length ? guards.notes.join("; ") : "—";
+    }
+
+    // Wire inputs
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', render);
+      el.addEventListener('change', render);
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
