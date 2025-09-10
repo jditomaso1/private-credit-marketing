@@ -332,10 +332,22 @@ export default async function handler(req, res) {
       return true;
     });
 
-    // 24h window preference
-    const cutoff = Date.now() - 72*3600*1000;
-    const within24h = itemsDeduped.filter(i => new Date(i.published_at).getTime() >= cutoff);
-    const base = within24h.length ? within24h : itemsDeduped;
+    // Prefer last 24h, then backfill to reach a target count
+    const TARGET = 300;                       // or 320 if you want extra headroom
+    const cutoff = Date.now() - 24*3600*1000; // keep 24h as “priority”
+    const recent = itemsDeduped.filter(i => new Date(i.published_at).getTime() >= cutoff);
+    
+    // Backfill with older items until TARGET
+    let base = recent.slice();
+    if (base.length < TARGET) {
+      for (const it of itemsDeduped) {
+        const ts = new Date(it.published_at).getTime();
+        if (ts < cutoff) {
+          base.push(it);
+          if (base.length >= TARGET) break;
+        }
+      }
+    }
 
     // Domain-balanced outputs
     const top10 = topNWithDomainCap(base, 10);
