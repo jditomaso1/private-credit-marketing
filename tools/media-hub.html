@@ -94,6 +94,12 @@
     }
   </style>
 
+  <style>
+    .source-toggles { display:flex; gap:12px; align-items:center; margin: -8px 0 10px; }
+    .toggle { font-size:13px; color:#444; }
+    .toggle input { vertical-align:middle; margin-right:6px; }
+  </style>
+  
   <!-- Structured data -->
   <script type="application/ld+json">
   {
@@ -166,7 +172,7 @@
       </header>
 
       <!-- Filters -->
-      <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
+      <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px;">
         <button data-tag="All" class="pill pill--active">All</button>
         <button data-tag="Direct Lending" class="pill">Direct Lending</button>
         <button data-tag="CLO" class="pill">CLO</button>
@@ -180,6 +186,14 @@
         <button data-tag="Ratings" class="pill">Ratings</button>
         <button data-tag="Bankruptcy" class="pill">Bankruptcy</button>
       </nav>
+      
+      <!-- Toggle lives outside nav -->
+      <div class="source-toggles" style="margin: -6px 0 20px;">
+        <label class="toggle">
+          <input type="checkbox" id="toggle-sec" checked />
+          Include SEC filings
+        </label>
+      </div>
 
       <h3 style="margin:10px 0 12px;font-size:20px;">Top 10 Today</h3>
       <div id="top10" class="grid"></div>
