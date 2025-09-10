@@ -251,7 +251,7 @@ function topNWithDomainCap(list, n = 10) {
 
 // Interleave/cap for the long list, but always fill up to `total`
 function interleaveWithCaps(list, total = 300) {
-  const perDomainDefault = 60;                       // was 30
+  const perDomainDefault = 200;                       // was 30
   const perDomainCaps = new Map([['sec.gov', 20]]);  // only keep a cap for SEC
   const counts = new Map();
   const out = [];
