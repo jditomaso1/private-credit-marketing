@@ -249,12 +249,14 @@ function topNWithDomainCap(list, n = 10) {
   return out.slice(0, n);
 }
 
-// Interleave/cap for the long list as well.
+// Interleave/cap for the long list, but always fill up to `total`
 function interleaveWithCaps(list, total = 300) {
-  const perDomainDefault = 30;
-  const perDomainCaps = new Map([['sec.gov', 20]]); // hard cap for SEC
+  const perDomainDefault = 60;                       // was 30
+  const perDomainCaps = new Map([['sec.gov', 20]]);  // only keep a cap for SEC
   const counts = new Map();
   const out = [];
+
+  // Pass 1: enforce caps to keep variety
   for (const it of list) {
     const d = it.source || 'unknown';
     const cap = perDomainCaps.get(d) ?? perDomainDefault;
@@ -262,9 +264,18 @@ function interleaveWithCaps(list, total = 300) {
     if (c >= cap) continue;
     out.push(it);
     counts.set(d, c + 1);
-    if (out.length === total) break;
+    if (out.length === total) return out;
   }
-  return out;
+
+  // Pass 2: backfill remaining slots ignoring caps
+  if (out.length < total) {
+    for (const it of list) {
+      if (out.length === total) break;
+      if (!out.includes(it)) out.push(it);
+    }
+  }
+
+  return out.slice(0, total);
 }
 
 // -------------------- Handler --------------------
