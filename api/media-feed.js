@@ -292,6 +292,10 @@ export default async function handler(req, res) {
         try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
 
         if (host === SEC_HOST) {
+          // TEMP: skip SEC items entirely
+          continue;
+        
+          /*
           if (!isUsefulSecItem(it)) continue;
           all.push({
             title: formatSecTitle(it),
@@ -302,6 +306,7 @@ export default async function handler(req, res) {
             tags: Array.from(new Set([...tagger(`${it.title} ${summary}`), 'Regulatory']))
           });
           continue;
+          */
         }
 
         all.push({
