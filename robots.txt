@@ -1,4 +1,3 @@
 User-agent: *
-Disallow:
-
+Disallow:/knowledge/resources/
 Sitemap: https://private-credit.ai/sitemap.xml
