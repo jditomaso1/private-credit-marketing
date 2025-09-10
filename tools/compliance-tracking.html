@@ -34,7 +34,43 @@
       display: flex;
       gap: 16px;
     }
+    /* === Compact tab-style sub-nav (override pill styles) === */
+    nav.tool-tabs {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 6px 0 18px;
+      border-bottom: 1px solid #e5e7eb;
+      overflow-x: auto;         /* keeps to one row, scrolls if needed */
+      white-space: nowrap;
+      padding-bottom: 6px;
+    }
     
+    nav.tool-tabs .tool-tab {
+      /* kill the pill look */
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    
+      padding: 8px 0;           /* top/bottom only */
+      font-size: 14px;
+      color: #6b7280;           /* muted */
+      text-decoration: none;
+      line-height: 1;
+      border-bottom: 2px solid transparent;  /* the “tab” underline */
+      transition: color .15s ease, border-color .15s ease;
+    }
+    
+    nav.tool-tabs .tool-tab:hover {
+      color: #111;
+    }
+    
+    nav.tool-tabs .tool-tab.active {
+      color: #111;
+      font-weight: 600;
+      border-bottom-color: #2c7cf1;  /* brand underline for active tab */
+    }
     .tool-tab {
       padding: 6px 0;
       font-size: 14px;
