@@ -163,24 +163,108 @@ function extractSecForm(rawTitle='') {
   let form = m[1].replace(/^FORM\s+/, '').replace(/\s+/g,' ').toUpperCase();
   return form.replace(/^DEF\s*14A$/, 'DEF 14A');
 }
-function extractSecCompany(summary='', content='', title='') {
-  const blob = [summary, content, title].join(' ');
-  let m = blob.match(/([A-Z0-9&.,' -]{3,100})\s*\(CIK\s*\d{3,}\)\s*\(Filer\)/i);
+
+// Extra company extractors (title & summary)
+function extractSecCompanyFromTitle(t='') {
+  const s = String(t);
+
+  // Common: "Form 8-K - Company Name (Filer)"
+  let m = s.match(/Form\s+[A-Z0-9-]+\s*[-–—]\s*([^<(]{2,120})/i);
   if (m) return m[1].trim();
-  m = blob.match(/Company(?: Name)?:\s*([^\n<]{3,100})/i);
+
+  // Sometimes: "8-K - Company Name"
+  m = s.match(/\b[0-9A-Z-]{3,}\b\s*[-–—]\s*([^<(]{2,120})/);
   if (m) return m[1].trim();
-  m = blob.match(/For:\s*([^\n<]{3,100})/i);
+
+  // Sometimes reversed: "Company Name - 8-K"
+  m = s.match(/^([^–—-]{3,120})\s*[-–—]\s*(?:Form\s+)?[0-9A-Z-]{3,}\b/i);
   if (m) return m[1].trim();
+
   return '';
 }
+
+function extractSecCompany(summary='', content='', title='') {
+  // Try title patterns first (most reliable)
+  let fromTitle = extractSecCompanyFromTitle(title);
+  if (fromTitle) return fromTitle;
+
+  const blob = [summary, content, title].join(' ');
+
+  // Atom often includes "Company Name: XYZ" or "For: XYZ"
+  let m = blob.match(/Company(?: Name)?:\s*([^\n<]{3,120})/i);
+  if (m) return m[1].trim();
+
+  m = blob.match(/Registrant(?: Name)?:\s*([^\n<]{3,120})/i);
+  if (m) return m[1].trim();
+
+  m = blob.match/\bIssuer:\s*([^\n<]{3,120})/i;
+  if (m) return m[1].trim();
+
+  m = blob.match(/For:\s*([^\n<]{3,120})/i);
+  if (m) return m[1].trim();
+
+  // Filer line: "ACME CORP (CIK 000012345) (Filer)"
+  m = blob.match(/([A-Z0-9&.,' /-]{3,120})\s*\(CIK\s*\d{3,}\)\s*\(Filer\)/i);
+  if (m) return m[1].trim();
+
+  return '';
+}
+
 function formatSecTitle(it) {
   const form = extractSecForm(it?.title || '') || '';
   const company = extractSecCompany(it?.contentSnippet || it?.content || '', it?.content || '', it?.title || '');
-  return (form && company) ? `${form}: ${company}` : (form || (it?.title || 'SEC Filing'));
+  if (form && company) return `${form}: ${company}`;
+  if (form) return form;
+  return it?.title || 'SEC Filing';
 }
+
 function isUsefulSecItem(it) {
   const form = extractSecForm(it?.title || '') || '';
   return SEC_FORM_WHITELIST.has(form);
+}
+
+// -------------------- Domain balancing --------------------
+// Keep Top 10 varied (sec.gov <=2), and prevent "All Stories" flood.
+function topNWithDomainCap(list, n = 10) {
+  const caps = new Map([['sec.gov', 2]]);
+  const defaultCap = 3;
+  const byDomain = new Map();
+  const out = [];
+  for (const it of list) {
+    const d = it.source || 'unknown';
+    const limit = caps.has(d) ? caps.get(d) : defaultCap;
+    const c = byDomain.get(d) || 0;
+    if (c < limit) {
+      out.push(it);
+      byDomain.set(d, c + 1);
+      if (out.length === n) break;
+    }
+  }
+  if (out.length < n) {
+    for (const it of list) {
+      if (out.length === n) break;
+      if (!out.includes(it)) out.push(it);
+    }
+  }
+  return out.slice(0, n);
+}
+
+// Interleave/cap for the long list as well.
+function interleaveWithCaps(list, total = 300) {
+  const perDomainDefault = 30;
+  const perDomainCaps = new Map([['sec.gov', 20]]); // hard cap for SEC
+  const counts = new Map();
+  const out = [];
+  for (const it of list) {
+    const d = it.source || 'unknown';
+    const cap = perDomainCaps.get(d) ?? perDomainDefault;
+    const c = counts.get(d) || 0;
+    if (c >= cap) continue;
+    out.push(it);
+    counts.set(d, c + 1);
+    if (out.length === total) break;
+  }
+  return out;
 }
 
 // -------------------- Handler --------------------
@@ -196,6 +280,7 @@ export default async function handler(req, res) {
     for (const r of results) {
       if (r.status !== 'fulfilled') continue;
       const feed = r.value;
+
       for (const it of (feed.items || [])) {
         // skip audio-only items
         if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) continue;
@@ -235,49 +320,25 @@ export default async function handler(req, res) {
 
     // De-dupe
     const seen = new Set();
-    const items = all.filter(i => {
+    const itemsDeduped = all.filter(i => {
       const key = i.url || i.title;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
 
-    // Safety net
-    let safeItems = items.length ? items : all.slice(0, 300);
-
-    // Top10 with domain caps
-    function topNWithDomainCap(list, n = 10) {
-      const caps = new Map([['sec.gov', 2]]);
-      const defaultCap = 3;
-      const byDomain = new Map();
-      const out = [];
-      for (const it of list) {
-        const d = it.source || 'unknown';
-        const limit = caps.has(d) ? caps.get(d) : defaultCap;
-        const c = byDomain.get(d) || 0;
-        if (c < limit) {
-          out.push(it);
-          byDomain.set(d, c + 1);
-          if (out.length === n) break;
-        }
-      }
-      if (out.length < n) {
-        for (const it of list) {
-          if (out.length === n) break;
-          if (!out.includes(it)) out.push(it);
-        }
-      }
-      return out.slice(0, n);
-    }
-
+    // 24h window preference
     const cutoff = Date.now() - 24*3600*1000;
-    const within24h = safeItems.filter(i => new Date(i.published_at).getTime() >= cutoff);
-    const base = within24h.length ? within24h : safeItems;
+    const within24h = itemsDeduped.filter(i => new Date(i.published_at).getTime() >= cutoff);
+    const base = within24h.length ? within24h : itemsDeduped;
+
+    // Domain-balanced outputs
     const top10 = topNWithDomainCap(base, 10);
+    const items = interleaveWithCaps(base, 300);
 
     // Cache & respond
     res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900');
-    res.status(200).json({ top10, items: safeItems.slice(0, 300) });
+    res.status(200).json({ top10, items });
   } catch (e) {
     console.error('media-feed failed', e);
     res.status(500).json({ error: 'media feed failed' });
