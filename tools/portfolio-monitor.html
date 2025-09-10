@@ -2,18 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Loan Pricing | Private Credit AI</title>
+  <title>Portfolio Monitor | Private Credit AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Translate target returns into coupons/fees and payment profiles. Useful for term sheets and quick comps." />
+  <meta name="description" content="Monitor portfolio exposure, covenant status, and concentrations. Paste or upload CSV; get alerts and quick charts." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
   <style>
     body{font-family:Poppins,sans-serif;margin:0;background:#f4f4f4;color:#333}
     .page{max-width:1100px;margin:24px auto;padding:20px}
-    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:20px;text-align:left}
     .tool-tabs{margin:0 0 16px;display:flex;gap:8px;flex-wrap:wrap}
     .tool-tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
     .tool-tab.active{background:#111;color:#fff;border-color:#111}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05);padding:18px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px}
+    .metric{background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
+    .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
+    .metric .v{font-size:1.25rem;font-weight:700}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+    .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
+    .btn.alt{background:#10b981}
+    .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
+    input[type="number"], input[type="text"], input[type="file"], textarea, select{
+      padding:8px;border:1px solid #ddd;border-radius:10px
+    }
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #f0f0f0;font-size:.95rem}
+    th{background:#f7f7f7;text-align:left}
+    .pill{font-size:.75rem;background:#f0f2f5;border:1px solid #e1e5ea;border-radius:999px;padding:4px 8px}
+    .alert{display:flex;gap:8px;align-items:flex-start;padding:10px;border:1px solid #fde68a;background:#fffbeb;border-radius:10px}
+    .alert.danger{border-color:#fecaca;background:#fff1f2}
+    canvas{width:100%;height:260px;display:block}
+    .charts{display:grid;grid-template-columns:repeat(2,minmax(260px,1fr));gap:12px}
+    @media (max-width:900px){ .charts{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
@@ -30,6 +50,7 @@
       <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
       <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
       <a class="tool-tab" href="/tools/shadow-ratings-basic.html">Shadow Ratings</a>
+      <a class="tool-tab" href="/tools/portfolio-monitor.html">Portfolio Monitor</a>
     </nav>
     <script>
       (function(){
@@ -43,300 +64,387 @@
       })();
     </script>
 
-    <!-- Page content -->
-    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Loan Pricing</h1>
-    <p style="margin:0 0 16px;color:#666;">Track new-issue economics: coupon, proceeds, all-in yield, fees — with IO/AM schedules, PIK, and optional prepay.</p>
+    <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;">Portfolio Monitor</h1>
+    <p style="margin:0 0 16px;color:#666;">Paste/upload a CSV of deals to track exposure, covenant status, concentrations, and quick alerts.</p>
 
-    <!-- ===== Loan Pricing Tool ===== -->
-    <div id="pricing-tool" style="max-width:1100px;margin:0 auto;">
-      <!-- Controls -->
-      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:18px;margin:12px 0;">
-        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
-          <div>
-            <label>Amount</label><br>
-            <input id="p_amount" type="number" value="1000000" step="1000" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:160px">
-          </div>
-          <div>
-            <label>Base (e.g., SOFR %)</label><br>
-            <input id="p_base" type="number" value="5.25" step="0.01" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
-          </div>
-          <div>
-            <label>Spread (bps)</label><br>
-            <input id="p_spread" type="number" value="450" step="5" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
-          </div>
-          <div>
-            <label>Floor (%)</label><br>
-            <input id="p_floor" type="number" value="0.00" step="0.05" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
-          </div>
-          <div>
-            <label>OID (%)</label><br>
-            <input id="p_oid" type="number" value="2.00" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
-          </div>
-          <div>
-            <label>Upfront Fee (%)</label><br>
-            <input id="p_upfront" type="number" value="0.50" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
-          </div>
-          <div>
-            <label>Exit Fee (%)</label><br>
-            <input id="p_exit" type="number" value="1.00" step="0.1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
-          </div>
-          <div>
-            <label>PIK (%)</label><br>
-            <input id="p_pik" type="number" value="0.00" step="0.25" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:100px">
-          </div>
-          <div>
-            <label>Term (months)</label><br>
-            <input id="p_term" type="number" value="36" step="1" min="1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:110px">
-          </div>
-          <div>
-            <label>Frequency</label><br>
-            <select id="p_freq" style="padding:8px;border:1px solid #ddd;border-radius:10px">
-              <option value="12" selected>Monthly</option>
-              <option value="4">Quarterly</option>
-              <option value="2">Semi-Annual</option>
-              <option value="1">Annual</option>
-            </select>
-          </div>
-          <div>
-            <label>Amortization</label><br>
-            <select id="p_amort" style="padding:8px;border:1px solid #ddd;border-radius:10px">
-              <option value="io" selected>Interest-Only + Bullet</option>
-              <option value="am">Level-Payment Amortizing</option>
-            </select>
-          </div>
-          <div>
-            <label>Prepay at month (optional)</label><br>
-            <input id="p_prepay" type="number" placeholder="e.g., 18" step="1" min="1" style="padding:8px;border:1px solid #ddd;border-radius:10px;width:130px">
-          </div>
-
-          <div style="margin-left:auto;display:flex;gap:8px">
-            <button id="p_build" class="btn">Price / Refresh</button>
-            <button id="p_addRow" class="btn alt">+ Cash Flow</button>
-            <button id="p_download" class="btn ghost">Download CSV</button>
-          </div>
+    <!-- Controls -->
+    <div class="card" style="margin:12px 0;">
+      <div class="controls">
+        <div>
+          <label for="file">Upload CSV</label><br>
+          <input id="file" type="file" accept=".csv">
         </div>
-        <p style="margin:10px 2px 0;color:#666"><small>
-          Coupon = max(Base, Floor) + Spread. All-in Yield = annualized IRR from generated cash-flows (incl. OID, fees, exit, PIK, amortization, prepay).
-        </small></p>
-      </div>
-
-      <!-- Headline metrics -->
-      <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:12px;margin:12px 0;">
-        <div class="metric"><div class="k">All-in Coupon</div><div id="m_coupon" class="v">–</div></div>
-        <div class="metric"><div class="k">Upfront Proceeds (net OID &amp; upfront)</div><div id="m_proceeds" class="v">–</div></div>
-        <div class="metric"><div class="k">All-in Yield (IRR, annual)</div><div id="m_yield" class="v">–</div></div>
-        <div class="metric"><div class="k">MOIC</div><div id="m_moic" class="v">–</div></div>
-        <div class="metric"><div class="k">Total Interest</div><div id="m_totint" class="v">–</div></div>
-        <div class="metric"><div class="k">Total Fees (OID + Upfront + Exit)</div><div id="m_totfee" class="v">–</div></div>
-      </div>
-
-      <!-- Table -->
-      <div style="background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:16px;margin:12px 0;">
-        <div style="overflow:auto">
-          <table id="p_table" style="width:100%;border-collapse:collapse">
-            <thead>
-              <tr style="background:#f7f7f7">
-                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">#</th>
-                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Month</th>
-                <th style="text-align:right;padding:10px;border-bottom:1px solid #eee">Cash Flow</th>
-                <th style="text-align:left;padding:10px;border-bottom:1px solid #eee">Note</th>
-                <th style="padding:10px;border-bottom:1px solid #eee"></th>
-              </tr>
-            </thead>
-            <tbody id="p_body"></tbody>
-          </table>
+        <div>
+          <label for="sep">Separator</label><br>
+          <select id="sep">
+            <option value=",">Comma</option>
+            <option value=";">Semicolon</option>
+            <option value="tab">Tab</option>
+          </select>
         </div>
+        <div>
+          <label for="recency">Cert stale if &gt; days</label><br>
+          <input id="recency" type="number" value="90" min="1" style="width:120px">
+        </div>
+        <div>
+          <label for="conc">Concentration warn at %</label><br>
+          <input id="conc" type="number" value="20" min="1" style="width:140px">
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button id="loadSample" class="btn alt">Load Sample</button>
+          <button id="parse" class="btn">Parse Data</button>
+          <button id="download" class="btn ghost">Download CSV</button>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label for="raw">Or paste CSV here</label>
+        <textarea id="raw" rows="6" placeholder="Borrower,Sector,Exposure,Status,Test,Threshold,Value,AsOf
+Acme Corp,Healthcare,2500000,In Compliance,Net Leverage,4.5x,3.8x,2025-08-15
+Bravo LLC,Software,3200000,At Risk,FCCR,1.2x,1.25x,2025-07-20
+Charlie Inc,Industrials,1800000,Breach,Net Leverage,4.5x,5.1x,2025-06-30" style="width:100%;"></textarea>
+      </div>
+      <p style="color:#666;margin:6px 0 0;"><small>
+        Expected columns (order flexible): <span class="pill">Borrower</span> <span class="pill">Sector</span> <span class="pill">Exposure</span> <span class="pill">Status</span> <span class="pill">Test</span> <span class="pill">Threshold</span> <span class="pill">Value</span> <span class="pill">AsOf (YYYY-MM-DD)</span>
+      </small></p>
+    </div>
+
+    <!-- Alerts -->
+    <div id="alerts"></div>
+
+    <!-- Metrics -->
+    <div class="grid" style="margin:12px 0;">
+      <div class="metric"><div class="k">Total Exposure</div><div id="m_total" class="v">–</div></div>
+      <div class="metric"><div class="k">Borrowers</div><div id="m_borrowers" class="v">–</div></div>
+      <div class="metric"><div class="k">Sectors</div><div id="m_sectors" class="v">–</div></div>
+      <div class="metric"><div class="k">Breaches</div><div id="m_breaches" class="v">–</div></div>
+      <div class="metric"><div class="k">At Risk</div><div id="m_risk" class="v">–</div></div>
+      <div class="metric"><div class="k">Top Borrower Concentration</div><div id="m_topconc" class="v">–</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts" style="margin:12px 0;">
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:18px">Exposure by Sector</h3>
+        <canvas id="chartSector" width="500" height="260"></canvas>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 8px;font-size:18px">Status Counts</h3>
+        <canvas id="chartStatus" width="500" height="260"></canvas>
       </div>
     </div>
 
-    <style>
-      #pricing-tool label{font-size:.86rem;color:#444}
-      #pricing-tool .btn{padding:10px 14px;border:none;border-radius:10px;background:#2c7cf1;color:#fff;cursor:pointer;font-weight:600}
-      #pricing-tool .btn.alt{background:#10b981}
-      #pricing-tool .btn.ghost{background:#fff;color:#2c7cf1;border:1px solid #cfe0ff}
-      #pricing-tool .metric{background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:14px}
-      #pricing-tool .metric .k{color:#666;font-size:.85rem;margin-bottom:4px}
-      #pricing-tool .metric .v{font-size:1.25rem;font-weight:700}
-      #pricing-tool td{border-bottom:1px solid #f0f0f0}
-    </style>
-
-    <script>
-    (function(){
-      const $ = id => document.getElementById(id);
-      const body = $('p_body');
-      const fmt = n => isFinite(n) ? (Math.abs(n)>=1000 ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : n.toFixed(2)) : '–';
-      const pct = p => (p*100).toFixed(2)+'%';
-
-      // periodic IRR solver (annualize by freq)
-      function irrPeriodic(cfs){
-        const f = r => cfs.reduce((s,x)=> s + x.cf/Math.pow(1+r,x.t), 0);
-        const df= r => cfs.reduce((s,x)=> s + (-x.t*x.cf)/Math.pow(1+r,x.t+1), 0);
-        let r = 0.02;
-        for(let i=0;i<50;i++){ const fr=f(r), dfr=df(r); if(!isFinite(fr)||!isFinite(dfr)) break; const nr=r-fr/dfr; if(Math.abs(nr-r)<1e-8) return r; r=nr; if(!isFinite(r) || r<=-0.99 || r>10){ r=0.02; break; } }
-        let lo=-0.9999, hi=10, flo=f(lo), fhi=f(hi);
-        for(let k=0;k<60 && flo*fhi>0;k++){ hi/=2; fhi=f(hi); }
-        if(flo*fhi>0) return NaN;
-        for(let i=0;i<200;i++){ const mid=(lo+hi)/2, fm=f(mid); if(Math.abs(fm)<1e-8) return mid; if(flo*fm<0){ hi=mid; fhi=fm; } else { lo=mid; flo=fm; } }
-        return (lo+hi)/2;
-      }
-
-      function addRow(t=0, cf=0, note=''){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td style="padding:8px"></td>
-          <td style="padding:8px"><input class="t" type="number" value="${t}" step="1" min="0" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100px"></td>
-          <td style="padding:8px"><input class="cf" type="number" value="${cf.toFixed(2)}" step="0.01" style="padding:6px;border:1px solid #ddd;border-radius:8px;text-align:right;width:160px"></td>
-          <td style="padding:8px"><input class="note" type="text" value="${note}" style="padding:6px;border:1px solid #ddd;border-radius:8px;width:100%"></td>
-          <td style="padding:8px;text-align:right"><button class="btn ghost del">Delete</button></td>
-        `;
-        body.appendChild(tr);
-        renumber();
-        tr.querySelector('.del').onclick = ()=>{ tr.remove(); renumber(); recalc(); };
-        tr.querySelector('.t').oninput = recalc;
-        tr.querySelector('.cf').oninput = recalc;
-      }
-
-      function renumber(){
-        [...body.querySelectorAll('tr')].forEach((tr,i)=> tr.firstElementChild.textContent = i+1);
-      }
-
-      function schedule(){
-        const amt = +$('p_amount').value||0;
-        const base = (+$('p_base').value||0)/100;
-        const spread = (+$('p_spread').value||0)/10000; // bps
-        const floor = (+$('p_floor').value||0)/100;
-        const oid = (+$('p_oid').value||0)/100;
-        const upfront = (+$('p_upfront').value||0)/100;
-        const exit = (+$('p_exit').value||0)/100;
-        const pik = (+$('p_pik').value||0)/100;
-        const termM = +$('p_term').value||0;
-        const freq = +$('p_freq').value;
-        const amort = $('p_amort').value;
-        const prepayM = +$('p_prepay').value||null;
-
-        const periodM = 12/freq;
-        const cutoff = prepayM ? Math.min(prepayM, termM) : termM;
-        const n = Math.max(1, Math.round(cutoff/periodM));
-        const coupon = Math.max(base, floor) + spread;
-
-        body.innerHTML = '';
-
-        // funding at t=0 (negative), net of OID + upfront fee
-        const proceeds = amt * (1 - oid - upfront);
-        addRow(0, -proceeds, `Funded (OID ${(oid*100).toFixed(2)}% + Upfront ${(upfront*100).toFixed(2)}%)`);
-
-        if(amort==='io'){
-          let bal = amt;
-          for(let k=1;k<=n;k++){
-            const tM = Math.round(k*periodM);
-            const cashInterest = bal * (coupon/freq) * (1 - pik);
-            const pikAmt = bal * (coupon/freq) * pik;
-            bal += pikAmt; // capitalize PIK
-            const isFinal = (!prepayM && k===Math.round(termM/periodM)) || (prepayM && tM===prepayM);
-
-            if(!isFinal){
-              addRow(tM, cashInterest, pikAmt>0 ? `Cash Interest (PIK ${(pik*100).toFixed(2)}% cap'd)` : 'Cash Interest');
-            }else{
-              const exitFee = amt * exit;
-              const payoff = cashInterest + bal + exitFee;
-              addRow(tM, payoff, (prepayM?'Prepay + ':'') + `Interest + Principal + Exit (${(exit*100).toFixed(2)}%)`);
-            }
-          }
-        }else{
-          const i = coupon/freq;
-          const nTot = Math.round(termM/periodM);
-          const pmt = (i===0) ? amt/nTot : amt * (i*Math.pow(1+i,nTot))/(Math.pow(1+i,nTot)-1);
-          let bal = amt;
-
-          for(let k=1;k<=n;k++){
-            const tM = Math.round(k*periodM);
-            const interest = bal * i;
-            const pikAmt = interest * pik;
-            const cashInt = interest - pikAmt;
-            let principal = Math.min(pmt - cashInt, bal);
-            bal = bal + pikAmt - principal;
-
-            const isFinal = (!prepayM && k===nTot) || (prepayM && tM===prepayM);
-            if(!isFinal){
-              addRow(tM, cashInt + principal, pikAmt>0 ? 'Level payment (part PIK)' : 'Level payment');
-            }else{
-              const exitFee = amt * exit;
-              addRow(tM, cashInt + principal + bal + exitFee, (prepayM?'Prepay + ':'') + `Final Payment + Exit (${(exit*100).toFixed(2)}%)`);
-              bal = 0;
-            }
-          }
-        }
-
-        recalc(true, {amt, oid, upfront, exit, coupon, freq});
-      }
-
-      function tableCfs(){
-        return [...body.querySelectorAll('tr')].map(r=>({
-          t: +r.querySelector('.t').value,
-          cf: +r.querySelector('.cf').value,
-          note: r.querySelector('.note').value || ''
-        })).sort((a,b)=>a.t-b.t);
-      }
-
-      function recalc(fromBuild=false, meta={}){
-        const freq = +$('p_freq').value;
-        const rows = tableCfs();
-        if(rows.length===0){ showMetrics(NaN,NaN,0,0); return; }
-
-        const monthsToPeriods = m => m*(freq/12);
-        const cfs = rows.map(r=>({t: monthsToPeriods(r.t), cf:r.cf}));
-
-        const ann = r => isFinite(r)? (Math.pow(1+r,freq)-1) : NaN;
-        const rPer = irrPeriodic(cfs);
-        const irrAnn = ann(rPer);
-
-        const totalIn = cfs.filter(x=>x.cf>0).reduce((s,x)=>s+x.cf,0);
-        const totalOut= cfs.filter(x=>x.cf<0).reduce((s,x)=>s+x.cf,0);
-        const moic = totalIn/Math.abs(totalOut||1);
-
-        const upfrontFees = (meta.amt||0)*((meta.oid||0)+(meta.upfront||0));
-        const exitFee = (meta.amt||0)*(meta.exit||0);
-        const biggestOut = Math.abs(Math.min(...cfs.map(x=>x.cf)));
-        const interestApprox = totalIn - (biggestOut + exitFee);
-
-        if(fromBuild){
-          $('m_coupon').textContent = pct(meta.coupon||0);
-          const proceeds = (meta.amt||0) * (1 - (meta.oid||0) - (meta.upfront||0));
-          $('m_proceeds').textContent = '$'+fmt(proceeds);
-          $('m_totfee').textContent = '$'+fmt(upfrontFees + exitFee);
-        }
-        showMetrics(irrAnn, moic, interestApprox, upfrontFees+exitFee);
-      }
-
-      function showMetrics(irrAnn, moic, totalInt, totalFees){
-        $('m_yield').textContent = isFinite(irrAnn)? (irrAnn*100).toFixed(2)+'%':'–';
-        $('m_moic').textContent = isFinite(moic)? moic.toFixed(3):'–';
-        $('m_totint').textContent = isFinite(totalInt)? '$'+fmt(totalInt):'–';
-        $('m_totfee').textContent = isFinite(totalFees)? '$'+fmt(totalFees):$('m_totfee').textContent;
-      }
-
-      function downloadCSV(){
-        const rows = tableCfs(); if(rows.length===0) return;
-        const lines = [['Index','Month','CashFlow','Note']].concat(rows.map((r,i)=>[i+1,r.t,r.cf,r.note]));
-        const csv = lines.map(r=>r.map(x=>{
-          const s=(''+x).replace(/"/g,'""'); return /[",\n]/.test(s)? `"${s}"`: s;
-        }).join(',')).join('\n');
-        const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-        const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='loan_pricing_cashflows.csv'; a.click(); URL.revokeObjectURL(a.href);
-      }
-
-      // Wire up
-      document.getElementById('p_build').onclick = schedule;
-      document.getElementById('p_addRow').onclick = ()=> addRow();
-      document.getElementById('p_download').onclick = downloadCSV;
-
-      // initial build
-      schedule();
-    })();
-    </script>
+    <!-- Table -->
+    <div class="card" style="margin:12px 0;">
+      <div style="overflow:auto">
+        <table id="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Borrower</th>
+              <th>Sector</th>
+              <th style="text-align:right">Exposure</th>
+              <th>Status</th>
+              <th>Test</th>
+              <th>Threshold</th>
+              <th>Value</th>
+              <th>As Of</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
   </main>
 
   <div id="site-footer"></div>
   <script src="/includes/include.js"></script>
+
+  <script>
+  (function(){
+    // ---------- Utilities ----------
+    const $ = id => document.getElementById(id);
+    const fmt = n => isFinite(n) ? (Math.abs(n)>=1000 ? n.toLocaleString(undefined,{maximumFractionDigits:0}) : n.toFixed(0)) : '–';
+    const money = n => isFinite(n) ? '$' + Number(n).toLocaleString(undefined,{maximumFractionDigits:0}) : '–';
+    const parseNumber = s => {
+      if (s==null) return NaN;
+      const t = (''+s).replace(/[\$,]/g,'').trim();
+      const x = parseFloat(t);
+      return isNaN(x) ? NaN : x;
+    };
+    const today = new Date();
+
+    function splitRows(text, sep){
+      if(sep==='tab') sep = '\t';
+      // quick-n-clean CSV: handles commas inside quotes
+      const lines = text.replace(/\r/g,'').split('\n').filter(Boolean);
+      return lines.map(line=>{
+        const out = [];
+        let cur = '', inQ = false;
+        for(let i=0;i<line.length;i++){
+          const ch=line[i];
+          if(ch === '"'){ inQ = !inQ; continue; }
+          if(ch === sep && !inQ){ out.push(cur); cur=''; continue; }
+          cur += ch;
+        }
+        out.push(cur);
+        return out.map(x=>x.trim());
+      });
+    }
+
+    function normalizeHeaders(arr){
+      return arr.map(h=>{
+        const k = h.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+        if(/borrower|issuer|name/.test(k)) return 'Borrower';
+        if(/sector|industry/.test(k)) return 'Sector';
+        if(/exposure|amount|par|face/.test(k)) return 'Exposure';
+        if(/status|state/.test(k)) return 'Status';
+        if(/test|metric/.test(k)) return 'Test';
+        if(/threshold|limit/.test(k)) return 'Threshold';
+        if(/value|result|measured/.test(k)) return 'Value';
+        if(/as ?of|date/.test(k)) return 'AsOf';
+        return h;
+      });
+    }
+
+    function asDate(s){
+      const d = new Date(s);
+      return isNaN(d) ? null : d;
+    }
+
+    // ---------- State ----------
+    let rows = []; // normalized rows
+
+    // ---------- DOM refs ----------
+    const file = $('file'), raw = $('raw'), sep = $('sep');
+    const recency = $('recency'), conc = $('conc');
+    const tbody = $('tbody');
+    const chartSector = $('chartSector'), chartStatus = $('chartStatus');
+
+    // ---------- Actions ----------
+    $('loadSample').onclick = ()=>{
+      raw.value = `Borrower,Sector,Exposure,Status,Test,Threshold,Value,AsOf
+Acme Corp,Healthcare,2500000,In Compliance,Net Leverage,4.5x,3.8x,${today.toISOString().slice(0,10)}
+Bravo LLC,Software,3200000,At Risk,FCCR,1.20x,1.25x,${new Date(today.getTime()-30*864e5).toISOString().slice(0,10)}
+Charlie Inc,Industrials,1800000,Breach,Net Leverage,4.5x,5.1x,${new Date(today.getTime()-70*864e5).toISOString().slice(0,10)}
+Delta Co,Healthcare,1200000,In Compliance,Fixed Charge,1.15x,1.30x,${new Date(today.getTime()-100*864e5).toISOString().slice(0,10)}
+Echo Ltd,Software,4200000,At Risk,Net Leverage,4.5x,4.4x,${new Date(today.getTime()-95*864e5).toISOString().slice(0,10)}`;
+    };
+
+    $('parse').onclick = ()=>{
+      let text = raw.value.trim();
+      if(!text && file.files[0]){
+        const reader = new FileReader();
+        reader.onload = e => { raw.value = e.target.result; parseNow(); };
+        reader.readAsText(file.files[0]);
+      }else{
+        parseNow();
+      }
+    };
+
+    function parseNow(){
+      const s = sep.value;
+      const data = splitRows(raw.value.trim(), s==='tab'? '\t': s || ',');
+      if(data.length===0){ return; }
+      const headers = normalizeHeaders(data[0]);
+      const idx = Object.fromEntries(headers.map((h,i)=>[h,i]));
+      rows = data.slice(1).map((r,i)=>({
+        Borrower: r[idx['Borrower']] ?? '',
+        Sector: r[idx['Sector']] ?? '',
+        Exposure: parseNumber(r[idx['Exposure']]),
+        Status: (r[idx['Status']] || '').trim() || 'Unknown',
+        Test: (r[idx['Test']] || '').trim(),
+        Threshold: (r[idx['Threshold']] || '').trim(),
+        Value: (r[idx['Value']] || '').trim(),
+        AsOf: (r[idx['AsOf']] || '').trim()
+      })).filter(x=>x.Borrower || isFinite(x.Exposure));
+
+      render();
+    }
+
+    $('download').onclick = ()=>{
+      if(!rows.length) return;
+      const headers = ['Borrower','Sector','Exposure','Status','Test','Threshold','Value','AsOf'];
+      const csv = [headers.join(',')]
+        .concat(rows.map(r=>headers.map(h=>{
+          const v = (''+(r[h]??'')).replace(/"/g,'""');
+          return /[",\n]/.test(v)? `"${v}"`: v;
+        }).join(',')))
+        .join('\n');
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'portfolio_monitor.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+
+    // ---------- Rendering ----------
+    function render(){
+      // Table
+      tbody.innerHTML = '';
+      rows.forEach((r,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i+1}</td>
+          <td>${r.Borrower||''}</td>
+          <td>${r.Sector||''}</td>
+          <td style="text-align:right">${money(r.Exposure)}</td>
+          <td>${r.Status||''}</td>
+          <td>${r.Test||''}</td>
+          <td>${r.Threshold||''}</td>
+          <td>${r.Value||''}</td>
+          <td>${r.AsOf||''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Metrics
+      const total = rows.reduce((s,r)=> s + (isFinite(r.Exposure)? r.Exposure:0), 0);
+      const borrowers = new Set(rows.map(r=>r.Borrower)).size;
+      const sectors = new Set(rows.map(r=>r.Sector)).size;
+      const breaches = rows.filter(r=>/breach/i.test(r.Status)).length;
+      const atRisk = rows.filter(r=>/risk/i.test(r.Status)).length;
+
+      const byBorrower = aggregate(rows, 'Borrower', 'Exposure');
+      const topBorrower = byBorrower.sort((a,b)=>b.value-a.value)[0];
+      const topConc = topBorrower && total>0 ? (topBorrower.value/total*100) : 0;
+
+      $('m_total').textContent = money(total);
+      $('m_borrowers').textContent = fmt(borrowers);
+      $('m_sectors').textContent = fmt(sectors);
+      $('m_breaches').textContent = fmt(breaches);
+      $('m_risk').textContent = fmt(atRisk);
+      $('m_topconc').textContent = isFinite(topConc)? topConc.toFixed(1)+'%':'–';
+
+      // Alerts
+      renderAlerts(total, topConc, breaches, atRisk);
+
+      // Charts
+      drawSectorChart(rows);
+      drawStatusChart(rows);
+    }
+
+    function aggregate(arr, key, numKey){
+      const m = new Map();
+      for(const r of arr){
+        const k = (r[key]||'Unknown').trim() || 'Unknown';
+        const v = isFinite(r[numKey]) ? +r[numKey] : 0;
+        m.set(k, (m.get(k)||0)+v);
+      }
+      return [...m.entries()].map(([k,v])=>({label:k, value:v}));
+    }
+
+    function renderAlerts(total, topConc, breaches, atRisk){
+      const wrap = $('alerts');
+      wrap.innerHTML = '';
+      const warnConc = +$('conc').value || 20;
+      const staleDays = +$('recency').value || 90;
+
+      const alerts = [];
+
+      if(isFinite(topConc) && topConc >= warnConc){
+        alerts.push({type:'warn', text:`Top borrower concentration ${topConc.toFixed(1)}% ≥ ${warnConc}% threshold.`});
+      }
+      if(breaches>0){
+        alerts.push({type:'danger', text:`${breaches} deal(s) in Breach — immediate review required.`});
+      }
+      if(atRisk>0){
+        alerts.push({type:'warn', text:`${atRisk} deal(s) marked At Risk.`});
+      }
+
+      // stale certificates (AsOf older than staleDays)
+      const staleCut = new Date(today.getTime() - staleDays*86400000);
+      const stale = rows.filter(r=>{
+        const d = asDate(r.AsOf);
+        return d && d < staleCut;
+      }).length;
+      if(stale>0){
+        alerts.push({type:'warn', text:`${stale} certificate(s) older than ${staleDays} days.`});
+      }
+
+      if(alerts.length===0){
+        const ok = document.createElement('div');
+        ok.className = 'alert';
+        ok.innerHTML = '✅ No alerts — portfolio looks clean.';
+        wrap.appendChild(ok);
+        return;
+      }
+
+      for(const a of alerts){
+        const div = document.createElement('div');
+        div.className = 'alert' + (a.type==='danger'?' danger':'');
+        div.innerHTML = (a.type==='danger'?'⛔':'⚠️') + ' ' + a.text;
+        wrap.appendChild(div);
+        wrap.appendChild(document.createElement('div')).style.height='8px';
+      }
+    }
+
+    // Simple bar charts (no external libs)
+    function drawBars(ctx, labels, values){
+      const W = ctx.canvas.width, H = ctx.canvas.height;
+      const max = Math.max(1, ...values);
+      const pad = 30, gap = 12;
+      const n = values.length;
+      const barW = (W - pad*2 - gap*(n-1)) / Math.max(1,n);
+
+      ctx.clearRect(0,0,W,H);
+      ctx.font = '12px Poppins, sans-serif';
+      ctx.fillStyle = '#333';
+      // axis
+      ctx.beginPath();
+      ctx.moveTo(pad, H-pad);
+      ctx.lineTo(W-pad, H-pad);
+      ctx.strokeStyle = '#ddd';
+      ctx.stroke();
+
+      // bars
+      for(let i=0;i<n;i++){
+        const x = pad + i*(barW+gap);
+        const h = (H - pad*2) * (values[i] / max);
+        const y = (H - pad) - h;
+        ctx.fillStyle = '#2c7cf1';
+        ctx.fillRect(x, y, barW, h);
+        // label
+        ctx.fillStyle = '#555';
+        const lbl = labels[i].length>10 ? labels[i].slice(0,10)+'…' : labels[i];
+        ctx.fillText(lbl, x, H-pad+14);
+      }
+    }
+
+    function drawSectorChart(rows){
+      const agg = aggregate(rows, 'Sector', 'Exposure').sort((a,b)=>b.value-a.value).slice(0,8);
+      const labels = agg.map(x=>x.label);
+      const vals = agg.map(x=>x.value);
+      const ctx = chartSector.getContext('2d');
+      drawBars(ctx, labels, vals);
+    }
+
+    function drawStatusChart(rows){
+      const counts = new Map();
+      for(const r of rows){
+        const k = (r.Status||'Unknown').trim() || 'Unknown';
+        counts.set(k, (counts.get(k)||0)+1);
+      }
+      const arr = [...counts.entries()].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+      const labels = arr.map(x=>x.label);
+      const vals = arr.map(x=>x.value);
+      const ctx = chartStatus.getContext('2d');
+      drawBars(ctx, labels, vals);
+    }
+
+    // File -> textarea convenience
+    file.addEventListener('change', ()=>{
+      if(file.files[0]){
+        const reader = new FileReader();
+        reader.onload = e => { raw.value = e.target.result; };
+        reader.readAsText(file.files[0]);
+      }
+    });
+
+    // initial: load sample so users see behavior
+    $('loadSample').click();
+    $('parse').click();
+  })();
+  </script>
 </body>
 </html>
