@@ -101,6 +101,22 @@ function tagger(str='') {
   return [...new Set(out)];
 }
 
+// --- Boost certain sources so they bubble up in Top 10 ---
+const BOOST = new Map([
+  ['prnewswire.com', -300000],   // 5 min earlier
+  ['businesswire.com', -300000],
+  ['globenewswire.com', -180000],
+  ['moodys.com', -240000],
+  ['ratings.spglobal.com', -240000],
+]);
+
+function boostedTime(it){
+  let t = new Date(it.published_at).getTime();
+  const host = (it.source || '').replace(/^www\./,'');
+  if (BOOST.has(host)) t += BOOST.get(host);
+  return t;
+}
+
 // Strip common tracking params so duplicates collapse cleanly
 function cleanUrl(u='') {
   try {
@@ -176,7 +192,12 @@ async function expandGoogleNewsUrl(url) {
 
 const SEC_HOST = 'sec.gov';
 const SEC_FORM_WHITELIST = new Set([
-  '8-K','10-Q','10-K','6-K','20-F','S-1','S-3','424B5','DEF 14A'
+  '8-K','10-Q','10-K','6-K','20-F',
+  'S-1','S-3','424B5','424B2',   // allow 424B2 for now
+  'DEF 14A',
+  '497','497K',                  // allow these for now
+  'SC 13D','SC 13G','SCHEDULE 13D','SCHEDULE 13G', // allow 13D/G
+  'D'                            // Form D (private placements) – temporary
 ]);
 
 function isSecUrl(u='') {
@@ -277,7 +298,7 @@ export default async function handler(req, res) {
     }
 
     // Sort newest → oldest
-    all.sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
+    all.sort((a,b) => boostedTime(b) - boostedTime(a));
 
     // De-dupe by cleaned URL (fallback to title)
     const seen = new Set();
@@ -325,7 +346,19 @@ export default async function handler(req, res) {
       return out.slice(0, n);
     }
 
-    const top10 = topNWithDomainCap(base, 10, 3);
+    // After you compute `items` (sorted & deduped)
+    let safeItems = items;
+    
+    // Safety net: if everything got filtered out, re-admit SEC items (lightly formatted)
+    if (!safeItems.length && all.length) {
+      safeItems = all.slice(0, 300);
+    }
+    
+    const cutoff = Date.now() - 24*3600*1000;
+    const within24h = safeItems.filter(i => new Date(i.published_at).getTime() >= cutoff);
+    const base = (within24h.length ? within24h : safeItems);
+    
+    const top10 = topNWithDomainCap(base, 10);
 
     // Cache on the edge
     res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900'); // 15m
