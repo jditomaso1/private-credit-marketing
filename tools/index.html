@@ -62,7 +62,7 @@
     </div>
 
     <!-- Top nav tabs (peer to Media Hub) -->
-    <nav class="tabs" aria-label="Sections">
+    <!-- <nav class="tabs" aria-label="Sections">
       <a class="tab" href="/tools/index.html">Tools</a>
       <a class="tab" href="/tools/media-hub.html">Media Hub</a>
     </nav>
@@ -73,7 +73,7 @@
           if(a.getAttribute('href')===here){ a.classList.add('active'); }
         });
       })();
-    </script>
+    </script> -->
 
     <!-- Hero -->
     <section class="hero">
@@ -93,16 +93,31 @@
         <div class="tag" data-tag="docs">Docs</div>
         <div class="tag" data-tag="monitoring">Monitoring</div>
         <div class="tag" data-tag="risk">Risk</div>
+        <div class="tag" data-tag="media">Media</div>
       </div>
     </div>
 
     <!-- Grid -->
     <section class="grid" id="toolGrid" aria-label="Tool list">
+      
+      <!-- Media Hub -->
+      <a class="card" href="/tools/media-hub.html"
+         data-tags="media"
+         data-keywords="loan pricing spread upfront fees amortization duration">
+        <div class="kicker"> Media</div>
+        <div class="title">Media Hub</div>
+        <div class="desc">Daily curated headlines across Direct Lending, CLOs, BDCs, and more.</div>
+        <div class="meta">
+          <span class="pill">Media</span>
+          <span class="status">Live</span>
+        </div>
+      </a> 
+      
       <!-- IRR -->
       <a class="card" href="/tools/irr-calculator.html"
          data-tags="modeling pricing"
          data-keywords="irr internal rate moic cash flow amortization bullet exit fee oid">
-        <div class="kicker">📈 Returns</div>
+        <div class="kicker"> Returns</div>
         <div class="title">IRR Calculator</div>
         <div class="desc">Build cashflows (IO or amortizing), include OID/exit, export CSV, and see gross/net IRR + MOIC.</div>
         <div class="meta">
@@ -112,11 +127,37 @@
         </div>
       </a>
 
+      <!-- Credit Decoder -->
+      <a class="card" href="/tools/credit-decoder.html"
+         data-tags="docs risk"
+         data-keywords="credit agreement decoder definitions baskets debt incurrence liens investments restricted payments">
+        <div class="kicker"> Docs</div>
+        <div class="title">Credit Decoder</div>
+        <div class="desc">Navigate core definitions and baskets; translate dense clauses into plain English.</div>
+        <div class="meta">
+          <span class="pill">Docs</span><span class="pill">Risk</span>
+          <span class="status">Coming Soon</span>
+        </div>
+      </a>
+      
+      <!-- Yield Curve -->
+      <a class="card" href="/tools/yield-curve.html"
+         data-tags="rates risk"
+         data-keywords="yield curve treasury forward duration base rate">
+        <div class="kicker"> Rates</div>
+        <div class="title">Yield Curve</div>
+        <div class="desc">Reference curves and quick math for base-rate scenarios and duration-light sanity checks.</div>
+        <div class="meta">
+          <span class="pill">Rates</span><span class="pill">Risk</span>
+          <span class="status">Live</span>
+        </div>
+      </a>
+      
       <!-- Loan Pricing -->
       <a class="card" href="/tools/loan-pricing.html"
          data-tags="pricing modeling"
          data-keywords="loan pricing spread upfront fees amortization duration">
-        <div class="kicker">💵 Structuring</div>
+        <div class="kicker"> Structuring</div>
         <div class="title">Loan Pricing</div>
         <div class="desc">Translate target returns into coupons/fees and payment profiles. Useful for term sheets.</div>
         <div class="meta">
@@ -125,37 +166,11 @@
         </div>
       </a>
 
-      <!-- Yield Curve -->
-      <a class="card" href="/tools/yield-curve.html"
-         data-tags="rates risk"
-         data-keywords="yield curve treasury forward duration base rate">
-        <div class="kicker">🧭 Rates</div>
-        <div class="title">Yield Curve</div>
-        <div class="desc">Reference curves and quick math for base-rate scenarios and duration-light sanity checks.</div>
-        <div class="meta">
-          <span class="pill">Rates</span><span class="pill">Risk</span>
-          <span class="status">Live</span>
-        </div>
-      </a>
-
-      <!-- Shadow Ratings -->
-      <a class="card" href="/tools/shadow-ratings-basic.html"
-         data-tags="risk modeling"
-         data-keywords="shadow rating score leverage coverage size sponsor covenants liquidity sector">
-        <div class="kicker">🛡️ Risk</div>
-        <div class="title">Shadow Ratings</div>
-        <div class="desc">Rules-based scoring aligned to agency heuristics to approximate implied credit tiers.</div>
-        <div class="meta">
-          <span class="pill">Risk</span><span class="pill">Modeling</span>
-          <span class="status">Live</span>
-        </div>
-      </a>
-
       <!-- Covenant Checker -->
       <a class="card" href="/tools/covenant-checker.html"
          data-tags="docs monitoring risk"
          data-keywords="covenant checker compliance leverage tests net leverage FCCR springing covenants">
-        <div class="kicker">🧾 Docs</div>
+        <div class="kicker"> Docs</div>
         <div class="title">Covenant Checker</div>
         <div class="desc">Extract and sanity-check key tests; flag potential breaches and springers.</div>
         <div class="meta">
@@ -164,16 +179,16 @@
         </div>
       </a>
 
-      <!-- Credit Decoder -->
-      <a class="card" href="/tools/credit-decoder.html"
-         data-tags="docs risk"
-         data-keywords="credit agreement decoder definitions baskets debt incurrence liens investments restricted payments">
-        <div class="kicker">🧩 Docs</div>
-        <div class="title">Credit Decoder</div>
-        <div class="desc">Navigate core definitions and baskets; translate dense clauses into plain English.</div>
+      <!-- Shadow Ratings -->
+      <a class="card" href="/tools/shadow-ratings-basic.html"
+         data-tags="risk modeling"
+         data-keywords="shadow rating score leverage coverage size sponsor covenants liquidity sector">
+        <div class="kicker"> Risk</div>
+        <div class="title">Shadow Ratings</div>
+        <div class="desc">Rules-based scoring aligned to agency heuristics to approximate implied credit tiers.</div>
         <div class="meta">
-          <span class="pill">Docs</span><span class="pill">Risk</span>
-          <span class="status">Coming Soon</span>
+          <span class="pill">Risk</span><span class="pill">Modeling</span>
+          <span class="status">Live</span>
         </div>
       </a>
 
@@ -181,7 +196,7 @@
       <a class="card" href="/tools/portfolio-monitor.html"
          data-tags="monitoring risk"
          data-keywords="portfolio monitor compliance tracker alerts exposure limits">
-        <div class="kicker">📊 Monitoring</div>
+        <div class="kicker"> Monitoring</div>
         <div class="title">Portfolio Monitor</div>
         <div class="desc">Lightweight dashboard for exposure, tests, and alerts. Hooks to Drive/Sheets.</div>
         <div class="meta">
