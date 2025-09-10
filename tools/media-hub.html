@@ -51,14 +51,13 @@
     .tool-tab.active{background:#111;color:#fff;border-color:#111}
 
     /* === Media Hub === */
-    #media-hub { max-width:1100px; margin:0 auto; padding:0 0 40px; }
+    #media-hub { margin:0; padding:0 0 40px; }  /* no extra max-width/auto centering */
     #media-hub a { color:#111; text-decoration:none; }
     #media-hub a:hover { color:#2c7cf1; text-decoration:underline; }
-
-    /* Reduce space between tool-tabs and Media Hub heading */
-    #media-hub header { margin-top: 0; }
-    #media-hub h1 { margin-top: 0; }
-    #site-header { margin-bottom: 30px; }
+    
+    /* Make the Media Hub heading hug the same left edge as the sub-nav */
+    #media-hub header, 
+    #media-hub h1 { margin-top:0; }
 
     .pill{border:1px solid #d5d8dd;background:#fff;color:#222;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
     .pill--active{background:#2c7cf1;color:#fff;border-color:#2c7cf1}
@@ -108,6 +107,14 @@
     .badge .lock {
       margin-left:4px;
       opacity:.7;
+    }
+    /* Kill any injected refresh button, regardless of how it's added */
+    #refresh-btn,
+    button#refresh-btn,
+    .refresh-button,
+    [data-role="refresh"],
+    button[aria-label="Refresh News"] {
+      display:none !important;
     }
   </style>
   <script type="application/ld+json">
