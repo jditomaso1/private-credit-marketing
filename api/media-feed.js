@@ -10,7 +10,7 @@ const parser = new Parser({
 });
 
 const SOURCES = [
-  // === Direct industry feeds ===
+  // === Direct industry feeds (existing)… ===
   'https://www.privatedebtinvestor.com/feed/',
   'https://www.hedgeweek.com/feed/',
   'https://alpha-week.com/rss.xml',
@@ -18,31 +18,77 @@ const SOURCES = [
   'https://privatemarketsreview.substack.com/feed',
   'https://www.privatemarketsmagazine.com/feed/',
 
-  // === GlobalCapital ===
-  // Articles (via Google News site filter)
+  // === GlobalCapital (existing) ===
   'https://news.google.com/rss/search?q=site:globalcapital.com%20(securitization%20OR%20CLO%20OR%20%22private%20credit%22)&hl=en-US&gl=US&ceid=US:en',
-  // Podcast (optional; audio-only entries will be skipped)
   'https://feeds.buzzsprout.com/1811593.rss',
 
-  // === Catch-all for breadth ===
+  // === Catch-all breadth (existing) ===
   'https://news.google.com/rss/search?q=(private+credit%20OR%20%22direct%20lending%22%20OR%20CLO%20OR%20BDC%20OR%20%22NAV%20loan%22%20OR%20securitization)&hl=en-US&gl=US&ceid=US:en',
 
-  // === Publisher-specific site filters ===
+  // === Publisher-specific site filters (existing)… ===
   'https://news.google.com/rss/search?q=site:pitchbook.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:bloomberg.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20%22NAV%20financing%22)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:reuters.com%20(private%20credit%20OR%20%22direct%20lending%22%20OR%20CLO)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:spglobal.com%20(direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:wsj.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=site:ft.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=site:barrons.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en'
+  'https://news.google.com/rss/search?q=site:barrons.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+
+  // === SEC EDGAR (Atom feeds; broad + form-specific) ===
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=8-K&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=10-Q&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=10-K&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=S-1&owner=include&count=100&output=atom',
+  // proxy / shelf / offering statements
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=DEF+14A&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=S-3&owner=include&count=100&output=atom',
+  'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=424B5&owner=include&count=100&output=atom',
+
+  // === Ratings actions & methodologies (via site filters) ===
+  'https://news.google.com/rss/search?q=site:moodys.com%20(%22rating%20action%22%20OR%20downgrade%20OR%20upgrade%20OR%20methodology)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:ratings.spglobal.com%20(%22rating%20action%22%20OR%20downgrade%20OR%20upgrade%20OR%20criteria%20update)&hl=en-US&gl=US&ceid=US:en',
+
+  // === Wires (press releases) ===
+  'https://news.google.com/rss/search?q=site:prnewswire.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:businesswire.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:globenewswire.com%20(private%20credit%20OR%20direct%20lending%20OR%20CLO%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+
+  // === Sponsors ===
+  'https://news.google.com/rss/search?q=site:kkr.com%20(%22press%20release%22%20OR%20credit)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:apollo.com%20(%22press%20release%22%20OR%20credit)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:blackstone.com%20(%22press%20release%22%20OR%20credit)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:carlyle.com%20(%22press%20release%22%20OR%20credit)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:aresmgmt.com%20(%22press%20release%22%20OR%20credit)&hl=en-US&gl=US&ceid=US:en',
+
+  // === Direct lenders ===
+  'https://news.google.com/rss/search?q=site:barings.com%20(private%20credit%20OR%20direct%20lending%20OR%20press%20release)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:golubcapital.com%20(private%20credit%20OR%20direct%20lending%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:blueowl.com%20(owl%20rock%20OR%20direct%20lending%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:hpspartners.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:antares.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:monroecap.com%20(private%20credit%20OR%20direct%20lending)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:aresmgmt.com%20(credit%20OR%20direct%20lending%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:kkr.com%20(credit%20OR%20direct%20lending%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=site:apollo.com%20(credit%20OR%20direct%20lending%20OR%20BDC)&hl=en-US&gl=US&ceid=US:en',
+
+  // === CourtListener (bankruptcy dockets via Google News mirror to start) ===
+  'https://news.google.com/rss/search?q=site:courtlistener.com%20(chapter%2011%20OR%20bankruptcy%20OR%20DIP)&hl=en-US&gl=US&ceid=US:en',
+
+  // === UK Companies House (announcements picked up by press) ===
+  'https://news.google.com/rss/search?q=site:gov.uk%20(Companies%20House%20charge%20OR%20mortgage)&hl=en-US&gl=US&ceid=US:en'
 ];
 
 const TAGS = [
-  { tag: 'CLO',           kws: [' clo ', ' aaa ', ' equity tranche', ' reset', ' refi', ' manager'] },
-  { tag: 'Direct Lending',kws: ['unitranche','direct lending','private debt','sponsor','club deal'] },
-  { tag: 'NAV',           kws: ['nav loan','nav financing'] },
-  { tag: 'BDC',           kws: [' bdc ','arcc','bxsl','ocsl','main','psec','cgbd','fdus'] },
-  { tag: 'ABS',           kws: ['securitization','warehouse','term abs','asset-backed'] },
+  { tag: 'CLO',            kws: [' clo ', ' aaa ', ' equity tranche', ' reset', ' refi', ' manager'] },
+  { tag: 'Direct Lending', kws: ['unitranche','direct lending','private debt','sponsor','club deal'] },
+  { tag: 'NAV',            kws: ['nav loan','nav financing'] },
+  { tag: 'BDC',            kws: [' bdc ','arcc','bxsl','ocsl','main','psec','cgbd','fdus'] },
+  { tag: 'ABS',            kws: ['securitization','warehouse','term abs','asset-backed'] },
+  // NEW:
+  { tag: 'Ratings',        kws: ['rating action','downgrade','upgrade','outlook revised','criteria update','methodology'] },
+  { tag: 'Bankruptcy',     kws: ['chapter 11','prepack','pre-negotiated plan','dip financing','restructuring support agreement','rsa'] },
+  { tag: 'Private Equity', kws: ['private equity','buyout','portfolio company','sponsor-backed','add-on acquisition'] },
 ];
 
 function tagger(str='') {
