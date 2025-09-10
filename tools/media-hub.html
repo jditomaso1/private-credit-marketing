@@ -462,7 +462,34 @@
     renderTop10(filtered);
     renderFeed(filtered.slice(10, 260));
   }
-
+    
+  <script>
+    // …your utilities…
+  
+    // Normalize each feed item so downstream renderers don't choke.
+    function massageItem(raw = {}) {
+      const url = rewriteGoogleNewsUrl(raw.url || '');
+      const published =
+        raw.published_at || raw.pubDate || raw.date || null;
+  
+      // ISO string if we have a valid date; otherwise leave undefined
+      let published_at = undefined;
+      if (published) {
+        const d = new Date(published);
+        if (!isNaN(d.getTime())) published_at = d.toISOString();
+      }
+  
+      // Ensure tags is always an array of strings
+      const tags = toTagArray(raw.tags || []);
+  
+      return {
+        ...raw,
+        url,
+        published_at,
+        tags
+      };
+    }
+  </script>
   // ===== Data load =====
   async function loadFeed(){
     try{
