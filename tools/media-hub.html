@@ -376,14 +376,16 @@
         );
       }
     
-      // SEC toggle filter
-      if (!includeSEC) {
-        filtered = filtered.filter(i => (i.source || '').replace(/^www\./,'') !== 'sec.gov');
-      }
+      // split into non-SEC and SEC
+      const nonSec = filtered.filter(i => (i.source || '').replace(/^www\./,'') !== 'sec.gov');
+      const sec    = filtered.filter(i => (i.source || '').replace(/^www\./,'') === 'sec.gov');
+    
+      // build ordered list: non-SEC first, SEC after (if toggle is on)
+      const ordered = includeSEC ? [...nonSec, ...sec] : nonSec;
     
       // render
-      renderTop10(filtered);
-      renderFeed(filtered.slice(10, 280));
+      renderTop10(ordered);
+      renderFeed(ordered.slice(10, 280));
     }
 
     // --- Item normalizer ---
