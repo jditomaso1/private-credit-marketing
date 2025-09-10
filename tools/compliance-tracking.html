@@ -28,23 +28,32 @@
     th{background:#f7f7f7;text-align:left}
     .alert{padding:10px;margin:8px 0;border:1px solid #fde68a;background:#fffbeb;border-radius:10px}
     .alert.danger{border-color:#fecaca;background:#fff1f2}
-    .tool-tab {
-      padding: 6px 10px;      /* tighter padding */
-      font-size: 13px;        /* smaller text */
-      border-radius: 6px;     /* less rounded corners */
-    }
-  
     .tool-tabs {
-      background:#fafafa;     /* light background bar */
-      padding:6px 8px;
-      border:1px solid #eee;
-      border-radius:8px;
+      margin: 0 0 16px;
+      border-bottom: 1px solid #ddd;   /* adds underline like a tab bar */
+      display: flex;
+      gap: 16px;
     }
-  
+    
+    .tool-tab {
+      padding: 6px 0;
+      font-size: 14px;
+      text-decoration: none;
+      color: #555;
+      border: none;                    /* remove borders */
+      background: none;                /* remove background */
+      border-bottom: 2px solid transparent; /* invisible underline */
+      transition: border-color 0.2s, color 0.2s;
+    }
+    
+    .tool-tab:hover {
+      color: #111;
+    }
+    
     .tool-tab.active {
-      background:#2c7cf1;     /* brand blue instead of black */
-      color:#fff;
-      border-color:#2c7cf1;
+      color: #111;
+      font-weight: 600;
+      border-bottom-color: #2c7cf1;    /* brand color underline */
     }
   </style>
 </head>
