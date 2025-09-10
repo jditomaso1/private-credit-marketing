@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow Ratings — Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;margin:0;color:#111}
+    .wrap{max-width:980px;margin:32px auto;padding:0 20px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .card-head{padding:16px 18px;border-bottom:1px solid #eee;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .card-body{padding:18px}
+    label{display:block;font-size:12px;color:#555;margin-bottom:6px}
+    select,input{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:560px){.grid,.grid-2{grid-template-columns:1fr}}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:600;font-size:12px;border:1px solid #c7d2fe}
+    .result{display:flex;align-items:center;gap:12px;margin-top:4px}
+    .rating-badge{font-weight:700;font-size:20px;padding:6px 12px;border-radius:10px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
+    .subgrid{margin-top:12px;border-top:1px dashed #e5e7eb;padding-top:12px}
+    .kpi{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:10px}
+    .kpi h4{margin:0 0 8px 0;font-size:13px}
+    .hint{font-size:12px;color:#6b7280}
+    .muted{color:#6b7280}
+    .danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 style="margin:0 0 14px">Shadow Ratings</h1>
+    <p class="muted" style="margin:0 0 18px">Toggle agency & sector, enter current metrics, and get a live shadow rating. Bands are configurable below.</p>
+
+    <section class="card">
+      <div class="card-head">
+        <div style="min-width:200px;flex:1">
+          <label>Rating Agency</label>
+          <select id="agency">
+            <option value="SP">S&amp;P (demo bands)</option>
+            <option value="Moodys">Moody’s (demo bands)</option>
+          </select>
+        </div>
+        <div style="min-width:240px;flex:2">
+          <label>Sector</label>
+          <select id="sector"></select>
+        </div>
+        <div class="result" style="margin-left:auto">
+          <span class="muted">Shadow rating</span>
+          <span id="finalRating" class="rating-badge">—</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div id="metrics" class="grid"></div>
+        <div class="subgrid grid-2">
+          <div class="kpi">
+            <h4>Aggregation method</h4>
+            <label><input type="radio" name="agg" value="median" checked style="width:auto;margin-right:6px">Median of metric ratings</label>
+            <label><input type="radio" name="agg" value="worst" style="width:auto;margin-right:6px">Worst of primary metrics (Leverage &amp; Coverage)</label>
+          </div>
+          <div class="kpi">
+            <h4>Qualitative overlay (optional)</h4>
+            <label>Business risk notch (−2 to +2)</label>
+            <input id="overlay" type="number" min="-2" max="2" step="1" value="0" />
+            <div class="hint">Use for sponsor strength, customer concentration, cyclicality, disclosure quality, etc.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="muted" style="margin-top:12px">Demo only. Replace the bands in CONFIG with your internal tables.</p>
+  </div>
+
+  <script>
+  // -------------------------
+  // CONFIG: demo rating bands
+  // -------------------------
+  // Each metric maps numeric input -> letter rating via bands per sector.
+  // Order bands strongest -> weakest. ratingScale defines ordering for aggregation.
+  const CONFIG = {
+    ratingScale: ["AA","A","BBB","BB","B","CCC"], // demo, align to your taxonomy
+    agencies: {
+      SP: {
+        sectors: {
+          "Software / SaaS": {
+            metrics: [
+              { key:"leverage", label:"Total Debt / EBITDA (x)", type:"number",
+                bands: [
+                  { max:3.0, rating:"A" },
+                  { max:4.0, rating:"BBB" },
+                  { max:5.0, rating:"BB" },
+                  { max:6.0, rating:"B" },
+                  { max:Infinity, rating:"CCC" }
+                ],
+                hint:"Recurring revenue allows higher leverage vs Industrials."
+              },
+              { key:"coverage", label:"EBITDA / Interest (x)", type:"number",
+                bands: [
+                  { min:8, rating:"A" },
+                  { min:5, rating:"BBB" },
+                  { min:3, rating:"BB" },
+                  { min:1.5, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Higher is better."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [
+                  { min:2000, rating:"A" },
+                  { min:1000, rating:"BBB" },
+                  { min:500,  rating:"BB" },
+                  { min:100,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Larger scale supports stronger ratings."
+              },
+              { key:"margin", label:"EBITDA Margin (%)", type:"number",
+                bands: [
+                  { min:25, rating:"A" },
+                  { min:20, rating:"BBB" },
+                  { min:15, rating:"BB" },
+                  { min:10, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Sustained margins indicate resilience."
+              }
+            ]
+          },
+          "Industrials": {
+            metrics: [
+              { key:"leverage", label:"Total Debt / EBITDA (x)", type:"number",
+                bands: [
+                  { max:2.0, rating:"A" },
+                  { max:3.0, rating:"BBB" },
+                  { max:4.0, rating:"BB" },
+                  { max:5.5, rating:"B" },
+                  { max:Infinity, rating:"CCC" }
+                ],
+                hint:"Lower leverage expected for cyclicals."
+              },
+              { key:"coverage", label:"EBITDA / Interest (x)", type:"number",
+                bands: [
+                  { min:8, rating:"A" },
+                  { min:5, rating:"BBB" },
+                  { min:3, rating:"BB" },
+                  { min:1.5, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Coverage is a primary driver."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [
+                  { min:3000, rating:"A" },
+                  { min:1500, rating:"BBB" },
+                  { min:700,  rating:"BB" },
+                  { min:250,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Scale supports diversification."
+              },
+              { key:"margin", label:"EBITDA Margin (%)", type:"number",
+                bands: [
+                  { min:20, rating:"A" },
+                  { min:15, rating:"BBB" },
+                  { min:12, rating:"BB" },
+                  { min:8,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Cyclicality depresses margins."
+              }
+            ]
+          }
+        }
+      },
+      Moodys: {
+        sectors: {
+          "Software / SaaS": {
+            metrics: [
+              { key:"leverage", label:"Gross Debt / EBITDA (x)", type:"number",
+                bands: [
+                  { max:3.25, rating:"A" },
+                  { max:4.25, rating:"BBB" },
+                  { max:5.25, rating:"BB" },
+                  { max:6.25, rating:"B" },
+                  { max:Infinity, rating:"CCC" }
+                ],
+                hint:"Moody’s grids often notch leverage slightly differently."
+              },
+              { key:"coverage", label:"EBIT / Interest (x)", type:"number",
+                bands: [
+                  { min:7.5, rating:"A" },
+                  { min:5.0, rating:"BBB" },
+                  { min:3.0, rating:"BB" },
+                  { min:1.5, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"EBIT-based coverage proxy."
+              },
+              { key:"retention", label:"FCF / Debt (%)", type:"number",
+                bands: [
+                  { min:25, rating:"A" },
+                  { min:15, rating:"BBB" },
+                  { min:5,  rating:"BB" },
+                  { min:0,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Cash generation and deleveraging capacity."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [
+                  { min:2500, rating:"A" },
+                  { min:1200, rating:"BBB" },
+                  { min:600,  rating:"BB" },
+                  { min:200,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Scale & diversification."
+              }
+            ]
+          },
+          "Industrials": {
+            metrics: [
+              { key:"leverage", label:"Gross Debt / EBITDA (x)", type:"number",
+                bands: [
+                  { max:2.25, rating:"A" },
+                  { max:3.25, rating:"BBB" },
+                  { max:4.25, rating:"BB" },
+                  { max:5.75, rating:"B" },
+                  { max:Infinity, rating:"CCC" }
+                ],
+                hint:"Tighter leverage for cyclicals."
+              },
+              { key:"coverage", label:"EBIT / Interest (x)", type:"number",
+                bands: [
+                  { min:7.5, rating:"A" },
+                  { min:5.0, rating:"BBB" },
+                  { min:3.0, rating:"BB" },
+                  { min:1.5, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Coverage is core."
+              },
+              { key:"retention", label:"FCF / Debt (%)", type:"number",
+                bands: [
+                  { min:25, rating:"A" },
+                  { min:12, rating:"BBB" },
+                  { min:3,  rating:"BB" },
+                  { min:-5, rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Negative FCF pushes into B/CCC."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [
+                  { min:3500, rating:"A" },
+                  { min:1700, rating:"BBB" },
+                  { min:800,  rating:"BB" },
+                  { min:300,  rating:"B" },
+                  { min:-Infinity, rating:"CCC" }
+                ],
+                hint:"Scale supports resiliency."
+              }
+            ]
+          }
+        }
+      }
+    }
+  };
+
+  // ---------------
+  // Helper methods
+  // ---------------
+  const byStrength = (a,b) => CONFIG.ratingScale.indexOf(a) - CONFIG.ratingScale.indexOf(b);
+
+  function bandsToRating(metric, value){
+    if (value==="" || value===null || isNaN(+value)) return null;
+    const v = +value;
+    // Support either max-based or min-based bands
+    for (const band of metric.bands){
+      if (typeof band.max === "number" && v <= band.max) return band.rating;
+      if (typeof band.min === "number" && v >= band.min) return band.rating;
+    }
+    return null;
+  }
+
+  function aggregate(ratings, method){
+    const clean = ratings.filter(Boolean);
+    if (!clean.length) return "—";
+    if (method === "worst"){
+      // focus on leverage & coverage when available
+      const pri = clean.filter(r=>r.metricKey==="leverage" || r.metricKey==="coverage");
+      const pool = pri.length ? pri : clean;
+      return pool.map(r=>r.rating).sort(byStrength).slice(-1)[0];
+    }
+    // median of all ratings
+    const arr = clean.map(r=>r.rating).sort(byStrength);
+    return arr[Math.floor((arr.length-1)/2)];
+  }
+
+  function applyOverlay(letter, notch){
+    if (!letter || letter==="—" || !notch) return letter;
+    const idx = CONFIG.ratingScale.indexOf(letter);
+    if (idx<0) return letter;
+    const target = Math.min(Math.max(idx - notch, 0), CONFIG.ratingScale.length-1);
+    return CONFIG.ratingScale[target];
+  }
+
+  // ---------------
+  // UI wiring
+  // ---------------
+  const $agency = document.getElementById('agency');
+  const $sector = document.getElementById('sector');
+  const $metrics = document.getElementById('metrics');
+  const $final = document.getElementById('finalRating');
+  const $overlay = document.getElementById('overlay');
+
+  // Populate sector options when agency changes
+  function refreshSectors(){
+    const ag = $agency.value;
+    const sectors = Object.keys(CONFIG.agencies[ag].sectors);
+    $sector.innerHTML = sectors.map(s=>`<option>${s}</option>`).join('');
+  }
+
+  // Render metric inputs for the current sector
+  function renderMetrics(){
+    const ag = $agency.value;
+    const sec = $sector.value;
+    const { metrics } = CONFIG.agencies[ag].sectors[sec];
+
+    $metrics.innerHTML = metrics.map(m => `
+      <div class="kpi">
+        <label for="${m.key}">${m.label}</label>
+        <input id="${m.key}" type="${m.type||'number'}" inputmode="decimal" placeholder="Enter value">
+        <div class="hint">${m.hint||''}</div>
+        <div class="hint" id="${m.key}-out"></div>
+      </div>
+    `).join('');
+
+    Array.from($metrics.querySelectorAll('input')).forEach(inp=>{
+      inp.addEventListener('input', recalc);
+    });
+    recalc();
+  }
+
+  function recalc(){
+    const ag = $agency.value;
+    const sec = $sector.value;
+    const aggMethod = (document.querySelector('input[name="agg"]:checked')||{}).value || 'median';
+    const notch = parseInt($overlay.value||0,10) || 0;
+
+    const { metrics } = CONFIG.agencies[ag].sectors[sec];
+
+    const perMetric = metrics.map(m=>{
+      const val = (document.getElementById(m.key)||{}).value;
+      const rating = bandsToRating(m, val);
+      // show per-metric outcome
+      const out = document.getElementById(`${m.key}-out`);
+      if (out){
+        out.textContent = rating ? `→ ${rating}` : '';
+      }
+      return { metricKey:m.key, rating };
+    });
+
+    const base = aggregate(perMetric, aggMethod);
+    const final = applyOverlay(base, notch);
+    $final.textContent = final;
+
+    // style if very weak
+    $final.classList.toggle('danger', final==="CCC");
+  }
+
+  // Init
+  $agency.addEventListener('change', () => { refreshSectors(); renderMetrics(); });
+  $sector.addEventListener('change', renderMetrics);
+  document.querySelectorAll('input[name="agg"]').forEach(r => r.addEventListener('change', recalc));
+  $overlay.addEventListener('input', recalc);
+
+  refreshSectors();
+  renderMetrics();
+  </script>
+</body>
+</html>
