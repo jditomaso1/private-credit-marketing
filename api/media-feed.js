@@ -333,7 +333,7 @@ export default async function handler(req, res) {
     });
 
     // 24h window preference
-    const cutoff = Date.now() - 24*3600*1000;
+    const cutoff = Date.now() - 72*3600*1000;
     const within24h = itemsDeduped.filter(i => new Date(i.published_at).getTime() >= cutoff);
     const base = within24h.length ? within24h : itemsDeduped;
 
