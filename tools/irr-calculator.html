@@ -29,14 +29,14 @@
       <a class="tool-tab" href="/tools/loan-pricing.html">Loan Pricing</a>
       <a class="tool-tab" href="/tools/covenant-checker.html">Covenant Checker</a>
       <a class="tool-tab" href="/tools/shadow-ratings-basic.html">Shadow Ratings</a>
+      <a class="tool-tab" href="/tools/portfolio-monitor.html">Portfolio Monitor</a>
+      <a class="tool-tab" href="/tools/compliance-tracking.html">Compliance Tracking</a>
     </nav>
     <script>
       (function(){
         const here = location.pathname.replace(/\/+$/,'');
         document.querySelectorAll('.tool-tab').forEach(a=>{
-          if(a.getAttribute('href')===here){
-            a.classList.add('active');
-          }
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
         });
       })();
     </script>
