@@ -1,56 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Root -->
   <url>
     <loc>https://private-credit.ai/</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>1.0</priority>
   </url>
 
+  <!-- Core Pages -->
+  <url>
+    <loc>https://private-credit.ai/about.html</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/contact.html</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/clo1.html</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tools -->
   <url>
     <loc>https://private-credit.ai/tools/media-hub.html</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.8</priority>
   </url>
-
   <url>
     <loc>https://private-credit.ai/tools/irr-calculator.html</loc>
     <lastmod>2025-09-09</lastmod>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
-
   <url>
     <loc>https://private-credit.ai/tools/yield-curve.html</loc>
     <lastmod>2025-09-09</lastmod>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
-
   <url>
     <loc>https://private-credit.ai/tools/credit-decoder.html</loc>
     <lastmod>2025-09-09</lastmod>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
-
   <url>
     <loc>https://private-credit.ai/tools/loan-pricing.html</loc>
     <lastmod>2025-09-09</lastmod>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
-
   <url>
     <loc>https://private-credit.ai/tools/covenant-checker.html</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Knowledge Hub -->
+  <url>
+    <loc>https://private-credit.ai/knowledge/</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/knowledge/insights/</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/knowledge/guides/</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/knowledge/resources/</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.6</priority>
   </url>
 
+  <!-- Resources -->
   <url>
-    <loc>https://private-credit.ai/about.html</loc>
+    <loc>https://private-credit.ai/resources/insights/</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/resources/knowledge-base/</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://private-credit.ai/resources/media/</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.5</priority>
   </url>
 
+  <!-- Stakeholders -->
   <url>
-    <loc>https://private-credit.ai/contact.html</loc>
+    <loc>https://private-credit.ai/stakeholders.html</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Asset Classes -->
+  <url>
+    <loc>https://private-credit.ai/asset-classes.html</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.5</priority>
   </url>
