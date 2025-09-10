@@ -328,16 +328,6 @@
     }catch{}
     return u;
   }
-  
-  function massageItem(i){
-    // If API left a GN URL, rewrite it here and recompute source
-    const newUrl = rewriteGoogleNewsUrl(i.url || '');
-    if (newUrl !== (i.url || '')){
-      i = { ...i, url: newUrl };
-      try { i.source = new URL(newUrl).hostname.replace(/^www\./,''); } catch {}
-    }
-    return i;
-  }
 
   function cleanTitle(title='') {
     const t = String(title);
