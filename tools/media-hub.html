@@ -227,6 +227,12 @@
     function tagPills(tags=[]){ return !tags?.length ? '' : `<span class="card-tags">${tags.join(' · ')}</span>`; }
     function prettyHost(host=''){ return String(host||'').replace(/^www\./,''); }
 
+    function formatDate(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch { return ''; }
+    }
     // --- Source badges ---
     const SOURCE_BADGES = {
       'privatedebtinvestor.com': {label:'PDI', cls:'pdi'},
@@ -338,7 +344,7 @@
         return `
           <a class="card" href="${href}" target="_blank" rel="noopener">
             <div class="card-title">${cleanTitle(i.title||'')}</div>
-            <div class="card-meta">${badgeHTML(host)} ${when}</div>
+            <div class="card-meta">${badgeHTML(host)} ${when} · ${formatDate(i.published_at)}</div>
             ${tagPills(i.tags)}
           </a>`;
       }).join('');
@@ -352,7 +358,7 @@
         return `
           <a href="${href}" target="_blank" rel="noopener">
             <span>${badgeHTML(host)}${cleanTitle(i.title||'')}</span>
-            <span class="right">${host} · ${when}</span>
+            <span class="right">${host} · ${when} · ${formatDate(i.published_at)}</span>
           </a>`;
       }).join('');
     }
