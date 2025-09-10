@@ -89,6 +89,9 @@ const TAGS = [
   { tag: 'Ratings',        kws: ['rating action','downgrade','upgrade','outlook revised','criteria update','methodology'] },
   { tag: 'Bankruptcy',     kws: ['chapter 11','prepack','pre-negotiated plan','dip financing','restructuring support agreement','rsa'] },
   { tag: 'Private Equity', kws: ['private equity','buyout','portfolio company','sponsor-backed','add-on acquisition'] },
+  // in TAGS (you likely already added)
+  { tag: 'Ratings',    kws: ['rating action','downgrade','upgrade','outlook revised','criteria update','methodology'] },
+  { tag: 'Bankruptcy', kws: ['chapter 11','prepack','dip financing','restructuring support agreement','rsa'] },
 ];
 
 function tagger(str='') {
@@ -171,6 +174,52 @@ async function expandGoogleNewsUrl(url) {
   }
 }
 
+const SEC_HOST = 'sec.gov';
+const SEC_FORM_WHITELIST = new Set([
+  '8-K','10-Q','10-K','6-K','20-F','S-1','S-3','424B5','DEF 14A'
+]);
+
+function isSecUrl(u='') {
+  try { return new URL(u).hostname.replace(/^www\./,'') === SEC_HOST; } catch { return false; }
+}
+
+function extractSecForm(rawTitle='') {
+  // Titles look like "424B2" or "FORM 8-K" or "SCHEDULE 13G"
+  const t = String(rawTitle).toUpperCase();
+  // Normalize variants like "FORM 8-K"→"8-K"
+  const m = t.match(/\b(8-K|10-Q|10-K|6-K|20-F|S-1|S-3|424B5|DEF\s?14A|424B2|424B3|497K?|40-17G|SC\s?13[DG]|SCHEDULE\s?13[DG]|FORM\s+8-K|FORM\s+10-Q|FORM\s+10-K)\b/);
+  if (!m) return null;
+  let form = m[1].replace(/^FORM\s+/, '').replace(/\s+/g,' ').toUpperCase();
+  // Normalize "DEF 14A"
+  form = form.replace(/^DEF\s*14A$/, 'DEF 14A');
+  return form;
+}
+
+function extractSecCompany(summary='', content='', title='') {
+  const blob = [summary, content, title].join(' ');
+  // Common patterns inside Atom content: "Company Name (CIK XXXXXXXX) (Filer)"
+  let m = blob.match(/([A-Z0-9&.,' -]{3,100})\s*\(CIK\s*\d{3,}\)\s*\(Filer\)/i);
+  if (m) return m[1].trim();
+  // Another pattern: "Company: Acme Corp"
+  m = blob.match(/Company(?: Name)?:\s*([^\n<]{3,100})/i);
+  if (m) return m[1].trim();
+  // Last resort: "For: Acme Corp"
+  m = blob.match(/For:\s*([^\n<]{3,100})/i);
+  if (m) return m[1].trim();
+  return '';
+}
+
+function formatSecTitle(it) {
+  const form = extractSecForm(it?.title || '') || '';
+  const company = extractSecCompany(it?.contentSnippet || it?.content || '', it?.content || '', it?.title || '');
+  return (form && company) ? `${form}: ${company}` : (form || (it?.title || 'SEC Filing'));
+}
+
+// Keep only SEC forms we care about; drop the rest (e.g., 424B2, 497, 40-17G, 13D/G, Form D)
+function isUsefulSecItem(it, link) {
+  const form = extractSecForm(it?.title || '') || '';
+  return SEC_FORM_WHITELIST.has(form);
+}
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -192,14 +241,30 @@ export default async function handler(req, res) {
         if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) continue;
 
         const summary = it.contentSnippet || it.content || '';
-
-        // fast link resolution (no network expands)
+        
+        // fast link resolution …
         let link = resolveLink(it);
         link = cleanUrl(link);
-
+        
         let host = '';
         try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
-
+        
+        // SEC: drop noisy forms and prettify title
+        if (host === SEC_HOST) {
+          if (!isUsefulSecItem(it, link)) continue; // skip noisy SEC forms
+          const prettyTitle = formatSecTitle(it);
+          all.push({
+            title: prettyTitle,
+            url: link,
+            source: host,
+            published_at: it.isoDate || it.pubDate || new Date().toISOString(),
+            summary,
+            tags: Array.from(new Set([...tagger(`${it.title} ${summary}`), 'Regulatory']))
+          });
+          continue;
+        }
+        
+        // Non-SEC (unchanged)
         all.push({
           title: it.title,
           url: link,
@@ -228,24 +293,35 @@ export default async function handler(req, res) {
     const within24h = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
     const base = (within24h.length ? within24h : items);
 
-    function topNWithDomainCap(list, n = 10, cap = 3) {
+    function topNWithDomainCap(list, n = 10) {
+      const caps = new Map([
+        ['sec.gov', 2], // harder cap for SEC
+      ]);
+      const defaultCap = 3;
+    
       const byDomain = new Map();
       const out = [];
+    
+      // First pass: honor caps
       for (const it of list) {
         const d = it.source || 'unknown';
+        const limit = caps.has(d) ? caps.get(d) : defaultCap;
         const c = byDomain.get(d) || 0;
-        if (c < cap) {
+        if (c < limit) {
           out.push(it);
           byDomain.set(d, c + 1);
           if (out.length === n) break;
         }
       }
+    
+      // Second pass: if still short, fill regardless of caps to reach N
       if (out.length < n) {
         for (const it of list) {
           if (out.length === n) break;
           if (!out.includes(it)) out.push(it);
         }
       }
+    
       return out.slice(0, n);
     }
 
