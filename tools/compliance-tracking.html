@@ -34,10 +34,21 @@
       display: flex;
       gap: 16px;
     }
+    
     .tool-tab {
-      padding: 6px 10px;      /* tighter padding */
-      font-size: 13px;        /* smaller text */
-      border-radius: 6px;     /* smaller corners */
+      background: none !important;   /* remove shading */
+      border: none !important;       /* remove border box */
+      border-radius: 0 !important;
+      padding: 8px 0;                /* just top/bottom padding */
+      font-size: 14px;
+      color: #6b7280;
+      text-decoration: none;
+      border-bottom: 2px solid transparent; /* invisible underline */
+      transition: color .2s ease, border-color .2s ease;
+    }
+    
+    .tool-tab:hover {
+      color: #111;
     }
     
     .tool-tabs {
@@ -48,8 +59,8 @@
     }
     
     .tool-tab.active {
-      background:#f3f4f6;   /* light grey */
-      color:#111;
+      background:#e8f0fe;    /* very light blue tint */
+      color:#2c7cf1;
       border-color:transparent;
     }
   </style>
