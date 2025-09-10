@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Tools | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explore Private Credit AI tools: IRR calculator, loan pricing, yield curve, covenant checker, credit decoder, and shadow ratings." />
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#f7f7f8; --text:#111; --muted:#666; --card:#fff;
+      --border:#e8e8e8; --brand:#2c7cf1; --brand-2:#10b981;
+      --shadow:0 6px 20px rgba(0,0,0,.06);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+    .page{max-width:1100px;margin:24px auto;padding:0 20px 40px}
+    .crumbs{font-size:.9rem;color:var(--muted);margin:10px 0 8px}
+    .crumbs a{color:inherit;text-decoration:none}
+    .crumbs span{opacity:.7}
+
+    .hero{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:16px}
+    .hero h1{margin:0 0 6px;font-size:28px}
+    .hero p{margin:0;color:var(--muted)}
+
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+    .search{flex:1;min-width:220px}
+    .search input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{padding:8px 10px;border:1px solid #ddd;border-radius:999px;background:#fff;font-size:.9rem;cursor:pointer;user-select:none}
+    .tag.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(260px,1fr));gap:14px}
+    @media (max-width:980px){ .grid{grid-template-columns:repeat(2,minmax(240px,1fr));} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform .06s ease, box-shadow .06s ease}
+    .card:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+    .kicker{font-size:.8rem;color:var(--muted)}
+    .title{font-weight:700;font-size:1.05rem}
+    .desc{color:var(--muted);font-size:.95rem;margin-top:2px}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    .pill{font-size:.75rem;background:#f0f2f5;border:1px solid #e1e5ea;border-radius:999px;padding:4px 8px}
+    .status{margin-left:auto;font-size:.75rem;border-radius:8px;padding:4px 8px;border:1px solid #e1e5ea;background:#fff}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+    .tab{display:inline-block;padding:10px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;text-decoration:none;color:#111;font-size:14px}
+    .tab.active{background:#111;color:#fff;border-color:#111}
+
+    .note{margin:14px 0;color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main class="page">
+    <!-- Breadcrumbs -->
+    <div class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>›</span> Tools
+    </div>
+
+    <!-- Top nav tabs (peer to Media Hub) -->
+    <nav class="tabs" aria-label="Sections">
+      <a class="tab" href="/tools/index.html">Tools</a>
+      <a class="tab" href="/tools/media-hub.html">Media Hub</a>
+    </nav>
+    <script>
+      (function(){
+        const here = location.pathname.replace(/\/+$/,'');
+        document.querySelectorAll('.tabs .tab').forEach(a=>{
+          if(a.getAttribute('href')===here){ a.classList.add('active'); }
+        });
+      })();
+    </script>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Tools</h1>
+      <p>Practical, no-BS utilities for private credit teams: pricing, cashflow math, docs parsing, covenant checks, and more.</p>
+    </section>
+
+    <!-- Controls -->
+    <div class="controls" role="region" aria-label="Filters">
+      <div class="search">
+        <input id="q" type="search" placeholder="Search tools (e.g., IRR, covenants, pricing, ratings)" aria-label="Search tools">
+      </div>
+      <div class="tags" id="tags">
+        <div class="tag" data-tag="modeling">Modeling</div>
+        <div class="tag" data-tag="pricing">Pricing</div>
+        <div class="tag" data-tag="rates">Rates</div>
+        <div class="tag" data-tag="docs">Docs</div>
+        <div class="tag" data-tag="monitoring">Monitoring</div>
+        <div class="tag" data-tag="risk">Risk</div>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <section class="grid" id="toolGrid" aria-label="Tool list">
+      <!-- IRR -->
+      <a class="card" href="/tools/irr-calculator.html"
+         data-tags="modeling pricing"
+         data-keywords="irr internal rate moic cash flow amortization bullet exit fee oid">
+        <div class="kicker">📈 Returns</div>
+        <div class="title">IRR Calculator</div>
+        <div class="desc">Build cashflows (IO or amortizing), include OID/exit, export CSV, and see gross/net IRR + MOIC.</div>
+        <div class="meta">
+          <span class="pill">Modeling</span>
+          <span class="pill">Pricing</span>
+          <span class="status">Live</span>
+        </div>
+      </a>
+
+      <!-- Loan Pricing -->
+      <a class="card" href="/tools/loan-pricing.html"
+         data-tags="pricing modeling"
+         data-keywords="loan pricing spread upfront fees amortization duration">
+        <div class="kicker">💵 Structuring</div>
+        <div class="title">Loan Pricing</div>
+        <div class="desc">Translate target returns into coupons/fees and payment profiles. Useful for term sheets.</div>
+        <div class="meta">
+          <span class="pill">Pricing</span><span class="pill">Modeling</span>
+          <span class="status">Coming Soon</span>
+        </div>
+      </a>
+
+      <!-- Yield Curve -->
+      <a class="card" href="/tools/yield-curve.html"
+         data-tags="rates risk"
+         data-keywords="yield curve treasury forward duration base rate">
+        <div class="kicker">🧭 Rates</div>
+        <div class="title">Yield Curve</div>
+        <div class="desc">Reference curves and quick math for base-rate scenarios and duration-light sanity checks.</div>
+        <div class="meta">
+          <span class="pill">Rates</span><span class="pill">Risk</span>
+          <span class="status">Live</span>
+        </div>
+      </a>
+
+      <!-- Shadow Ratings -->
+      <a class="card" href="/tools/shadow-ratings-basic.html"
+         data-tags="risk modeling"
+         data-keywords="shadow rating score leverage coverage size sponsor covenants liquidity sector">
+        <div class="kicker">🛡️ Risk</div>
+        <div class="title">Shadow Ratings</div>
+        <div class="desc">Rules-based scoring aligned to agency heuristics to approximate implied credit tiers.</div>
+        <div class="meta">
+          <span class="pill">Risk</span><span class="pill">Modeling</span>
+          <span class="status">Live</span>
+        </div>
+      </a>
+
+      <!-- Covenant Checker -->
+      <a class="card" href="/tools/covenant-checker.html"
+         data-tags="docs monitoring risk"
+         data-keywords="covenant checker compliance leverage tests net leverage FCCR springing covenants">
+        <div class="kicker">🧾 Docs</div>
+        <div class="title">Covenant Checker</div>
+        <div class="desc">Extract and sanity-check key tests; flag potential breaches and springers.</div>
+        <div class="meta">
+          <span class="pill">Docs</span><span class="pill">Monitoring</span>
+          <span class="status">Coming Soon</span>
+        </div>
+      </a>
+
+      <!-- Credit Decoder -->
+      <a class="card" href="/tools/credit-decoder.html"
+         data-tags="docs risk"
+         data-keywords="credit agreement decoder definitions baskets debt incurrence liens investments restricted payments">
+        <div class="kicker">🧩 Docs</div>
+        <div class="title">Credit Decoder</div>
+        <div class="desc">Navigate core definitions and baskets; translate dense clauses into plain English.</div>
+        <div class="meta">
+          <span class="pill">Docs</span><span class="pill">Risk</span>
+          <span class="status">Coming Soon</span>
+        </div>
+      </a>
+
+      <!-- Portfolio Monitor (placeholder) -->
+      <a class="card" href="/tools/portfolio-monitor.html"
+         data-tags="monitoring risk"
+         data-keywords="portfolio monitor compliance tracker alerts exposure limits">
+        <div class="kicker">📊 Monitoring</div>
+        <div class="title">Portfolio Monitor</div>
+        <div class="desc">Lightweight dashboard for exposure, tests, and alerts. Hooks to Drive/Sheets.</div>
+        <div class="meta">
+          <span class="pill">Monitoring</span><span class="pill">Risk</span>
+          <span class="status">Prototype</span>
+        </div>
+      </a>
+    </section>
+
+    <p class="note">Tip: label unfinished pages as “Coming Soon” or “Prototype” (like above) so visitors see momentum without dead ends.</p>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/includes/include.js"></script>
+  <script>
+    // Simple search + tag filtering
+    (function(){
+      const q = document.getElementById('q');
+      const grid = document.getElementById('toolGrid');
+      const cards = [...grid.querySelectorAll('.card')];
+      const tagsWrap = document.getElementById('tags');
+      const activeTags = new Set();
+
+      function applyFilter(){
+        const term = (q.value||'').trim().toLowerCase();
+        cards.forEach(c=>{
+          const kw = (c.dataset.keywords||'') + ' ' + (c.dataset.tags||'');
+          const hasTerm = !term || kw.toLowerCase().includes(term);
+          const hasTags = activeTags.size===0 || [...activeTags].every(t => (c.dataset.tags||'').includes(t));
+          c.style.display = (hasTerm && hasTags) ? '' : 'none';
+        });
+      }
+
+      q.addEventListener('input', applyFilter);
+      tagsWrap.addEventListener('click', e=>{
+        const t = e.target.closest('.tag'); if(!t) return;
+        const k = t.dataset.tag;
+        if(t.classList.toggle('active')) activeTags.add(k); else activeTags.delete(k);
+        applyFilter();
+      });
+    })();
+  </script>
+
+  <!-- Structured data (helps SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Private Credit AI Tools",
+    "description": "Utilities for private credit: IRR, pricing, yield curve, covenant checks, credit decoder, and shadow ratings.",
+    "url": "https://private-credit.ai/tools/"
+  }
+  </script>
+</body>
+</html>
