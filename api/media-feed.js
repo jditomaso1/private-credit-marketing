@@ -85,13 +85,9 @@ const TAGS = [
   { tag: 'NAV',            kws: ['nav loan','nav financing'] },
   { tag: 'BDC',            kws: [' bdc ','arcc','bxsl','ocsl','main','psec','cgbd','fdus'] },
   { tag: 'ABS',            kws: ['securitization','warehouse','term abs','asset-backed'] },
-  // NEW:
   { tag: 'Ratings',        kws: ['rating action','downgrade','upgrade','outlook revised','criteria update','methodology'] },
   { tag: 'Bankruptcy',     kws: ['chapter 11','prepack','pre-negotiated plan','dip financing','restructuring support agreement','rsa'] },
   { tag: 'Private Equity', kws: ['private equity','buyout','portfolio company','sponsor-backed','add-on acquisition'] },
-  // in TAGS (you likely already added)
-  { tag: 'Ratings',    kws: ['rating action','downgrade','upgrade','outlook revised','criteria update','methodology'] },
-  { tag: 'Bankruptcy', kws: ['chapter 11','prepack','dip financing','restructuring support agreement','rsa'] },
 ];
 
 function tagger(str='') {
@@ -297,9 +293,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // Sort newest → oldest
+    // Sort newest → oldest, with boost nudges for select sources
     all.sort((a,b) => boostedTime(b) - boostedTime(a));
-
+    
     // De-dupe by cleaned URL (fallback to title)
     const seen = new Set();
     const items = all.filter(i => {
@@ -308,22 +304,21 @@ export default async function handler(req, res) {
       seen.add(key);
       return true;
     });
-
-    // Top10 = last 24h with domain cap
-    const cutoff = Date.now() - 24*3600*1000;
-    const within24h = items.filter(i => new Date(i.published_at).getTime() >= cutoff);
-    const base = (within24h.length ? within24h : items);
-
+    
+    // Safety net: if everything got filtered out, re-admit some raw items
+    let safeItems = items;
+    if (!safeItems.length && all.length) {
+      safeItems = all.slice(0, 300);
+    }
+    
+    // Build Top10 with domain caps
     function topNWithDomainCap(list, n = 10) {
-      const caps = new Map([
-        ['sec.gov', 2], // harder cap for SEC
-      ]);
+      const caps = new Map([['sec.gov', 2]]); // harder cap for SEC
       const defaultCap = 3;
     
       const byDomain = new Map();
       const out = [];
     
-      // First pass: honor caps
       for (const it of list) {
         const d = it.source || 'unknown';
         const limit = caps.has(d) ? caps.get(d) : defaultCap;
@@ -334,35 +329,24 @@ export default async function handler(req, res) {
           if (out.length === n) break;
         }
       }
-    
-      // Second pass: if still short, fill regardless of caps to reach N
       if (out.length < n) {
         for (const it of list) {
           if (out.length === n) break;
           if (!out.includes(it)) out.push(it);
         }
       }
-    
       return out.slice(0, n);
-    }
-
-    // After you compute `items` (sorted & deduped)
-    let safeItems = items;
-    
-    // Safety net: if everything got filtered out, re-admit SEC items (lightly formatted)
-    if (!safeItems.length && all.length) {
-      safeItems = all.slice(0, 300);
     }
     
     const cutoff = Date.now() - 24*3600*1000;
     const within24h = safeItems.filter(i => new Date(i.published_at).getTime() >= cutoff);
     const base = (within24h.length ? within24h : safeItems);
-    
     const top10 = topNWithDomainCap(base, 10);
-
+    
     // Cache on the edge
-    res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900'); // 15m
-    res.status(200).json({ top10, items: items.slice(0, 300) });
+    res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900');
+    res.status(200).json({ top10, items: safeItems.slice(0, 300) });
+    
   } catch (e) {
     res.status(500).json({ error: 'media feed failed' });
   }
