@@ -357,11 +357,31 @@
     }
 
     // --- Filter ---
-    function applyFilter(tag='All'){
+    function getSelectedTag(){
+      const active = document.querySelector('#filters .pill.pill--active');
+      return active ? active.dataset.tag : 'All';
+    }
+    
+    function applyFilter(tag = getSelectedTag()){
+      const includeSEC = document.getElementById('toggle-sec')?.checked !== false;
+    
+      // start from all items
+      let filtered = _items;
+    
+      // tag filter
       const selected = normalizeTag(tag);
-      const filtered = selected==='All'
-        ? _items
-        : _items.filter(i => toTagArray(i.tags).map(t=>normalizeTag(t)).includes(selected));
+      if (selected !== 'All') {
+        filtered = filtered.filter(i =>
+          toTagArray(i.tags).map(t => normalizeTag(t)).includes(selected)
+        );
+      }
+    
+      // SEC toggle filter
+      if (!includeSEC) {
+        filtered = filtered.filter(i => (i.source || '').replace(/^www\./,'') !== 'sec.gov');
+      }
+    
+      // render
       renderTop10(filtered);
       renderFeed(filtered.slice(10, 260));
     }
