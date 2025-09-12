@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow Ratings — Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;margin:0;color:#111}
+    .wrap{max-width:980px;margin:32px auto;padding:0 20px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .card-head{padding:16px 18px;border-bottom:1px solid #eee;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .card-body{padding:18px}
+    label{display:block;font-size:12px;color:#555;margin-bottom:6px}
+    select,input{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:560px){.grid,.grid-2{grid-template-columns:1fr}}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:600;font-size:12px;border:1px solid #c7d2fe}
+    .result{display:flex;align-items:center;gap:12px;margin-top:4px}
+    .rating-badge{font-weight:700;font-size:20px;padding:6px 12px;border-radius:10px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
+    .subgrid{margin-top:12px;border-top:1px dashed #e5e7eb;padding-top:12px}
+    .kpi{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:10px}
+    .kpi h4{margin:0 0 8px 0;font-size:13px}
+    .hint{font-size:12px;color:#6b7280}
+    .muted{color:#6b7280}
+    .danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .row{display:flex;gap:14px;flex-wrap:wrap}
+    .row > div{min-width:200px;flex:1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 style="margin:0 0 14px">Shadow Ratings</h1>
+    <p class="muted" style="margin:0 0 18px">Toggle agency & sector, enter current metrics, and get a live shadow rating. Bands are configurable below.</p>
+
+    <section class="card">
+      <div class="card-head">
+        <div class="row" style="width:100%">
+          <div>
+            <label>Rating Agency</label>
+            <select id="agency">
+              <option value="SP">S&amp;P (demo bands)</option>
+              <option value="Moodys" selected>Moody’s (scorecard-style)</option>
+            </select>
+          </div>
+          <div style="min-width:260px;flex:2">
+            <label>Sector</label>
+            <select id="sector"></select>
+          </div>
+          <div id="subtypeWrap" style="min-width:240px;display:none">
+            <label>Subtype (sector specific)</label>
+            <select id="subtype"></select>
+          </div>
+          <div class="result" style="margin-left:auto">
+            <span class="muted">Shadow rating</span>
+            <span id="finalRating" class="rating-badge">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div id="metrics" class="grid"></div>
+        <div class="subgrid grid-2">
+          <div class="kpi">
+            <h4>Aggregation method</h4>
+            <label><input type="radio" name="agg" value="median" checked style="width:auto;margin-right:6px">Median of metric ratings</label>
+            <label><input type="radio" name="agg" value="worst" style="width:auto;margin-right:6px">Worst of primary metrics (Leverage &amp; Coverage)</label>
+          </div>
+          <div class="kpi">
+            <h4>Qualitative overlay (optional)</h4>
+            <label>Business risk notch (−2 to +2)</label>
+            <input id="overlay" type="number" min="-2" max="2" step="1" value="0" />
+            <div class="hint">Use for sponsor strength, customer concentration, cyclicality, disclosure quality, etc.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="muted" style="margin-top:12px">For Moody’s Media, bands reflect the scorecard style (Aaa→Caa). Adjust cutoffs as needed when you finalize tables.</p>
+  </div>
+
+  <script>
+  // --------------------------------
+  // CONFIG: rating bands & sectors
+  // --------------------------------
+  // Display scale for UI (coarser). We’ll map Aaa/Aa/A/Baa/Ba/B/Caa → this set.
+  const CONFIG = {
+    displayScale: ["AA","A","BBB","BB","B","CCC"],
+    // Map Moody’s band to UI display bucket
+    moodysToDisplay: (band) => {
+      const map = { "Aaa":"AA", "Aa":"AA", "A":"A", "Baa":"BBB", "Ba":"BB", "B":"B", "Caa":"CCC" };
+      return map[band] || "CCC";
+    },
+    agencies: {
+      SP: {
+        sectors: {
+          "Software / SaaS": {
+            metrics: [
+              { key:"leverage", label:"Total Debt / EBITDA (x)", type:"number",
+                bands: [ { max:3.0, rating:"A" }, { max:4.0, rating:"BBB" }, { max:5.0, rating:"BB" }, { max:6.0, rating:"B" }, { max:Infinity, rating:"CCC" } ],
+                hint:"Recurring revenue allows higher leverage vs Industrials."
+              },
+              { key:"coverage", label:"EBITDA / Interest (x)", type:"number",
+                bands: [ { min:8, rating:"A" }, { min:5, rating:"BBB" }, { min:3, rating:"BB" }, { min:1.5, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"Higher is better."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [ { min:2000, rating:"A" }, { min:1000, rating:"BBB" }, { min:500, rating:"BB" }, { min:100, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"Larger scale supports stronger ratings."
+              },
+              { key:"margin", label:"EBITDA Margin (%)", type:"number",
+                bands: [ { min:25, rating:"A" }, { min:20, rating:"BBB" }, { min:15, rating:"BB" }, { min:10, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"Sustained margins indicate resilience."
+              }
+            ]
+          }
+        }
+      },
+
+      // ----------------------------
+      // Moody’s (scorecard-style)
+      // ----------------------------
+      Moodys: {
+        sectors: {
+          // >>> NEW: Media scorecard with subtype <<<
+          "Media (scorecard)": {
+            subtypes: [
+              { key:"broadcasters", label:"Broadcasters / Cable / Outdoor / Other" },
+              { key:"publishers",  label:"Publishers" }
+            ],
+            metrics: [
+              // SCALE: Revenue in $ billions (Aaa .. Caa)
+              { key:"rev_bil", label:"Revenue ($ billions)", type:"number",
+                bandsMoodys: {
+                  // Provisional from scorecard style — replace with exact cutoffs when finalized
+                  Aaa: { min:40 }, Aa:{ min:20 }, A:{ min:10 }, Baa:{ min:4 }, Ba:{ min:1.25 }, B:{ min:0.5 }, Caa:{ min:-Infinity }
+                },
+                hint:"Scale factor. Enter revenue in USD billions."
+              },
+              // LEVERAGE: Debt / EBITDA (lower is better) — differs by subtype
+              { key:"leverage", label:"Debt / EBITDA (x)", type:"number",
+                bandsMoodysBySubtype: {
+                  broadcasters: {
+                    // Aaa <1.0, Aa <1.5, A <2.0, Baa <3.0, Ba <4.0, B <5.5, else Caa
+                    Aaa:{ max:1.0 }, Aa:{ max:1.5 }, A:{ max:2.0 }, Baa:{ max:3.0 }, Ba:{ max:4.0 }, B:{ max:5.5 }, Caa:{ max:Infinity }
+                  },
+                  publishers: {
+                    // Aaa <1.0, Aa <1.5, A <2.0, Baa <2.75, Ba <3.5, B <5.0, else Caa
+                    Aaa:{ max:1.0 }, Aa:{ max:1.5 }, A:{ max:2.0 }, Baa:{ max:2.75 }, Ba:{ max:3.5 }, B:{ max:5.0 }, Caa:{ max:Infinity }
+                  }
+                },
+                hint:"Lower is better. Uses subtype-specific thresholds."
+              },
+              // COVERAGE: (EBITDA – Capex) / Interest (higher is better) — differs by subtype
+              { key:"cov", label:"(EBITDA – Capex) / Interest (x)", type:"number",
+                bandsMoodysBySubtype: {
+                    broadcasters: {
+                      // Aaa ≥10, Aa ≥7, A ≥5, Baa ≥4, Ba ≥3, B ≥2, else Caa
+                      Aaa:{ min:10 }, Aa:{ min:7 }, A:{ min:5 }, Baa:{ min:4 }, Ba:{ min:3 }, B:{ min:2 }, Caa:{ min:-Infinity }
+                    },
+                    publishers: {
+                      // Aaa ≥12, Aa ≥8, A ≥6, Baa ≥4.5, Ba ≥3, B ≥2, else Caa
+                      Aaa:{ min:12 }, Aa:{ min:8 }, A:{ min:6 }, Baa:{ min:4.5 }, Ba:{ min:3 }, B:{ min:2 }, Caa:{ min:-Infinity }
+                    }
+                },
+                hint:"Higher is better. Uses subtype-specific thresholds."
+              }
+              // Qualitative subfactors (Market position, Trajectory, Business model, Policy) can be added as dropdowns later.
+            ]
+          },
+
+          // Keep your previous examples too
+          "Software / SaaS": {
+            metrics: [
+              { key:"leverage", label:"Gross Debt / EBITDA (x)", type:"number",
+                bands: [ { max:3.25, rating:"A" }, { max:4.25, rating:"BBB" }, { max:5.25, rating:"BB" }, { max:6.25, rating:"B" }, { max:Infinity, rating:"CCC" } ],
+                hint:"Moody’s grids often notch leverage slightly differently."
+              },
+              { key:"coverage", label:"EBIT / Interest (x)", type:"number",
+                bands: [ { min:7.5, rating:"A" }, { min:5.0, rating:"BBB" }, { min:3.0, rating:"BB" }, { min:1.5, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"EBIT-based coverage proxy."
+              },
+              { key:"retention", label:"FCF / Debt (%)", type:"number",
+                bands: [ { min:25, rating:"A" }, { min:15, rating:"BBB" }, { min:5,  rating:"BB" }, { min:0,  rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"Cash generation and deleveraging capacity."
+              },
+              { key:"scale", label:"Revenue ($m)", type:"number",
+                bands: [ { min:2500, rating:"A" }, { min:1200, rating:"BBB" }, { min:600,  rating:"BB" }, { min:200,  rating:"B" }, { min:-Infinity, rating:"CCC" } ],
+                hint:"Scale & diversification."
+              }
+            ]
+          }
+        }
+      }
+    }
+  };
+
+  // ---------------
+  // Helpers
+  // ---------------
+  const byStrength = (a,b) => CONFIG.displayScale.indexOf(a) - CONFIG.displayScale.indexOf(b);
+
+  function pickMoodysBand(value, bandsObj, higherIsBetter) {
+    // bandsObj like { Aaa:{min:..} / {max:..}, Aa:{...}, ... Caa:{} }
+    const order = ["Aaa","Aa","A","Baa","Ba","B","Caa"]; // best -> worst
+    for (const k of order) {
+      const b = bandsObj[k] || {};
+      const lo = ("min" in b) ? b.min : null;
+      const hi = ("max" in b) ? b.max : null;
+      if ((lo === null || value >= lo) && (hi === null || value < hi)) return k;
+    }
+    return "Caa";
+  }
+
+  function bandsToRating(metric, value, agency, sector, subtypeKey){
+    if (value==="" || value===null || isNaN(+value)) return null;
+    const v = +value;
+
+    if (agency === "Moodys" && sector === "Media (scorecard)") {
+      // Special handling: Moody’s Media uses scorecard bands / subtype
+      if (metric.key === "rev_bil") {
+        const band = pickMoodysBand(v, metric.bandsMoodys, true);
+        return CONFIG.moodysToDisplay(band);
+      }
+      if (metric.key === "leverage") {
+        const bands = metric.bandsMoodysBySubtype[subtypeKey] || metric.bandsMoodysBySubtype["broadcasters"];
+        const band = pickMoodysBand(v, bands, false);
+        return CONFIG.moodysToDisplay(band);
+      }
+      if (metric.key === "cov") {
+        const bands = metric.bandsMoodysBySubtype[subtypeKey] || metric.bandsMoodysBySubtype["broadcasters"];
+        const band = pickMoodysBand(v, bands, true);
+        return CONFIG.moodysToDisplay(band);
+      }
+    }
+
+    // Default path (non-Moody’s-scorecard metrics use simple min/max with direct display ratings)
+    const v2 = +value;
+    for (const band of (metric.bands||[])){
+      if (typeof band.max === "number" && v2 <= band.max) return band.rating;
+      if (typeof band.min === "number" && v2 >= band.min) return band.rating;
+    }
+    return null;
+  }
+
+  function aggregate(ratings, method){
+    const clean = ratings.filter(r => !!r.rating);
+    if (!clean.length) return "—";
+    if (method === "worst"){
+      const pri = clean.filter(r=>["leverage","coverage","cov"].includes(r.metricKey));
+      const pool = pri.length ? pri : clean;
+      return pool.map(r=>r.rating).sort(byStrength).slice(-1)[0];
+    }
+    const arr = clean.map(r=>r.rating).sort(byStrength);
+    return arr[Math.floor((arr.length-1)/2)];
+  }
+
+  function applyOverlay(letter, notch){
+    if (!letter || letter==="—" || !notch) return letter;
+    const idx = CONFIG.displayScale.indexOf(letter);
+    if (idx<0) return letter;
+    const target = Math.min(Math.max(idx - notch, 0), CONFIG.displayScale.length-1);
+    return CONFIG.displayScale[target];
+  }
+
+  // ---------------
+  // UI wiring
+  // ---------------
+  const $agency = document.getElementById('agency');
+  const $sector = document.getElementById('sector');
+  const $subtypeWrap = document.getElementById('subtypeWrap');
+  const $subtype = document.getElementById('subtype');
+  const $metrics = document.getElementById('metrics');
+  const $final = document.getElementById('finalRating');
+  const $overlay = document.getElementById('overlay');
+
+  function refreshSectors(){
+    const ag = $agency.value;
+    const sectors = Object.keys(CONFIG.agencies[ag].sectors);
+    $sector.innerHTML = sectors.map(s=>`<option>${s}</option>`).join('');
+    refreshSubtype();
+  }
+
+  function refreshSubtype(){
+    const ag = $agency.value;
+    const sec = $sector.value;
+    const def = CONFIG.agencies[ag].sectors[sec];
+    const hasSubtype = !!def.subtypes;
+    $subtypeWrap.style.display = hasSubtype ? 'block' : 'none';
+    if (hasSubtype){
+      $subtype.innerHTML = def.subtypes.map(st=>`<option value="${st.key}">${st.label}</option>`).join('');
+    } else {
+      $subtype.innerHTML = '';
+    }
+  }
+
+  function renderMetrics(){
+    const ag = $agency.value;
+    const sec = $sector.value;
+    const { metrics } = CONFIG.agencies[ag].sectors[sec];
+
+    $metrics.innerHTML = metrics.map(m => `
+      <div class="kpi">
+        <label for="${m.key}">${m.label}</label>
+        <input id="${m.key}" type="${m.type||'number'}" inputmode="decimal" placeholder="Enter value">
+        <div class="hint">${m.hint||''}</div>
+        <div class="hint" id="${m.key}-out"></div>
+      </div>
+    `).join('');
+
+    Array.from($metrics.querySelectorAll('input')).forEach(inp=>{
+      inp.addEventListener('input', recalc);
+    });
+    recalc();
+  }
+
+  function recalc(){
+    const ag = $agency.value;
+    const sec = $sector.value;
+    const subtypeKey = $subtype.value || "broadcasters";
+    const aggMethod = (document.querySelector('input[name="agg"]:checked')||{}).value || 'median';
+    const notch = parseInt($overlay.value||0,10) || 0;
+
+    const def = CONFIG.agencies[ag].sectors[sec];
+    const { metrics } = def;
+
+    const perMetric = metrics.map(m=>{
+      const val = (document.getElementById(m.key)||{}).value;
+      const rating = bandsToRating(m, val, ag, sec, subtypeKey);
+      const out = document.getElementById(`${m.key}-out`);
+      if (out){
+        out.textContent = rating ? `→ ${rating}` : '';
+      }
+      return { metricKey:m.key, rating };
+    });
+
+    const base = aggregate(perMetric, aggMethod);
+    const final = applyOverlay(base, notch);
+    $final.textContent = final;
+    $final.classList.toggle('danger', final==="CCC");
+  }
+
+  // Init
+  $agency.addEventListener('change', () => { refreshSectors(); renderMetrics(); });
+  $sector.addEventListener('change', () => { refreshSubtype(); renderMetrics(); });
+  $subtype.addEventListener('change', recalc);
+  document.querySelectorAll('input[name="agg"]').forEach(r => r.addEventListener('change', recalc));
+  $overlay.addEventListener('input', recalc);
+
+  refreshSectors();
+  renderMetrics();
+  </script>
+</body>
+</html>
