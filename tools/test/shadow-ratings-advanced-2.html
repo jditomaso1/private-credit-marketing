@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;margin:0;color:#111}
-    .wrap{max-width:980px;margin:32px auto;padding:0 20px}
+    .wrap{max-width:1100px;margin:32px auto;padding:0 20px}
     .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
     .card-head{padding:16px 18px;border-bottom:1px solid #eee;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
     .card-body{padding:18px}
@@ -15,25 +15,27 @@
     select,input{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px}
     .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
     .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:560px){.grid,.grid-2{grid-template-columns:1fr}}
-    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:600;font-size:12px;border:1px solid #c7d2fe}
-    .result{display:flex;align-items:center;gap:12px;margin-top:4px}
-    .rating-badge{font-weight:700;font-size:20px;padding:6px 12px;border-radius:10px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
-    .subgrid{margin-top:12px;border-top:1px dashed #e5e7eb;padding-top:12px}
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.grid,.grid-2{grid-template-columns:1fr}}
     .kpi{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:10px}
     .kpi h4{margin:0 0 8px 0;font-size:13px}
     .hint{font-size:12px;color:#6b7280}
     .muted{color:#6b7280}
+    .result{display:flex;align-items:center;gap:12px}
+    .rating-badge{font-weight:700;font-size:20px;padding:6px 12px;border-radius:10px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
     .danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:600;font-size:12px;border:1px solid #c7d2fe}
     .row{display:flex;gap:14px;flex-wrap:wrap}
     .row > div{min-width:200px;flex:1}
+    .weights{font-size:12px;line-height:1.4}
+    .weights .group{padding:10px;border:1px dashed #e5e7eb;border-radius:10px;background:#fafafa}
+    .weights strong{font-weight:600}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1 style="margin:0 0 14px">Shadow Ratings</h1>
-    <p class="muted" style="margin:0 0 18px">Toggle agency & sector, enter current metrics, and get a live shadow rating. Bands are configurable below.</p>
+    <h1 style="margin:0 0 8px">Shadow Ratings</h1>
+    <p class="muted" style="margin:0 0 18px">Toggle agency & sector, enter metrics (numeric + qualitative), and compute a scorecard-style shadow rating. Bands are configurable.</p>
 
     <section class="card">
       <div class="card-head">
@@ -41,15 +43,15 @@
           <div>
             <label>Rating Agency</label>
             <select id="agency">
-              <option value="SP">S&amp;P (demo bands)</option>
-              <option value="Moodys" selected>Moody’s (scorecard-style)</option>
+              <option value="Moodys" selected>Moody’s (scorecard)</option>
+              <!-- S&P can be added later via config -->
             </select>
           </div>
           <div style="min-width:260px;flex:2">
             <label>Sector</label>
             <select id="sector"></select>
           </div>
-          <div id="subtypeWrap" style="min-width:240px;display:none">
+          <div id="subtypeWrap" style="min-width:260px;display:none">
             <label>Subtype (sector specific)</label>
             <select id="subtype"></select>
           </div>
@@ -61,213 +63,276 @@
       </div>
 
       <div class="card-body">
-        <div id="metrics" class="grid"></div>
-        <div class="subgrid grid-2">
+        <div class="grid-2" style="margin-bottom:12px">
           <div class="kpi">
             <h4>Aggregation method</h4>
-            <label><input type="radio" name="agg" value="median" checked style="width:auto;margin-right:6px">Median of metric ratings</label>
-            <label><input type="radio" name="agg" value="worst" style="width:auto;margin-right:6px">Worst of primary metrics (Leverage &amp; Coverage)</label>
+            <label><input type="radio" name="agg" value="scorecard" style="width:auto;margin-right:6px">Scorecard (weighted)</label><br/>
+            <label><input type="radio" name="agg" value="median" checked style="width:auto;margin-right:6px">Median of metric ratings</label><br/>
+            <label><input type="radio" name="agg" value="worst" style="width:auto;margin-right:6px">Worst of primary metrics</label>
           </div>
           <div class="kpi">
             <h4>Qualitative overlay (optional)</h4>
-            <label>Business risk notch (−2 to +2)</label>
+            <label>Post-scorecard notch (−2 to +2)</label>
             <input id="overlay" type="number" min="-2" max="2" step="1" value="0" />
-            <div class="hint">Use for sponsor strength, customer concentration, cyclicality, disclosure quality, etc.</div>
+            <div class="hint">Use for ESG/other/instrument/cross-sector considerations.</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="kpi" style="grid-column:1/-1">
+            <h4>Inputs</h4>
+            <div id="metrics" class="grid"></div>
+          </div>
+          <div class="kpi" style="grid-column:1/-1">
+            <h4>Factor weights</h4>
+            <div id="weightsPanel" class="weights"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <p class="muted" style="margin-top:12px">For Moody’s Media, bands reflect the scorecard style (Aaa→Caa). Adjust cutoffs as needed when you finalize tables.</p>
+    <p class="muted" style="margin-top:12px">Note: Numeric bands for some sectors are placeholders. Once we drop exact ranges from each PDF, scoring updates automatically.</p>
   </div>
 
   <script>
-  // --------------------------------
-  // CONFIG: rating bands & sectors
-  // --------------------------------
-  // Display scale for UI (coarser). We’ll map Aaa/Aa/A/Baa/Ba/B/Caa → this set.
-  const CONFIG = {
-    displayScale: ["AA","A","BBB","BB","B","CCC"],
-    // Map Moody’s band to UI display bucket
-    moodysToDisplay: (band) => {
-      const map = { "Aaa":"AA", "Aa":"AA", "A":"A", "Baa":"BBB", "Ba":"BB", "B":"B", "Caa":"CCC" };
-      return map[band] || "CCC";
-    },
-    agencies: {
-      SP: {
-        sectors: {
-          "Software / SaaS": {
-            metrics: [
-              { key:"leverage", label:"Total Debt / EBITDA (x)", type:"number",
-                bands: [ { max:3.0, rating:"A" }, { max:4.0, rating:"BBB" }, { max:5.0, rating:"BB" }, { max:6.0, rating:"B" }, { max:Infinity, rating:"CCC" } ],
-                hint:"Recurring revenue allows higher leverage vs Industrials."
-              },
-              { key:"coverage", label:"EBITDA / Interest (x)", type:"number",
-                bands: [ { min:8, rating:"A" }, { min:5, rating:"BBB" }, { min:3, rating:"BB" }, { min:1.5, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"Higher is better."
-              },
-              { key:"scale", label:"Revenue ($m)", type:"number",
-                bands: [ { min:2000, rating:"A" }, { min:1000, rating:"BBB" }, { min:500, rating:"BB" }, { min:100, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"Larger scale supports stronger ratings."
-              },
-              { key:"margin", label:"EBITDA Margin (%)", type:"number",
-                bands: [ { min:25, rating:"A" }, { min:20, rating:"BBB" }, { min:15, rating:"BB" }, { min:10, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"Sustained margins indicate resilience."
-              }
-            ]
-          }
-        }
+  // =========================
+  // CONFIG (embedded for now)
+  // =========================
+  const DISPLAY_SCALE = ["AA","A","BBB","BB","B","CCC"];
+  const MOODYS_ORDER = ["Aaa","Aa","A","Baa","Ba","B","Caa"];
+  const BAND_TO_NUM = { Aaa:1, Aa:2, A:3, Baa:4, Ba:5, B:6, Caa:7 };
+  const moodysToDisplay = (band) => ({Aaa:"AA",Aa:"AA",A:"A",Baa:"BBB",Ba:"BB",B:"B",Caa:"CCC"})[band] || "CCC";
+  const toMoodysFromDisplay = (disp) => ({AA:"Aa",A:"A",BBB:"Baa",BB:"Ba",B:"B",CCC:"Caa"})[disp] || "Caa";
+
+  const SECTORS = {
+    Moodys: {
+      // === MEDIA ===
+      "Media (scorecard)": {
+        weights: { scale_revenue:0.15, business_profile:0.30, leverage_coverage:0.45, financial_policy:0.10 },
+        subtypes: [
+          { key:"broadcasters", label:"Broadcasters / Cable / Outdoor / Other" },
+          { key:"publishers",  label:"Publishers" }
+        ],
+        metrics: [
+          // SCALE
+          { key:"rev_bil", label:"Revenue ($ billions)", type:"number",
+            bandsMoodys:{ Aaa:{min:40}, Aa:{min:20}, A:{min:10}, Baa:{min:4}, Ba:{min:1.25}, B:{min:0.5}, Caa:{min:-Infinity} },
+            hint:"Scale 15% — enter USD billions."
+          },
+          // LEVERAGE
+          { key:"leverage", label:"Debt / EBITDA (x)", type:"number",
+            bandsMoodysBySubtype:{
+              broadcasters:{ Aaa:{max:1.0}, Aa:{max:1.5}, A:{max:2.0}, Baa:{max:3.0}, Ba:{max:4.0}, B:{max:5.5}, Caa:{max:Infinity} },
+              publishers:{   Aaa:{max:1.0}, Aa:{max:1.5}, A:{max:2.0}, Baa:{max:2.75}, Ba:{max:3.5}, B:{max:5.0}, Caa:{max:Infinity} }
+            },
+            hint:"Leverage 25% — lower is better."
+          },
+          // COVERAGE
+          { key:"cov", label:"(EBITDA – Capex) / Interest (x)", type:"number",
+            bandsMoodysBySubtype:{
+              broadcasters:{ Aaa:{min:10}, Aa:{min:7}, A:{min:5}, Baa:{min:4}, Ba:{min:3}, B:{min:2}, Caa:{min:-Infinity} },
+              publishers:{   Aaa:{min:12}, Aa:{min:8}, A:{min:6}, Baa:{min:4.5}, Ba:{min:3}, B:{min:2}, Caa:{min:-Infinity} }
+            },
+            hint:"Coverage 20% — higher is better."
+          },
+          // BUSINESS PROFILE (3x 10%)
+          { key:"mp",  label:"Market Position (band)",         type:"select", options:MOODYS_ORDER, hint:"Business Profile 30% (10%)." },
+          { key:"mst", label:"Market Share Trajectory (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 30% (10%)." },
+          { key:"bm",  label:"Business Model (band)",          type:"select", options:MOODYS_ORDER, hint:"Business Profile 30% (10%)." },
+          // FINANCIAL POLICY (10%)
+          { key:"policy", label:"Financial Policy (band)", type:"select", options:MOODYS_ORDER, hint:"Financial Policy 10%." }
+        ],
+        weightsPanel: [
+          { name:"Scale", w:15, items:[{n:"Revenue",w:15}] },
+          { name:"Business Profile", w:30, items:[{n:"Market Position",w:10},{n:"Market Share Trajectory",w:10},{n:"Business Model",w:10}] },
+          { name:"Leverage & Coverage", w:45, items:[{n:"Debt/EBITDA",w:25},{n:"(EBITDA–Capex)/Interest",w:20}] },
+          { name:"Financial Policy", w:10, items:[{n:"Policy",w:10}] }
+        ]
       },
 
-      // ----------------------------
-      // Moody’s (scorecard-style)
-      // ----------------------------
-      Moodys: {
-        sectors: {
-          // >>> NEW: Media scorecard with subtype <<<
-          "Media (scorecard)": {
-            subtypes: [
-              { key:"broadcasters", label:"Broadcasters / Cable / Outdoor / Other" },
-              { key:"publishers",  label:"Publishers" }
-            ],
-            metrics: [
-              // SCALE: Revenue in $ billions (Aaa .. Caa)
-              { key:"rev_bil", label:"Revenue ($ billions)", type:"number",
-                bandsMoodys: {
-                  // Provisional from scorecard style — replace with exact cutoffs when finalized
-                  Aaa: { min:40 }, Aa:{ min:20 }, A:{ min:10 }, Baa:{ min:4 }, Ba:{ min:1.25 }, B:{ min:0.5 }, Caa:{ min:-Infinity }
-                },
-                hint:"Scale factor. Enter revenue in USD billions."
-              },
-              // LEVERAGE: Debt / EBITDA (lower is better) — differs by subtype
-              { key:"leverage", label:"Debt / EBITDA (x)", type:"number",
-                bandsMoodysBySubtype: {
-                  broadcasters: {
-                    // Aaa <1.0, Aa <1.5, A <2.0, Baa <3.0, Ba <4.0, B <5.5, else Caa
-                    Aaa:{ max:1.0 }, Aa:{ max:1.5 }, A:{ max:2.0 }, Baa:{ max:3.0 }, Ba:{ max:4.0 }, B:{ max:5.5 }, Caa:{ max:Infinity }
-                  },
-                  publishers: {
-                    // Aaa <1.0, Aa <1.5, A <2.0, Baa <2.75, Ba <3.5, B <5.0, else Caa
-                    Aaa:{ max:1.0 }, Aa:{ max:1.5 }, A:{ max:2.0 }, Baa:{ max:2.75 }, Ba:{ max:3.5 }, B:{ max:5.0 }, Caa:{ max:Infinity }
-                  }
-                },
-                hint:"Lower is better. Uses subtype-specific thresholds."
-              },
-              // COVERAGE: (EBITDA – Capex) / Interest (higher is better) — differs by subtype
-              { key:"cov", label:"(EBITDA – Capex) / Interest (x)", type:"number",
-                bandsMoodysBySubtype: {
-                    broadcasters: {
-                      // Aaa ≥10, Aa ≥7, A ≥5, Baa ≥4, Ba ≥3, B ≥2, else Caa
-                      Aaa:{ min:10 }, Aa:{ min:7 }, A:{ min:5 }, Baa:{ min:4 }, Ba:{ min:3 }, B:{ min:2 }, Caa:{ min:-Infinity }
-                    },
-                    publishers: {
-                      // Aaa ≥12, Aa ≥8, A ≥6, Baa ≥4.5, Ba ≥3, B ≥2, else Caa
-                      Aaa:{ min:12 }, Aa:{ min:8 }, A:{ min:6 }, Baa:{ min:4.5 }, Ba:{ min:3 }, B:{ min:2 }, Caa:{ min:-Infinity }
-                    }
-                },
-                hint:"Higher is better. Uses subtype-specific thresholds."
-              }
-              // Qualitative subfactors (Market position, Trajectory, Business model, Policy) can be added as dropdowns later.
-            ]
+      // === ALCOHOLIC BEVERAGES ===
+      "Alcoholic Beverages (scorecard)": {
+        // From your screenshot: 15% Scale, 32.5% Business Profile (10 + 7.5 + 7.5 + 7.5),
+        // 7.5% Profitability (EBITA margin), 30% Leverage & Coverage (10 + 12.5 + 7.5), 15% Policy
+        weights: { scale_revenue:0.15, business_profile:0.325, profitability:0.075, leverage_coverage:0.30, financial_policy:0.15 },
+        metrics: [
+          // SCALE
+          { key:"rev_bil", label:"Revenue ($ billions)", type:"number",
+            bandsMoodys:{ /* TODO: fill exact ranges from PDF */ },
+            hint:"Scale 15% — enter USD billions."
           },
+          // BUSINESS PROFILE (4 subfactors)
+          { key:"div_risk",  label:"Diversification & Riskier Markets (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 10%." },
+          { key:"brand",     label:"Category / Brand Strength & Diversification (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 7.5%." },
+          { key:"global_pos",label:"Global Industry Position (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 7.5%." },
+          { key:"innovation",label:"Innovation, Distribution & Infrastructure (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 7.5%." },
+          // PROFITABILITY
+          { key:"ebita_margin", label:"EBITA Margin (%)", type:"number",
+            bandsMoodys:{ /* TODO: fill exact ranges from PDF */ },
+            hint:"Profitability 7.5% — higher is better."
+          },
+          // LEVERAGE & COVERAGE
+          { key:"rcf_net_debt", label:"RCF / Net Debt (%)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 10% — higher is better."
+          },
+          { key:"debt_ebitda", label:"Debt / EBITDA (x)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 12.5% — lower is better."
+          },
+          { key:"ebit_int", label:"EBIT / Interest (x)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 7.5% — higher is better."
+          },
+          // POLICY
+          { key:"policy", label:"Financial Policy (band)", type:"select", options:MOODYS_ORDER, hint:"Financial Policy 15%." }
+        ],
+        weightsPanel: [
+          { name:"Scale", w:15, items:[{n:"Revenue",w:15}] },
+          { name:"Business Profile", w:32.5, items:[
+            {n:"Diversification & Riskier Markets",w:10},
+            {n:"Category/Brand Strength & Diversification",w:7.5},
+            {n:"Global Industry Position",w:7.5},
+            {n:"Innovation/Distribution/Infrastructure",w:7.5}
+          ]},
+          { name:"Profitability", w:7.5, items:[{n:"EBITA Margin",w:7.5}] },
+          { name:"Leverage & Coverage", w:30, items:[
+            {n:"RCF/Net Debt",w:10},{n:"Debt/EBITDA",w:12.5},{n:"EBIT/Interest",w:7.5}
+          ]},
+          { name:"Financial Policy", w:15, items:[{n:"Policy",w:15}] }
+        ]
+      },
 
-          // Keep your previous examples too
-          "Software / SaaS": {
-            metrics: [
-              { key:"leverage", label:"Gross Debt / EBITDA (x)", type:"number",
-                bands: [ { max:3.25, rating:"A" }, { max:4.25, rating:"BBB" }, { max:5.25, rating:"BB" }, { max:6.25, rating:"B" }, { max:Infinity, rating:"CCC" } ],
-                hint:"Moody’s grids often notch leverage slightly differently."
-              },
-              { key:"coverage", label:"EBIT / Interest (x)", type:"number",
-                bands: [ { min:7.5, rating:"A" }, { min:5.0, rating:"BBB" }, { min:3.0, rating:"BB" }, { min:1.5, rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"EBIT-based coverage proxy."
-              },
-              { key:"retention", label:"FCF / Debt (%)", type:"number",
-                bands: [ { min:25, rating:"A" }, { min:15, rating:"BBB" }, { min:5,  rating:"BB" }, { min:0,  rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"Cash generation and deleveraging capacity."
-              },
-              { key:"scale", label:"Revenue ($m)", type:"number",
-                bands: [ { min:2500, rating:"A" }, { min:1200, rating:"BBB" }, { min:600,  rating:"BB" }, { min:200,  rating:"B" }, { min:-Infinity, rating:"CCC" } ],
-                hint:"Scale & diversification."
-              }
-            ]
-          }
-        }
+      // === MANUFACTURING ===
+      "Manufacturing (scorecard)": {
+        // From your screenshot: 20% Scale, 25% Business Profile, 5% Profitability, 35% Leverage & Coverage (10+10+5+10), 15% Policy
+        weights: { scale_revenue:0.20, business_profile:0.25, profitability:0.05, leverage_coverage:0.35, financial_policy:0.15 },
+        metrics: [
+          // SCALE
+          { key:"rev_bil", label:"Revenue ($ billions)", type:"number",
+            bandsMoodys:{ /* TODO: fill exact ranges from PDF */ },
+            hint:"Scale 20% — enter USD billions."
+          },
+          // BUSINESS PROFILE (single 25% qualitative band — methodology specific; if subfactors present, split later)
+          { key:"bp", label:"Business Profile (band)", type:"select", options:MOODYS_ORDER, hint:"Business Profile 25%." },
+          // PROFITABILITY
+          { key:"ebita_margin", label:"EBITA Margin (%)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Profitability & Efficiency 5% — higher is better."
+          },
+          // LEVERAGE & COVERAGE
+          { key:"debt_ebitda", label:"Debt / EBITDA (x)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 10% — lower is better."
+          },
+          { key:"rcf_net_debt", label:"RCF / Net Debt (%)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 10% — higher is better."
+          },
+          { key:"fcf_debt", label:"FCF / Debt (%)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 5% — higher is better."
+          },
+          { key:"ebita_int", label:"EBITA / Interest (x)", type:"number",
+            bandsMoodys:{ /* TODO */ },
+            hint:"Leverage & Coverage 10% — higher is better."
+          },
+          // POLICY
+          { key:"policy", label:"Financial Policy (band)", type:"select", options:MOODYS_ORDER, hint:"Financial Policy 15%." }
+        ],
+        weightsPanel: [
+          { name:"Scale", w:20, items:[{n:"Revenue",w:20}] },
+          { name:"Business Profile", w:25, items:[{n:"Business Profile",w:25}] },
+          { name:"Profitability & Efficiency", w:5, items:[{n:"EBITA Margin",w:5}] },
+          { name:"Leverage & Coverage", w:35, items:[
+            {n:"Debt/EBITDA",w:10},{n:"RCF/Net Debt",w:10},{n:"FCF/Debt",w:5},{n:"EBITA/Interest",w:10}
+          ]},
+          { name:"Financial Policy", w:15, items:[{n:"Policy",w:15}] }
+        ]
       }
     }
   };
 
-  // ---------------
-  // Helpers
-  // ---------------
-  const byStrength = (a,b) => CONFIG.displayScale.indexOf(a) - CONFIG.displayScale.indexOf(b);
-
-  function pickMoodysBand(value, bandsObj, higherIsBetter) {
-    // bandsObj like { Aaa:{min:..} / {max:..}, Aa:{...}, ... Caa:{} }
-    const order = ["Aaa","Aa","A","Baa","Ba","B","Caa"]; // best -> worst
-    for (const k of order) {
-      const b = bandsObj[k] || {};
+  // ================
+  // Helper functions
+  // ================
+  function pickBand(value, bandsObj){
+    if (!bandsObj || typeof value !== "number" || isNaN(value)) return null;
+    for (const band of MOODYS_ORDER){ // best->worst
+      const b = bandsObj[band] || {};
       const lo = ("min" in b) ? b.min : null;
       const hi = ("max" in b) ? b.max : null;
-      if ((lo === null || value >= lo) && (hi === null || value < hi)) return k;
-    }
-    return "Caa";
-  }
-
-  function bandsToRating(metric, value, agency, sector, subtypeKey){
-    if (value==="" || value===null || isNaN(+value)) return null;
-    const v = +value;
-
-    if (agency === "Moodys" && sector === "Media (scorecard)") {
-      // Special handling: Moody’s Media uses scorecard bands / subtype
-      if (metric.key === "rev_bil") {
-        const band = pickMoodysBand(v, metric.bandsMoodys, true);
-        return CONFIG.moodysToDisplay(band);
-      }
-      if (metric.key === "leverage") {
-        const bands = metric.bandsMoodysBySubtype[subtypeKey] || metric.bandsMoodysBySubtype["broadcasters"];
-        const band = pickMoodysBand(v, bands, false);
-        return CONFIG.moodysToDisplay(band);
-      }
-      if (metric.key === "cov") {
-        const bands = metric.bandsMoodysBySubtype[subtypeKey] || metric.bandsMoodysBySubtype["broadcasters"];
-        const band = pickMoodysBand(v, bands, true);
-        return CONFIG.moodysToDisplay(band);
-      }
-    }
-
-    // Default path (non-Moody’s-scorecard metrics use simple min/max with direct display ratings)
-    const v2 = +value;
-    for (const band of (metric.bands||[])){
-      if (typeof band.max === "number" && v2 <= band.max) return band.rating;
-      if (typeof band.min === "number" && v2 >= band.min) return band.rating;
+      if ((lo===null || value>=lo) && (hi===null || value<hi)) return band;
     }
     return null;
   }
+  const byStrength = (a,b) => DISPLAY_SCALE.indexOf(a) - DISPLAY_SCALE.indexOf(b);
 
-  function aggregate(ratings, method){
-    const clean = ratings.filter(r => !!r.rating);
-    if (!clean.length) return "—";
-    if (method === "worst"){
-      const pri = clean.filter(r=>["leverage","coverage","cov"].includes(r.metricKey));
-      const pool = pri.length ? pri : clean;
-      return pool.map(r=>r.rating).sort(byStrength).slice(-1)[0];
+  // Weighted scorecard aggregator (handles missing bands gracefully)
+  function scorecardAggregate(perMetric, def){
+    const w = def.weights || {};
+    // helper to fetch current display band for a metric
+    const getDisp = k => perMetric.find(r=>r.metricKey===k)?.rating || null;
+    const dispToNum = d => BAND_TO_NUM[toMoodysFromDisplay(d)] || 7;
+    // collect component scores with their weights
+    const parts = [];
+
+    // MEDIA structure (rev, leverage/cov splits, 3x BP, policy)
+    if (def === SECTORS.Moodys["Media (scorecard)"]){
+      const rev = getDisp("rev_bil"); if (rev) parts.push({wt:w.scale_revenue, val:dispToNum(rev)});
+      const lev = getDisp("leverage"); if (lev) parts.push({wt:w.leverage_coverage/2, val:dispToNum(lev)});
+      const cov = getDisp("cov");      if (cov) parts.push({wt:w.leverage_coverage/2, val:dispToNum(cov)});
+      const mp  = getDisp("mp");       if (mp)  parts.push({wt:w.business_profile/3, val:dispToNum(mp)});
+      const mst = getDisp("mst");      if (mst) parts.push({wt:w.business_profile/3, val:dispToNum(mst)});
+      const bm  = getDisp("bm");       if (bm)  parts.push({wt:w.business_profile/3, val:dispToNum(bm)});
+      const pol = getDisp("policy");   if (pol) parts.push({wt:w.financial_policy, val:dispToNum(pol)});
     }
-    const arr = clean.map(r=>r.rating).sort(byStrength);
-    return arr[Math.floor((arr.length-1)/2)];
+
+    // ALCOHOLIC BEVERAGES
+    if (def === SECTORS.Moodys["Alcoholic Beverages (scorecard)"]){
+      const rev = getDisp("rev_bil"); if (rev) parts.push({wt:w.scale_revenue, val:dispToNum(rev)});
+      ["div_risk","brand","global_pos","innovation"].forEach((k,i)=>{
+        const d = getDisp(k); if (d) parts.push({wt:[0.10,0.075,0.075,0.075][i], val:dispToNum(d)});
+      });
+      const pm = getDisp("ebita_margin"); if (pm) parts.push({wt:w.profitability, val:dispToNum(pm)});
+      const rcf = getDisp("rcf_net_debt"); if (rcf) parts.push({wt:0.10, val:dispToNum(rcf)});
+      const d2e = getDisp("debt_ebitda");  if (d2e) parts.push({wt:0.125, val:dispToNum(d2e)});
+      const ei  = getDisp("ebit_int");     if (ei)  parts.push({wt:0.075, val:dispToNum(ei)});
+      const pol = getDisp("policy");       if (pol) parts.push({wt:w.financial_policy, val:dispToNum(pol)});
+    }
+
+    // MANUFACTURING
+    if (def === SECTORS.Moodys["Manufacturing (scorecard)"]){
+      const rev = getDisp("rev_bil"); if (rev) parts.push({wt:w.scale_revenue, val:dispToNum(rev)});
+      const bp  = getDisp("bp");      if (bp)  parts.push({wt:w.business_profile, val:dispToNum(bp)});
+      const pm  = getDisp("ebita_margin"); if (pm) parts.push({wt:w.profitability, val:dispToNum(pm)});
+      const d2e = getDisp("debt_ebitda");   if (d2e) parts.push({wt:0.10, val:dispToNum(d2e)});
+      const rcf = getDisp("rcf_net_debt");  if (rcf) parts.push({wt:0.10, val:dispToNum(rcf)});
+      const fcf = getDisp("fcf_debt");      if (fcf) parts.push({wt:0.05, val:dispToNum(fcf)});
+      const ei  = getDisp("ebita_int");     if (ei)  parts.push({wt:0.10, val:dispToNum(ei)});
+      const pol = getDisp("policy");        if (pol) parts.push({wt:w.financial_policy, val:dispToNum(pol)});
+    }
+
+    // normalize weights actually present
+    const totalW = parts.reduce((s,p)=>s+p.wt,0) || 1;
+    const score = parts.reduce((s,p)=>s + p.val * (p.wt/totalW), 0);
+    const idx = Math.max(1, Math.min(7, Math.round(score)));
+    const moodysBand = MOODYS_ORDER[idx-1];
+    return moodysToDisplay(moodysBand);
   }
 
-  function applyOverlay(letter, notch){
-    if (!letter || letter==="—" || !notch) return letter;
-    const idx = CONFIG.displayScale.indexOf(letter);
-    if (idx<0) return letter;
-    const target = Math.min(Math.max(idx - notch, 0), CONFIG.displayScale.length-1);
-    return CONFIG.displayScale[target];
+  function renderWeightsPanel(def){
+    const el = document.getElementById("weightsPanel");
+    const groups = def.weightsPanel || [];
+    el.innerHTML = groups.map(g=>{
+      const items = (g.items||[]).map(i=>`<div>${i.n} — <strong>${i.w}%</strong></div>`).join("");
+      return `<div class="group"><div><strong>${g.name}</strong> — <strong>${g.w}%</strong></div>${items}</div>`;
+    }).join("");
   }
 
-  // ---------------
-  // UI wiring
-  // ---------------
+  // ====================
+  // UI wiring & actions
+  // ====================
   const $agency = document.getElementById('agency');
   const $sector = document.getElementById('sector');
   const $subtypeWrap = document.getElementById('subtypeWrap');
@@ -278,7 +343,7 @@
 
   function refreshSectors(){
     const ag = $agency.value;
-    const sectors = Object.keys(CONFIG.agencies[ag].sectors);
+    const sectors = Object.keys(SECTORS[ag]);
     $sector.innerHTML = sectors.map(s=>`<option>${s}</option>`).join('');
     refreshSubtype();
   }
@@ -286,7 +351,7 @@
   function refreshSubtype(){
     const ag = $agency.value;
     const sec = $sector.value;
-    const def = CONFIG.agencies[ag].sectors[sec];
+    const def = SECTORS[ag][sec];
     const hasSubtype = !!def.subtypes;
     $subtypeWrap.style.display = hasSubtype ? 'block' : 'none';
     if (hasSubtype){
@@ -294,55 +359,116 @@
     } else {
       $subtype.innerHTML = '';
     }
+    renderWeightsPanel(def);
   }
 
   function renderMetrics(){
     const ag = $agency.value;
     const sec = $sector.value;
-    const { metrics } = CONFIG.agencies[ag].sectors[sec];
+    const { metrics } = SECTORS[ag][sec];
 
-    $metrics.innerHTML = metrics.map(m => `
-      <div class="kpi">
-        <label for="${m.key}">${m.label}</label>
-        <input id="${m.key}" type="${m.type||'number'}" inputmode="decimal" placeholder="Enter value">
-        <div class="hint">${m.hint||''}</div>
-        <div class="hint" id="${m.key}-out"></div>
-      </div>
-    `).join('');
+    $metrics.innerHTML = metrics.map(m => {
+      const base = `<label for="${m.key}">${m.label}</label>`;
+      const tail = `<div class="hint">${m.hint||''}</div><div class="hint" id="${m.key}-out"></div>`;
+      if (m.type === 'select') {
+        const opts = (m.options||[]).map(o=>`<option value="${o}">${o}</option>`).join('');
+        return `<div class="kpi"><div>${base}</div><select id="${m.key}">${opts}</select>${tail}</div>`;
+      }
+      return `<div class="kpi"><div>${base}</div><input id="${m.key}" type="number" inputmode="decimal" placeholder="Enter value">${tail}</div>`;
+    }).join('');
 
-    Array.from($metrics.querySelectorAll('input')).forEach(inp=>{
-      inp.addEventListener('input', recalc);
+    Array.from($metrics.querySelectorAll('input,select')).forEach(el=>{
+      el.addEventListener('input', recalc);
+      el.addEventListener('change', recalc);
     });
     recalc();
+  }
+
+  function bandsToDisplayForMetric(m, val, subtypeKey){
+    if (val==="" || val===null || isNaN(+val)) return null;
+    const v = +val;
+
+    // numeric with per-subtype bands
+    if (m.bandsMoodysBySubtype){
+      const bands = m.bandsMoodysBySubtype[subtypeKey] || Object.values(m.bandsMoodysBySubtype)[0];
+      const band = pickBand(v, bands);
+      return band ? moodysToDisplay(band) : null;
+    }
+    // numeric with global bands
+    if (m.bandsMoodys){
+      const band = pickBand(v, m.bandsMoodys);
+      return band ? moodysToDisplay(band) : null;
+    }
+    // qualitative select chosen as Aaa..Caa
+    if (m.type === 'select'){
+      const el = document.getElementById(m.key);
+      const chosen = el ? el.value : null;
+      return chosen ? moodysToDisplay(chosen) : null;
+    }
+    return null;
+  }
+
+  function aggregate(ratings, method, def){
+    const clean = ratings.filter(r => !!r.rating);
+    if (!clean.length) return "—";
+    if (method === "worst"){
+      // prioritize common core keys
+      const priKeys = ["leverage","cov","coverage","debt_ebitda","ebit_int","ebita_int"];
+      const pri = clean.filter(r => priKeys.includes(r.metricKey));
+      const pool = pri.length ? pri : clean;
+      return pool.map(r=>r.rating).sort(byStrength).slice(-1)[0];
+    }
+    if (method === "scorecard"){
+      return scorecardAggregate(clean, def);
+    }
+    // median
+    const arr = clean.map(r=>r.rating).sort(byStrength);
+    return arr[Math.floor((arr.length-1)/2)];
+  }
+
+  function applyOverlay(letter, notch){
+    if (!letter || letter==="—" || !notch) return letter;
+    const idx = DISPLAY_SCALE.indexOf(letter);
+    if (idx<0) return letter;
+    const target = Math.min(Math.max(idx - notch, 0), DISPLAY_SCALE.length-1);
+    return DISPLAY_SCALE[target];
   }
 
   function recalc(){
     const ag = $agency.value;
     const sec = $sector.value;
-    const subtypeKey = $subtype.value || "broadcasters";
+    const def = SECTORS[ag][sec];
+    const subtypeKey = $subtype.value || (def.subtypes ? def.subtypes[0].key : null);
     const aggMethod = (document.querySelector('input[name="agg"]:checked')||{}).value || 'median';
     const notch = parseInt($overlay.value||0,10) || 0;
 
-    const def = CONFIG.agencies[ag].sectors[sec];
-    const { metrics } = def;
+    const perMetric = def.metrics.map(m=>{
+      const el = document.getElementById(m.key);
+      const val = el ? (m.type==='select' ? el.value : el.value) : "";
+      const disp = (m.type==='select')
+        ? moodysToDisplay(val)
+        : bandsToDisplayForMetric(m, val, subtypeKey);
 
-    const perMetric = metrics.map(m=>{
-      const val = (document.getElementById(m.key)||{}).value;
-      const rating = bandsToRating(m, val, ag, sec, subtypeKey);
       const out = document.getElementById(`${m.key}-out`);
       if (out){
-        out.textContent = rating ? `→ ${rating}` : '';
+        out.textContent = disp ? `→ ${disp}` : (m.type==='number' && (!m.bandsMoodys && !m.bandsMoodysBySubtype) ? '– add bands' : '');
       }
-      return { metricKey:m.key, rating };
+      return { metricKey:m.key, rating:disp };
     });
 
-    const base = aggregate(perMetric, aggMethod);
+    const base = aggregate(perMetric, aggMethod, def);
     const final = applyOverlay(base, notch);
     $final.textContent = final;
     $final.classList.toggle('danger', final==="CCC");
   }
 
   // Init
+  const $agency = document.getElementById('agency');
+  const $sector = document.getElementById('sector');
+  const $subtype = document.getElementById('subtype');
+  const $subtypeWrap = document.getElementById('subtypeWrap');
+  const $overlay = document.getElementById('overlay');
+
   $agency.addEventListener('change', () => { refreshSectors(); renderMetrics(); });
   $sector.addEventListener('change', () => { refreshSubtype(); renderMetrics(); });
   $subtype.addEventListener('change', recalc);
