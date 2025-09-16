@@ -14,7 +14,9 @@ export function interp(value, best, worst, higherIsBetter = true){
 }
 
 // Moody’s-style aggregate mapping (works as placeholder for S&P stub too)
+// Guard against bad inputs
 export function mapAggregateToRating(x){
+  if (!Number.isFinite(x)) return '—';     // <— add this
   const bands = [
     {max:1.5, r:'Aaa'},
     {max:2.5, r:'Aa1'},{max:3.5, r:'Aa2'},{max:4.5, r:'Aa3'},
