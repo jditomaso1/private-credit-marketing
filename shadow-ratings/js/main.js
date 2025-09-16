@@ -26,14 +26,30 @@ function populateIndustryOptions(fw){
   const current = sel.value;
   const entries = Object.entries(INDUSTRY_MANIFEST[fw] || {});
   sel.innerHTML = entries.map(([val, label]) => `<option value="${val}">${label}</option>`).join('');
+  // if the current option exists in the new set, keep it selected
   if (INDUSTRY_MANIFEST[fw] && INDUSTRY_MANIFEST[fw][current]) sel.value = current;
 }
 
-// === dynamic loader ===
+// === dynamic loader (with guardrails) ===
 async function loadModule() {
-  const fw = document.getElementById('framework').value;   // 'moodys' | 'sp'
+  const fw  = document.getElementById('framework').value;  // 'moodys' | 'sp'
   const ind = document.getElementById('industry').value;   // filename (no .js)
-  return await import(`../frameworks/${fw}/${ind}.js`);
+  try {
+    return await import(`../frameworks/${fw}/${ind}.js`);
+  } catch (e) {
+    console.error(e);
+    // Soft-fail UI messaging
+    document.getElementById('finalRating').textContent = '—';
+    document.getElementById('numeric').textContent = 'Score: —';
+    document.getElementById('explain').textContent =
+      `Could not load module: frameworks/${fw}/${ind}.js`;
+    // Clear tables/lists so it’s obvious nothing loaded
+    const tbody = document.querySelector('#metricsTable tbody');
+    if (tbody) tbody.innerHTML = '';
+    const drivers = document.getElementById('drivers');
+    if (drivers) drivers.innerHTML = '';
+    throw e;
+  }
 }
 
 function fieldRow(f){
@@ -59,7 +75,10 @@ function fmt(v){
 }
 
 async function calculate(){
-  const mod = await loadModule();
+  let mod;
+  try {
+    mod = await loadModule();
+  } catch { return; } // loadModule already messaged the error
 
   // Collect inputs exactly as defined in the module (preserves all your fields)
   const inputs = {};
@@ -73,33 +92,41 @@ async function calculate(){
 
   // Render
   document.getElementById('finalRating').textContent = res.rating || '—';
-  document.getElementById('numeric').textContent = `Score: ${Number.isFinite(res.numeric) ? res.numeric.toFixed(2) : '—'}`;
+  document.getElementById('numeric').textContent =
+    `Score: ${Number.isFinite(res.numeric) ? res.numeric.toFixed(2) : '—'}`;
+
   if (res.pdHint) {
     const base = Number.isFinite(res.numeric) ? res.numeric.toFixed(2) : '—';
     document.getElementById('explain').textContent = `Base score ${base}/100. ${res.pdHint}`;
   } else {
     document.getElementById('explain').textContent = 'Calculation complete using the active template.';
   }
+
+  // Metrics table
   const tbody = document.querySelector('#metricsTable tbody');
   tbody.innerHTML = Object.entries(res.metrics || {}).map(([k,v]) =>
     `<tr><td>${k}</td><td>${fmt(v)}</td></tr>`
   ).join('');
 
-  document.getElementById('drivers').innerHTML = (res.drivers || []).map(d => `<li>${d}</li>`).join('');
+  // Drivers
+  document.getElementById('drivers').innerHTML =
+    (res.drivers || []).map(d => `<li>${d}</li>`).join('');
 }
-
-document.getElementById('calcBtn').addEventListener('click', calculate);
 
 // Rebuild industries for the chosen framework, then load that module's fields
 async function refreshForm(){
   const fw = document.getElementById('framework').value;
-  populateIndustryOptions(fw);                 // <-- add this
-  const m = await loadModule();
-  buildForm(m.fields);
+  populateIndustryOptions(fw);
+  try {
+    const m = await loadModule();
+    buildForm(m.fields);
+  } catch { /* error already surfaced in loadModule */ }
 }
+
+document.getElementById('calcBtn').addEventListener('click', calculate);
 document.getElementById('framework').addEventListener('change', refreshForm);
 document.getElementById('industry').addEventListener('change', refreshForm);
 
 // Initial load: populate industries for default framework, then render
-populateIndustryOptions(document.getElementById('framework').value);  // <-- add this
+populateIndustryOptions(document.getElementById('framework').value);
 refreshForm();
