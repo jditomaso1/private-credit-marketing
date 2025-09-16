@@ -162,6 +162,7 @@ export async function score(inputs){
     factors: { sScale, qCA, qSSD, qOE, sMargin, sLev, sCov, sCF, qFP },
     numeric: agg,
     rating,
+    pdHint: spPDHint(rating),
     drivers,
     notes: [
       'S&P KCF factors reflected; exact live weights/bands can be swapped in later if you obtain RatingsDirect tables.',
