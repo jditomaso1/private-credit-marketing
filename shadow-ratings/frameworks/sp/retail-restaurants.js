@@ -2,7 +2,8 @@
 // Shadow Ratings — S&P-style scorecard: Retail & Restaurants (based on KCF; superseded by 2024 umbrella, but useful for factors/bands)
 // Uses your shared engine helpers: QUAL_TO_NUM (Aaa..Ca → 0..1), interp(), mapAggregateToRating()
 
-import { QUAL_TO_NUM, interp, mapAggregateToRating } from '../../js/engine.js';
+import { QUAL_TO_NUM, interp } from '../../js/engine.js';
+import { spMapScoreToLetter, spPDHint } from './_shared.js';
 
 export const id = 'sp/retail-restaurants';
 
@@ -135,7 +136,7 @@ export async function score(inputs){
       sCF      * W.cashFlowToDebt +
       qFP      * W.financialPolicy;
 
-  const rating = mapAggregateToRating(agg);
+  const rating = spMapScoreToLetter(agg);
 
   // 5) Diagnostics / drivers
   const drivers = [];
