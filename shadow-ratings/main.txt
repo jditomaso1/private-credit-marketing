@@ -1,0 +1,14 @@
+ratings/
+├── index.html                  # single-page UI (toggle + industry + inputs + result)
+├── css/
+│   └── styles.css
+├── js/
+│   ├── main.js                 # wires the UI to the selected framework/industry module
+│   └── engine.js               # shared scoring utilities (interpolation, mapping, etc.)
+└── frameworks/
+    ├── moodys/
+    │   ├── media.js            # Media scorecard (weights, bands, mapping, labels)
+    │   └── ... (other industries as you add them)
+    └── sp/
+        ├── media.js            # S&P version of Media (when you provide the PDF)
+        └── ... (other industries)
