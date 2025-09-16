@@ -1,0 +1,26 @@
+<form id="inviteLogin">
+  <input name="email" type="email" placeholder="your email" required />
+  <input name="password" type="password" placeholder="password" required />
+  <button type="submit">Get Access</button>
+  <div id="msg"></div>
+</form>
+
+<script>
+  document.getElementById("inviteLogin").onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = { email: fd.get("email"), password: fd.get("password") };
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (res.ok) {
+      // Redirect to protected area
+      window.location.href = '/orion';
+    } else {
+      document.getElementById('msg').innerText = json.error || 'login failed';
+    }
+  }
+</script>
