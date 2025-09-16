@@ -1,30 +1,33 @@
-// frameworks/sp/_shared.js
-// Local S&P mapping for aggregate 0–100 → letter.
-// Tune these thresholds per your calibration.
-export const SP_BANDS = [
-  { min: 88, letter: 'BB+' },
-  { min: 82, letter: 'BB'  },
-  { min: 77, letter: 'BB-' },
-  { min: 72, letter: 'B+'  },
-  { min: 66, letter: 'B'   },
-  { min: 60, letter: 'B-'  },
-  { min: 52, letter: 'CCC+'},
-  { min: 42, letter: 'CCC' },
-  { min:  0, letter: 'CCC-'},
-];
+// Lightweight S&P mapping & PD helper used by S&P modules
 
-export function spMapScoreToLetter(score){
-  const s = Number.isFinite(score) ? score : 0;
-  const band = SP_BANDS.find(b => s >= b.min);
-  return band ? band.letter : 'CCC-';
+// Map normalized 0..1 aggregate to S&P-like letter bands.
+// Tune thresholds later as you calibrate.
+export function spMapScoreToLetter(x){
+  if (!Number.isFinite(x)) return '—';
+  // Example bands roughly centered on single-B world
+  return (
+    x >= 0.90 ? 'BBB+' :
+    x >= 0.85 ? 'BBB'  :
+    x >= 0.80 ? 'BBB-' :
+    x >= 0.75 ? 'BB+'  :
+    x >= 0.70 ? 'BB'   :
+    x >= 0.65 ? 'BB-'  :
+    x >= 0.60 ? 'B+'   :
+    x >= 0.55 ? 'B'    :
+    x >= 0.50 ? 'B-'   :
+    x >= 0.45 ? 'CCC+' :
+    x >= 0.40 ? 'CCC'  :
+                'CCC-'
+  );
 }
 
-// Optional: PD hint tuned for S&P mapping
+// Simple PD hint string by rating bucket (placeholder; refine when you have data)
 export function spPDHint(letter){
   const map = {
-    'BB+':'≈1–2% PD','BB':'≈2–3%','BB-':'≈3–4%',
-    'B+':'≈4–6%','B':'≈6–9%','B-':'≈9–14%',
+    'BBB+':'≈0.5–0.8% PD','BBB':'≈0.8–1.2%','BBB-':'≈1.2–1.8%',
+    'BB+':'≈1.8–2.6%','BB':'≈2.6–3.8%','BB-':'≈3.8–5.5%',
+    'B+':'≈5.5–7.5%','B':'≈7.5–10%','B-':'≈10–14%',
     'CCC+':'≈14–22%','CCC':'≈22–30%','CCC-':'≈30%+'
   };
-  return map[letter] || '—';
+  return map[letter] ? `PD overlay: ${map[letter]}` : '';
 }
