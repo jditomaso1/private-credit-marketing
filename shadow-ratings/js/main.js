@@ -74,8 +74,12 @@ async function calculate(){
   // Render
   document.getElementById('finalRating').textContent = res.rating || '—';
   document.getElementById('numeric').textContent = `Score: ${Number.isFinite(res.numeric) ? res.numeric.toFixed(2) : '—'}`;
-  document.getElementById('explain').textContent = 'Calculation complete using the active template.';
-
+  if (res.pdHint) {
+    const base = Number.isFinite(res.numeric) ? res.numeric.toFixed(2) : '—';
+    document.getElementById('explain').textContent = `Base score ${base}/100. ${res.pdHint}`;
+  } else {
+    document.getElementById('explain').textContent = 'Calculation complete using the active template.';
+  }
   const tbody = document.querySelector('#metricsTable tbody');
   tbody.innerHTML = Object.entries(res.metrics || {}).map(([k,v]) =>
     `<tr><td>${k}</td><td>${fmt(v)}</td></tr>`
