@@ -1,42 +1,48 @@
-<!-- /public/orion.html -->
 <!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Orion — Secure Area</title>
+  <title>Private Credit AI — Login</title>
   <meta name="robots" content="noindex,nofollow" />
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    #app { display:none; } /* hide until auth passes */
-    .center { max-width: 640px; margin: 10vh auto; text-align: center; }
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:#f7f7f8; margin:0; }
+    .wrap { max-width: 420px; margin: 12vh auto; background:#fff; padding:28px; border-radius:14px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    h1 { margin:0 0 6px; font-size:22px; }
+    p { color:#555; margin:0 0 18px; }
+    input, button { width:100%; padding:12px; margin:8px 0; border-radius:10px; border:1px solid #ddd; font-size:14px; }
+    button { cursor:pointer; border:0; background:#111; color:#fff; }
+    .msg { min-height:20px; color:#b00020; margin-top:8px; }
   </style>
 </head>
 <body>
-  <div class="center" id="gate">Checking access…</div>
-
-  <div id="app">
-    <!-- Your real content/app goes here -->
-    <h1>Orion</h1>
-    <p>Welcome.</p>
-    <button id="logout">Log out</button>
+  <div class="wrap">
+    <h1>Secure Access</h1>
+    <p>Invite-only. Use the email and password Joe sent you.</p>
+    <form id="inviteLogin">
+      <input name="email" type="email" placeholder="your email" required />
+      <input name="password" type="password" placeholder="password" required />
+      <button type="submit">Get Access</button>
+      <div class="msg" id="msg"></div>
+    </form>
   </div>
 
   <script>
-    (async () => {
-      const res = await fetch('/api/auth/check', { credentials: 'include' });
-      if (!res.ok) {
-        window.location.href = '/login.html';
-        return;
+    document.getElementById("inviteLogin").onsubmit = async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const data = { email: fd.get("email"), password: fd.get("password") };
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if (res.ok) {
+        window.location.href = '/orion.html';
+      } else {
+        document.getElementById('msg').innerText = json.error || 'login failed';
       }
-      // Authorized — reveal app, hide gate
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-
-      document.getElementById('logout').onclick = async () => {
-        await fetch('/api/auth/logout', { method: 'POST' });
-        window.location.href = '/login.html';
-      };
-    })();
+    };
   </script>
 </body>
 </html>
