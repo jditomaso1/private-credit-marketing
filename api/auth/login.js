@@ -2,26 +2,14 @@
 import { google } from "googleapis";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import bcrypt from "bcryptjs"; // optional, used in hashed flavor
+import bcrypt from "bcryptjs";
 
 // --- HARDCODED CONFIG ---
-// Replace these with your actual sheet info and secrets
 const SERVICE_ACCOUNT = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN);
-
-// The Sheet ID from your Google Sheet URL
-const SHEET_ID = "1HAV20XTUhhgHEHhhcNBs5UBApWOXSSPqMu3a7Y3iSSg"; 
-// Example: "1AbCDeFgHIJKlmNoPqrStuVwxYz12345"
-
-// The tab and range where your allowlist lives
+const SHEET_ID = "1HAV20XTUhhgHEHhhcNBs5UBApWOXSSPqMu3a7Y3iSSg";
 const SHEET_RANGE = "Allowlist!A2:G";
-
-// JWT secret (make it long + random; can just be a string for now)
 const JWT_SECRET = "super-long-random-secret-string-change-me";
-
-// Cookie name
 const COOKIE_NAME = "pcai_session";
-
-// Session max age (in seconds) — here: 1 day
 const SESSION_MAX_AGE = 86400;
 
 // --- HELPERS ---
@@ -40,53 +28,86 @@ async function readSheetRows() {
   });
   const rows = res.data.values || [];
   return rows.map(r => ({
-    email: (r[0] || "").toLowerCase(),
-    pw: r[1] || "",
-    enabled: (r[2] || "").toLowerCase() === "true",
-    role: r[3] || "viewer",
+    email: (r[0] || "").toLowerCase().trim(),
+    pw: (r[1] || "").trim(),
+    enabled: String(r[2] || "").toLowerCase().trim() === "true",
+    role: (r[3] || "viewer").trim(),
   }));
 }
 
-// --- HANDLER ---
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
-  const { email, password } = req.body || {};
-  if (!email || !password) return res.status(400).json({ error: "missing" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "method_not_allowed" });
+  }
+
+  // --- Parse body robustly (fallback if req.body is empty) ---
+  let body = req.body;
+  if (!body || typeof body !== "object") {
+    try {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const text = Buffer.concat(chunks).toString();
+      body = text ? JSON.parse(text) : {};
+    } catch (e) {
+      console.error("Body parse error:", e);
+      return res.status(400).json({ error: "bad_json_body" });
+    }
+  }
+
+  const rawEmail = (body.email || "").toLowerCase().trim();
+  const password = (body.password || "").trim();
+  if (!rawEmail || !password) {
+    return res.status(400).json({ error: "missing" });
+  }
 
   try {
     const rows = await readSheetRows();
-    const row = rows.find(r => r.email === email.toLowerCase());
-    if (!row || !row.enabled) return res.status(401).json({ error: "invalid" });
+    const row = rows.find(r => r.email === rawEmail);
+
+    if (!row) {
+      console.warn("Login email not found in sheet:", rawEmail);
+      return res.status(401).json({ error: "invalid" });
+    }
+    if (!row.enabled) {
+      console.warn("Login email disabled:", rawEmail);
+      return res.status(401).json({ error: "invalid" });
+    }
 
     const stored = row.pw;
     let ok = false;
 
-    // Flavor A: plain text match
-    if (stored === password) ok = true;
-
-    // Flavor B: bcrypt hash check
+    if (stored === password) ok = true; // plain text
     if (!ok && stored && stored.startsWith("$2")) {
-      ok = await bcrypt.compare(password, stored);
+      ok = await bcrypt.compare(password, stored); // bcrypt
     }
 
-    if (!ok) return res.status(401).json({ error: "invalid" });
+    if (!ok) {
+      console.warn("Password mismatch for:", rawEmail);
+      return res.status(401).json({ error: "invalid" });
+    }
 
-    // Create JWT
     const payload = { email: row.email, role: row.role };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: SESSION_MAX_AGE });
 
-    // Set cookie
-    res.setHeader("Set-Cookie", cookie.serialize(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: SESSION_MAX_AGE,
-    }));
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize(COOKIE_NAME, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: SESSION_MAX_AGE,
+      })
+    );
 
     return res.status(200).json({ ok: true, email: row.email, role: row.role });
   } catch (err) {
     console.error("auth error", err);
+    // Add a hint for the most common root causes:
+    // - Service account JSON missing/var name mismatch
+    // - Sheets API not enabled
+    // - Sheet not shared to service account
+    // - Wrong SHEET_ID or SHEET_RANGE
     return res.status(500).json({ error: "server" });
   }
 }
