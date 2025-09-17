@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import bcrypt from "bcryptjs"; // optional, used in hashed flavor
 
-const SERVICE_ACCOUNT = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+const SERVICE_ACCOUNT = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN);
 const SHEET_ID = process.env.SHEET_ID;
 const SHEET_RANGE = process.env.SHEET_RANGE || "Allowlist!A2:G";
 const JWT_SECRET = process.env.JWT_SECRET;
