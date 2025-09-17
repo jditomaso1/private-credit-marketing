@@ -30,9 +30,8 @@
     function getNextPath() {
       const url = new URL(window.location.href);
       const next = url.searchParams.get("next");
-      // only allow safe same-site paths
       if (next && next.startsWith("/")) return next;
-      return "/arrived.html"; // fallback if no next
+      return "/testlogin.html"; // fallback if no next
     }
 
     const form = document.getElementById("inviteLogin");
@@ -58,7 +57,7 @@
         });
 
         if (res.ok) {
-          window.location.href = getNextPath();   // ← back to /testlogin.html
+          window.location.href = getNextPath();   // ← sends back to testlogin.html
         } else {
           const txt = await res.text();
           try {
