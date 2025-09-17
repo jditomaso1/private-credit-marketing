@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Private Credit AI — Login</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7f8; margin:0; }
+    .wrap { max-width: 420px; margin: 12vh auto; background:#fff; padding:28px; border-radius:14px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    h1 { margin:0 0 6px; font-size:22px; }
+    p { color:#555; margin:0 0 18px; }
+    input, button { width:100%; padding:12px; margin:8px 0; border-radius:10px; border:1px solid #ddd; font-size:14px; }
+    button { cursor:pointer; border:0; background:#111; color:#fff; }
+    .msg { min-height: 20px; color:#b00020; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Secure Access</h1>
+    <p>Invite-only. Use the email and password you were sent.</p>
+    <form id="inviteLogin">
+      <input name="email" type="email" placeholder="your email" required />
+      <input name="password" type="password" placeholder="password" required />
+      <button type="submit">Get Access</button>
+      <div class="msg" id="msg"></div>
+    </form>
+  </div>
+
+  <script>
+    function getNextPath() {
+      const url = new URL(window.location.href);
+      const next = url.searchParams.get("next");
+      // only allow safe same-site paths
+      if (next && next.startsWith("/")) return next;
+      return "/arrived.html"; // fallback if no next
+    }
+
+    const form = document.getElementById("inviteLogin");
+    const msg  = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.style.color = "#444";
+      msg.textContent = "Signing in…";
+
+      try {
+        const fd = new FormData(form);
+        const data = {
+          email: (fd.get("email") || "").trim(),
+          password: (fd.get("password") || "").trim()
+        };
+
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+          credentials: "include"
+        });
+
+        if (res.ok) {
+          window.location.href = getNextPath();   // ← back to /testlogin.html
+        } else {
+          const txt = await res.text();
+          try {
+            const j = JSON.parse(txt);
+            msg.style.color = "#b00020";
+            msg.textContent = j.error || "login failed";
+          } catch {
+            msg.style.color = "#b00020";
+            msg.textContent = txt || "login failed";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        msg.style.color = "#b00020";
+        msg.textContent = "Network error — please try again";
+      }
+    });
+  </script>
+</body>
+</html>
