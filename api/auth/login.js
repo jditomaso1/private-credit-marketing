@@ -12,6 +12,42 @@ const JWT_SECRET = "super-long-random-secret-string-change-me";
 const COOKIE_NAME = "pcai_session";
 const SESSION_MAX_AGE = 86400;
 
+// Lazy-load and validate service account JSON at runtime
+function getServiceAccount() {
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN;
+  if (!raw) {
+    throw new Error("Missing env var GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN");
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    throw new Error("Invalid JSON in GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN");
+  }
+}
+
+async function readSheetRows() {
+  const SERVICE_ACCOUNT = getServiceAccount();
+  const jwtClient = new google.auth.JWT(
+    SERVICE_ACCOUNT.client_email,
+    null,
+    SERVICE_ACCOUNT.private_key,
+    ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+  );
+  await jwtClient.authorize();
+  const sheets = google.sheets({ version: "v4", auth: jwtClient });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: SHEET_RANGE,
+  });
+  const rows = res.data.values || [];
+  return rows.map(r => ({
+    email: (r[0] || "").toLowerCase().trim(),
+    pw: (r[1] || "").trim(),
+    enabled: String(r[2] || "").toLowerCase().trim() === "true",
+    role: (r[3] || "viewer").trim(),
+  }));
+}
+
 // --- HELPERS ---
 async function readSheetRows() {
   const jwtClient = new google.auth.JWT(
