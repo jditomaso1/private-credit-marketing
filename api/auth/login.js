@@ -6,12 +6,11 @@ import bcrypt from "bcryptjs";
 
 // ---- CONFIG (hardcoded for prototype) ----
 const SHEET_ID = "1HAV20XTUhhgHEHhhcNBs5UBApWOXSSPqMu3a7Y3iSSg";
-const SHEET_RANGE = "Allowlist!A2:D"; // A=email, B=password/hash, C=enabled, D=role
+const SHEET_RANGE = "Allowlist!A2:E"; // ⬅️ include Version col (E)
 const JWT_SECRET = "super-long-random-secret-string-change-me";
 const COOKIE_NAME = "pcai_session";
 const SESSION_MAX_AGE = 86400; // 1 day
 
-// Load service account JSON lazily (at runtime), not at import time
 function getServiceAccount() {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN;
   if (!raw) throw new Error("Missing env var GOOGLE_SERVICE_ACCOUNT_JSON_LOGIN");
@@ -41,16 +40,16 @@ async function readSheetRows() {
     pw: (r[1] || "").trim(),
     enabled: String(r[2] || "").toLowerCase().trim() === "true",
     role: (r[3] || "viewer").trim(),
+    version: Number(r[4] || 1),                 // ⬅️ NEW: Version column (defaults to 1)
   }));
 }
 
 export default async function handler(req, res) {
-  // Never touch Sheets or env vars on GET — just return 405
   if (req.method !== "POST") {
     return res.status(405).json({ error: "method_not_allowed" });
   }
 
-  // Robust body parsing (in case auto JSON parsing is off)
+  // robust body parse
   let body = req.body;
   if (!body || typeof body !== "object") {
     try {
@@ -90,9 +89,12 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "invalid" });
     }
 
-    const token = jwt.sign({ email: row.email, role: row.role }, JWT_SECRET, {
-      expiresIn: SESSION_MAX_AGE,
-    });
+    // ⬅️ Include version in the token
+    const token = jwt.sign(
+      { email: row.email, role: row.role, ver: row.version },
+      JWT_SECRET,
+      { expiresIn: SESSION_MAX_AGE }
+    );
 
     res.setHeader("Set-Cookie", cookie.serialize(COOKIE_NAME, token, {
       httpOnly: true,
