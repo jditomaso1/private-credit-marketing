@@ -92,6 +92,20 @@
     #refresh-btn, button#refresh-btn, .refresh-button, [data-role="refresh"], button[aria-label="Refresh News"] {
       display:none !important;
     }
+    
+    /* Loader */
+    .loader{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; margin:6px 0 16px;
+      background:#fff; border:1px solid #eee; border-radius:10px;
+      color:#444; font-size:14px;
+    }
+    .spinner{
+      width:16px; height:16px; border-radius:50%;
+      border:2px solid #e5e7eb; border-top-color:#2c7cf1;
+      animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
   </style>
 
   <style>
@@ -170,7 +184,13 @@
         <p style="margin:0;color:#555;">Top headlines in private credit — updated hourly. Click to read at the source.</p>
         <p id="last-updated" style="margin-top:8px; color:#666; font-size:13px;"></p>
       </header>
-
+      
+      <!-- Loader -->
+      <div id="loader" class="loader">
+        <div class="spinner" aria-hidden="true"></div>
+        <span>Loading latest headlines…</span>
+      </div>
+      
       <!-- Filters -->
       <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px;">
         <button data-tag="All" class="pill pill--active">All</button>
