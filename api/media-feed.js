@@ -6,6 +6,9 @@ const parser = new Parser({
   requestOptions: { headers: { 'User-Agent': UA } }
 });
 
+// Ensure fetch exists in this runtime (Node polyfill if needed)
+const getFetch = async () => globalThis.fetch ?? (await import('node-fetch')).default;
+
 // -------------------- Sources --------------------
 const SOURCES = [
   // Industry
@@ -283,6 +286,7 @@ async function fetchXmlWithTimeout(url, ms = 8000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms);
   try {
+    const _fetch = await getFetch();
     const res = await fetch(url, {
       headers: { 'User-Agent': UA },
       signal: ctrl.signal,
@@ -301,7 +305,7 @@ function safeTime(msLike) {
 }
 
 // Optional: temporarily skip fetching SEC to reduce timeouts while stabilizing
-const SKIP_SEC_FETCH = false;
+const SKIP_SEC_FETCH = true;
 
 function inBatches(arr, size) {
   const out = [];
