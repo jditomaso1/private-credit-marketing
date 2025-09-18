@@ -24,7 +24,7 @@ async function readUsers() {
   });
   const rows = res.data.values || [];
   return rows.map(r => ({
-    email: (r[0] || "").toLowerCase(),
+    email: (r[0] || "").toLowerCase().trim(),   // ← important
     enabled: (r[2] || "").toLowerCase() === "true",
     role: r[3] || "viewer",
     version: Number(r[4] || 1),
