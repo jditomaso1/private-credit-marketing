@@ -233,6 +233,7 @@
     // ===== Config =====
     const API = location.origin + '/api/media-feed';
     let _items = [];
+    const _loader = document.getElementById('loader');
 
     // ===== Utilities =====
     function timeAgo(iso){
@@ -439,15 +440,16 @@
     }
 
     async function loadFeed(){
+      if (_loader) _loader.style.display = 'flex'; // show while fetching
       try{
         const url = `${API}?ts=${Date.now()}`;
         const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) throw new Error(`Feed HTTP ${res.status}`);
         const data = await res.json();
-
+  
         const rawItems = normalizeFeedData(data);
         console.log('Feed counts', { items: rawItems.length, apiKeys: Object.keys(data) });
-
+  
         if (!rawItems.length) {
           const feed = document.getElementById('feed');
           if (feed) {
@@ -458,21 +460,24 @@
           }
           const top = document.getElementById('top10');
           if (top) top.innerHTML = '';
+          if (_loader) _loader.style.display = 'none'; // hide loader even if empty
           return;
         }
-
+  
         _items = rawItems.map(i => {
           const baseTags = toTagArray(i.tags);
           const inferred = inferTagsFromText([i.title, i.summary, i.description].filter(Boolean).join(' '));
           const merged = Array.from(new Set([...baseTags, ...inferred]));
           return massageItem({ ...i, tags: merged });
         }).sort((a,b)=> new Date(b.published_at||b.pubDate||0) - new Date(a.published_at||a.pubDate||0));
-
+  
         applyFilter('All');
+        if (_loader) _loader.style.display = 'none'; // hide when done
       }catch(e){
         console.error('Feed load error', e);
         const feed = document.getElementById('feed');
         if (feed) feed.innerHTML = `<div style="color:#b91c1c">⚠️ Failed to load feed: ${e.message}</div>`;
+        if (_loader) _loader.textContent = `⚠️ Failed to load feed: ${e.message}`;
       }
     }
 
