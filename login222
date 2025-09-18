@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Private Credit AI | AI for Credit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png?v=8" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GY4CQ6ZFH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-6GY4CQ6ZFH');
+  </script>
+
+  <style>
+    :root{
+      --pcai-blue:#3a71b0;
+      --link:#2c7cf1;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Poppins',sans-serif;
+      color:#333;
+      background:#f4f4f4;
+    }
+
+    /* Header */
+    header{
+      background:#fff;
+      border-bottom:1px solid #eee;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+    .header-container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:10px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .site-title{
+      display:flex;align-items:center;gap:10px;
+      font-size:22px;font-weight:700;color:#111;text-decoration:none;
+    }
+    nav{padding:6px 0}
+    .nav-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+    .nav-item a{
+      color:#000;text-decoration:none;
+      font-weight:400;font-size:14.5px;letter-spacing:.25px;
+      padding:10px 16px;display:inline-block;
+    }
+
+    /* Dropdowns */
+    .dropdown{position:relative}
+    .dropdown-menu{
+      display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);
+      background:#fff;color:#000;padding:20px 24px;border-radius:10px;
+      box-shadow:0 6px 16px rgba(0,0,0,.2);z-index:1000;
+      max-width:720px;max-height:400px;overflow:auto;
+      display:grid;grid-template-columns:repeat(3,minmax(200px,1fr));gap:8px 16px;
+    }
+    .dropdown:hover .dropdown-menu{display:grid}
+    .dropdown-item{padding:4px;border-radius:6px;transition:background .2s}
+    .dropdown-item:hover{background:#f9f9f9}
+    .dropdown-item h4{margin:0 0 4px 0;font-size:15px;font-weight:600}
+    .dropdown-item p{margin:0;font-size:13px;color:#444}
+    .icon{width:20px;height:20px;vertical-align:middle;margin-right:8px;fill:currentColor}
+
+    /* CTA button in nav */
+    .btn-primary{
+      background:#007bff;color:#fff;border-radius:6px;
+      padding:8px 18px;text-decoration:none;display:inline-block
+    }
+
+    /* Hero */
+    .hero{
+      position:relative;
+      min-height:520px;max-height:640px;
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      color:#fff;background:url("img/AdobeStock_1039079833.jpeg") center/cover no-repeat;
+      padding:60px 20px;
+    }
+    .hero::before{
+      content:"";position:absolute;inset:0;z-index:0;
+      background:linear-gradient(to bottom, rgba(0,0,0,.15), rgba(58,113,176,.65));
+    }
+    .hero-content{position:relative;z-index:1;max-width:900px}
+    .hero h1{font-size:48px;line-height:1.2;margin:0 0 16px;font-weight:700}
+    .hero p{font-size:18px;margin:8px auto;max-width:720px}
+
+    /* Footer */
+    footer{
+      background:var(--pcai-blue);color:#fff;
+      padding:40px 20px;margin-top:0;
+    }
+    .footer-wrap{
+      max-width:1200px;margin:0 auto;
+      display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;text-align:center;
+    }
+    .footer-links{
+      display:flex;gap:20px;justify-content:center;flex-wrap:wrap
+    }
+    .footer-links a{color:#fff;text-decoration:none;font-size:14px}
+
+    /* Responsive tweaks */
+    @media (max-width:900px){ .dropdown-menu{grid-template-columns:repeat(2,minmax(200px,1fr));max-width:480px} }
+    @media (max-width:600px){
+      .dropdown-menu{grid-template-columns:1fr;max-width:300px}
+      .hero h1{font-size:36px}
+      .hero p{font-size:16px}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="https://private-credit.ai" class="site-title">
+        <img src="img/favicon.png" alt="Private Credit AI logo" style="height:28px;">
+        <span>Private Credit AI</span>
+      </a>
+
+      <nav aria-label="Main">
+        <div class="nav-links">
+          <div class="dropdown nav-item">
+            <a class="dropdown-toggle" href="asset-classes.html" aria-haspopup="true" aria-expanded="false">Asset Classes ▾</a>
+            <div class="dropdown-menu" role="menu" aria-label="Asset Classes">
+              <a href="asset-classes.html"><div class="dropdown-item"><h4><img src="icons/amphora.svg" class="icon" alt="">Direct Lending</h4><p>Senior secured loans, sponsor finance</p></div></a>
+              <a href="asset-classes.html"><div class="dropdown-item"><h4><img src="icons/anchor.svg" class="icon" alt="">Special Situations & Distressed</h4><p>Opportunistic, event-driven credit</p></div></a>
+              <a href="asset-classes.html"><div class="dropdown-item"><h4><img src="icons/anvil.svg" class="icon" alt="">Real Estate Credit</h4><p>Bridge, mezz, construction debt</p></div></a>
+              <!-- … keep others as needed … -->
+            </div>
+          </div>
+
+          <div class="dropdown nav-item">
+            <a class="dropdown-toggle" href="stakeholders.html" aria-haspopup="true" aria-expanded="false">Stakeholders ▾</a>
+            <div class="dropdown-menu" role="menu" aria-label="Stakeholders">
+              <a href="stakeholders.html"><div class="dropdown-item"><h4><img src="icons/diamond.svg" class="icon" alt="">Originators</h4><p>Deal sourcing, sponsor coverage</p></div></a>
+              <a href="stakeholders.html"><div class="dropdown-item"><h4><img src="icons/dishwasher.svg" class="icon" alt="">Underwriters</h4><p>Structuring and risk management</p></div></a>
+              <a href="stakeholders.html"><div class="dropdown-item"><h4><img src="icons/gearbox.svg" class="icon" alt="">Risk & Portfolio</h4><p>Continuous risk assessment</p></div></a>
+            </div>
+          </div>
+
+          <div class="dropdown nav-item">
+            <a class="dropdown-toggle" href="/knowledge/">Knowledge Hub ▾</a>
+            <div class="dropdown-menu" role="menu" aria-label="Knowledge Hub">
+              <a href="/knowledge/insights/"><div class="dropdown-item"><h4><img src="icons/olive.svg" class="icon" alt="">Insights</h4><p>Market trends & outlook</p></div></a>
+              <a href="/knowledge/guides/"><div class="dropdown-item"><h4><img src="icons/pretzel.svg" class="icon" alt="">Guides</h4><p>Structuring, covenants, frameworks</p></div></a>
+              <a href="/knowledge/resources/"><div class="dropdown-item"><h4><img src="icons/pig.svg" class="icon" alt="">Resources</h4><p>Videos & webinars</p></div></a>
+            </div>
+          </div>
+
+          <div class="dropdown nav-item">
+            <a class="dropdown-toggle" href="/tools/">Tools ▾</a>
+            <div class="dropdown-menu" role="menu" aria-label="Tools">
+              <a href="tools/media-hub.html"><div class="dropdown-item"><h4><img src="icons/bone.svg" class="icon" alt="">Media Hub</h4><p>Daily curated headlines</p></div></a>
+              <a href="tools/irr-calculator.html"><div class="dropdown-item"><h4><img src="icons/bottle-wine.svg" class="icon" alt="">IRR Calculator</h4><p>IRR & MOIC estimates</p></div></a>
+              <a href="tools/covenant-checker.html"><div class="dropdown-item"><h4><img src="icons/hat-top.svg" class="icon" alt="">Covenant Checker</h4><p>Instant risk assessment</p></div></a>
+            </div>
+          </div>
+
+          <div class="nav-item"><a href="clo1.html">CLO1AI</a></div>
+          <div class="nav-item"><a href="about.html">About</a></div>
+          <div class="nav-item"><a href="contact.html">Contact</a></div>
+          <div class="nav-item"><a class="btn-primary" href="https://orion.private-credit.ai">Try Orion</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" role="banner" aria-label="Hero">
+    <div class="hero-content">
+      <h1>AI for Credit</h1>
+      <p>AI alpha engine built by credit professionals, for credit professionals.</p>
+      <p>Delivering higher yields, sharper risk management, and faster execution — all with lower cost, greater accuracy, and scalable efficiency.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-wrap">
+      <div>
+        <strong style="font-size:16px;">Private Credit AI</strong><br>
+        <span style="font-size:14px;">© 2025 All rights reserved.</span>
+      </div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimal GA events -->
+  <script>
+    function fireGA(eventName, params){ if(typeof gtag==='function'){ gtag('event', eventName, params||{});} }
+
+    const tryOrion = document.querySelector('a[href*="orion.private-credit.ai"]');
+    if(tryOrion){
+      tryOrion.addEventListener('click', () => fireGA('try_orion_click', {location:'nav', destination:'orion.private-credit.ai'}));
+    }
+
+    const contact = document.querySelector('a[href$="contact.html"]');
+    if(contact){
+      contact.addEventListener('click', () => fireGA('contact_click', {location:'nav'}));
+    }
+  </script>
+</body>
+</html>
