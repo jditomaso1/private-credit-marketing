@@ -1,5 +1,9 @@
 {
   "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "googleapis": "^131.0.0",
     "jsonwebtoken": "^9.0.2",
