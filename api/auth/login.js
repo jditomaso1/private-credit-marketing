@@ -91,7 +91,7 @@ export default async function handler(req, res) {
 
     // ⬅️ Include version in the token
     const token = jwt.sign(
-      { email: row.email, role: row.role, ver: row.version },
+      { email: row.email, role: row.role, ver: row.version || 1 },
       JWT_SECRET,
       { expiresIn: SESSION_MAX_AGE }
     );
