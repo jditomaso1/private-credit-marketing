@@ -31,7 +31,7 @@
       const url = new URL(window.location.href);
       const next = url.searchParams.get("next");
       if (next && next.startsWith("/")) return next;
-      return "/testlogin.html"; // fallback if no next
+      return "/index.html"; // fallback if no next
     }
 
     const form = document.getElementById("inviteLogin");
