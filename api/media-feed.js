@@ -287,7 +287,7 @@ async function fetchXmlWithTimeout(url, ms = 8000) {
   const t = setTimeout(() => ctrl.abort(), ms);
   try {
     const _fetch = await getFetch();
-    const res = await fetch(url, {
+    const res = await _fetch(url, {
       headers: { 'User-Agent': UA },
       signal: ctrl.signal,
     });
