@@ -278,97 +278,174 @@ function interleaveWithCaps(list, total = 300) {
   return out.slice(0, total);
 }
 
-// -------------------- Handler --------------------
+// --- helper: timeout fetch + parse --- //
+async function fetchXmlWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': UA },
+      signal: ctrl.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+    const xml = await res.text();
+    return xml;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+function safeTime(msLike) {
+  const t = new Date(msLike).getTime();
+  return Number.isFinite(t) ? t : Date.now();
+}
+
+// Optional: temporarily skip fetching SEC to reduce timeouts while stabilizing
+const SKIP_SEC_FETCH = false;
+
+function inBatches(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+// -------------------- Handler (DROP-IN REPLACEMENT) --------------------
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
   try {
-    const results = await Promise.allSettled(SOURCES.map(url => parser.parseURL(url)));
-    const all = [];
+    // 0) Pick sources (optionally skip SEC while debugging/stabilizing)
+    const sources = SKIP_SEC_FETCH
+      ? SOURCES.filter(u => !/sec\.gov/.test(u))
+      : SOURCES;
 
-    for (const r of results) {
-      if (r.status !== 'fulfilled') continue;
-      const feed = r.value;
+    // 1) Fetch in small batches with timeouts to avoid route-wide failure
+    const allFeeds = [];
+    const failures = [];
 
-      for (const it of (feed.items || [])) {
-        // skip audio-only items
-        if (it.enclosure && it.enclosure.type && String(it.enclosure.type).startsWith('audio')) continue;
+    for (const batch of inBatches(sources, 6)) {
+      const settled = await Promise.allSettled(
+        batch.map(async (url) => {
+          try {
+            const xml = await fetchXmlWithTimeout(url, 8000);
+            // Parse from string so we control network timeouts ourselves
+            const feed = await parser.parseString(xml);
+            return { url, feed };
+          } catch (e) {
+            throw { url, message: e?.message || String(e) };
+          }
+        })
+      );
 
-        const summary = it.contentSnippet || it.content || '';
-        let link = cleanUrl(resolveLink(it));
-
-        let host = '';
-        try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
-
-        if (host === SEC_HOST) {
-          // TEMP: skip SEC items entirely
-          continue;
-        
-          /*
-          if (!isUsefulSecItem(it)) continue;
-          all.push({
-            title: formatSecTitle(it),
-            url: link,
-            source: host,
-            published_at: it.isoDate || it.pubDate || new Date().toISOString(),
-            summary,
-            tags: Array.from(new Set([...tagger(`${it.title} ${summary}`), 'Regulatory']))
-          });
-          continue;
-          */
+      for (const r of settled) {
+        if (r.status === 'fulfilled') {
+          allFeeds.push(r.value);
+        } else {
+          const info = r.reason || {};
+          failures.push({ url: info.url || 'unknown', err: info.message || String(r.reason) });
         }
-
-        all.push({
-          title: it.title,
-          url: link,
-          source: host,
-          published_at: it.isoDate || it.pubDate || new Date().toISOString(),
-          summary,
-          tags: tagger(`${it.title} ${summary}`)
-        });
       }
     }
 
-    // Sort with boost
-    all.sort((a,b) => boostedTime(b) - boostedTime(a));
+    if (failures.length) {
+      console.warn('[media-feed] fetch/parse failures:', failures);
+    }
 
-    // De-dupe
+    if (!allFeeds.length) {
+      res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300');
+      return res.status(502).json({ error: 'all feeds failed', failures });
+    }
+
+    // 2) Build item list with per-item guards so one bad item can't crash the route
+    const all = [];
+    for (const { url: sourceUrl, feed } of allFeeds) {
+      const items = Array.isArray(feed?.items) ? feed.items : [];
+      for (const it of items) {
+        try {
+          // skip audio-only
+          if (it?.enclosure?.type && String(it.enclosure.type).startsWith('audio')) continue;
+
+          const summary = it.contentSnippet || it.content || '';
+          const link = cleanUrl(resolveLink(it));
+
+          let host = '';
+          try { host = new URL(link).hostname.replace(/^www\./,''); } catch {}
+
+          if (host === SEC_HOST) {
+            // Keep your current behavior: skip SEC items entirely
+            continue;
+          }
+
+          const published_at = it.isoDate || it.pubDate || new Date().toISOString();
+
+          all.push({
+            title: it.title || 'Untitled',
+            url: link || it.link || '',
+            source: host || 'unknown',
+            published_at,
+            summary,
+            tags: tagger(`${it.title} ${summary}`)
+          });
+        } catch (e) {
+          console.warn('[media-feed] item skipped', {
+            sourceUrl,
+            itemTitle: it?.title,
+            err: String(e?.message || e)
+          });
+        }
+      }
+    }
+
+    // 3) Sort (boosted + safe dates)
+    all.sort((a, b) => {
+      const ta = safeTime(a.published_at);
+      const tb = safeTime(b.published_at);
+      const ba = ta + (BOOST.get((a.source || '').replace(/^www\./,'')) || 0);
+      const bb = tb + (BOOST.get((b.source || '').replace(/^www\./,'')) || 0);
+      return bb - ba;
+    });
+
+    // 4) De-dupe
     const seen = new Set();
     const itemsDeduped = all.filter(i => {
-      const key = i.url || i.title;
+      const key = i.url || i.title || '';
+      if (!key) return false;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
 
-    // Prefer last 24h, then backfill to reach a target count
-    const TARGET = 300;                       // or 320 if you want extra headroom
-    const cutoff = Date.now() - 24*3600*1000; // keep 24h as “priority”
-    const recent = itemsDeduped.filter(i => new Date(i.published_at).getTime() >= cutoff);
-    
-    // Backfill with older items until TARGET
+    // 5) Recent-first + backfill
+    const TARGET = 300;
+    const cutoff = Date.now() - 24 * 3600 * 1000;
+    const recent = itemsDeduped.filter(i => safeTime(i.published_at) >= cutoff);
+
     let base = recent.slice();
     if (base.length < TARGET) {
       for (const it of itemsDeduped) {
-        const ts = new Date(it.published_at).getTime();
-        if (ts < cutoff) {
+        if (safeTime(it.published_at) < cutoff) {
           base.push(it);
           if (base.length >= TARGET) break;
         }
       }
     }
 
-    // Domain-balanced outputs
+    // 6) Domain-balanced outputs
     const top10 = topNWithDomainCap(base, 10);
     const items = interleaveWithCaps(base, 320);
 
-    // Cache & respond
+    // 7) Respond (200 with partials if any failures)
     res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=900');
-    res.status(200).json({ top10, items });
+    return res.status(200).json({
+      status: failures.length ? 'partial' : 'ok',
+      failures,
+      top10,
+      items
+    });
   } catch (e) {
     console.error('media-feed failed', e);
-    res.status(500).json({ error: 'media feed failed' });
+    res.status(500).json({ error: 'media feed failed', detail: String(e?.message || e) });
   }
 }
