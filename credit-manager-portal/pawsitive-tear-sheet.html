@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pawsitive Brands, Inc. — Tear Sheet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; }
+      a[href]:after { content: ""; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900">
+  <!-- Top bar -->
+  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center gap-3">
+      <a href="./credit-manager-portal.html" class="no-print inline-flex items-center gap-2 text-sm text-gray-600 hover:text-black">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard
+      </a>
+      <div class="ml-auto no-print flex items-center gap-2">
+        <button onclick="window.print()" class="rounded-xl px-3 py-2 border text-sm hover:bg-gray-50 flex items-center gap-2">
+          <i data-lucide="printer" class="w-4 h-4"></i> Print / PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 py-6 space-y-6">
+    <!-- Title & status -->
+    <section class="flex flex-col gap-3">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+            Pawsitive Brands, Inc. — Tear Sheet
+          </h1>
+          <p class="text-sm text-gray-600">$300,000,000 Senior Secured Credit Facility</p>
+        </div>
+        <div class="flex flex-wrap gap-2 items-start">
+          <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border bg-green-50 text-green-700"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> In Compliance</span>
+          <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border bg-gray-50">Pet Care</span>
+          <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border bg-gray-50">Summit Hill Partners (Sponsor)</span>
+          <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border bg-gray-50">Ownership ≥ 51%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key metrics cards -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <Metric label="Revenue (LTM)" value="$375mm" />
+      <Metric label="EBITDA (LTM)" value="$60mm" />
+      <Metric label="EBITDA Margin" value="16%" />
+      <Metric label="CapEx (LTM)" value="$8mm" />
+      <Metric label="Cash" value="$15mm" />
+      <Metric label="Debt (New)" value="$300mm" />
+      <Metric label="Term" value="7 years" />
+      <Metric label="Pricing" value="SOFR + 525 bps (1.00% floor)" />
+      <Metric label="Revolver" value="SOFR + 375 bps" />
+      <Metric label="Leverage (Gross)" value="5.4x" />
+      <Metric label="Leverage (Net)" value="3.69x" />
+      <Metric label="Equity Contrib." value="35%" />
+    </section>
+
+    <!-- Deal Overview & Strategy -->
+    <section class="grid grid-cols-12 gap-4">
+      <div class="col-span-12 lg:col-span-8">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="notebook-text" class="w-5 h-5"></i> Deal Overview</h2>
+          <div class="mt-3 text-sm text-gray-800 space-y-2">
+            <p><span class="text-gray-500">Company:</span> Pawsitive Brands, Inc. — Manufacturer and distributor of premium pet food and wellness products. The Company serves over 10,000 retail outlets and a rapidly growing DTC channel.</p>
+            <p><span class="text-gray-500">Structure:</span> Term Loan B $250mm; Revolving Credit Facility $50mm.</p>
+            <p><span class="text-gray-500">Use of Proceeds:</span> $175mm refi, $75mm sponsor dividend.</p>
+            <p><span class="text-gray-500">Security:</span> 1st priority lien on substantially all assets incl. AR, inventory, IP, equipment, and equity in subs.</p>
+          </div>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="rounded-xl border p-3">
+              <div class="text-xs font-medium text-gray-500">Covenants</div>
+              <ul class="mt-2 text-sm space-y-1">
+                <li>Total Net Leverage ≤ <b>5.00x</b></li>
+                <li>Interest Coverage ≥ <b>2.25x</b></li>
+                <li>Liquidity ≥ <b>$15,000,000</b></li>
+              </ul>
+            </div>
+            <div class="rounded-xl border p-3">
+              <div class="text-xs font-medium text-gray-500">Sponsor & Ownership</div>
+              <ul class="mt-2 text-sm space-y-1">
+                <li>Sponsor: <b>Summit Hill Partners</b></li>
+                <li>Ownership: <b>≥ 51%</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="col-span-12 lg:col-span-4 space-y-4">
+        <div class="rounded-2xl border bg-white p-4">
+          <h3 class="text-sm font-medium flex items-center gap-2"><i data-lucide="brain" class="w-4 h-4"></i> Strategy Recommendation</h3>
+          <div class="mt-2 text-sm p-3 rounded-xl bg-purple-50 border text-purple-900">Suggested Strategy: <b>Flexible SMA / Hybrid</b></div>
+        </div>
+        <div class="rounded-2xl border bg-white p-4">
+          <h3 class="text-sm font-medium flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Export</h3>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Download JSON</a>
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Download CSV</a>
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Download Text</a>
+            <button onclick="window.print()" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Download PDF</button>
+          </div>
+        </div>
+        <div class="rounded-2xl border bg-white p-4">
+          <h3 class="text-sm font-medium flex items-center gap-2"><i data-lucide="paperclip" class="w-4 h-4"></i> Files Used</h3>
+          <ul class="mt-2 text-sm space-y-1 text-gray-700">
+            <li>Pawsitive__2025-09__Compliance_Certificate.pdf</li>
+            <li>Pawsitive_Notes.pdf</li>
+            <li>Pawsitive_Credit_Agreement.pdf</li>
+            <li>Pawsitive_CIM.pdf</li>
+            <li>Pawsitive_Term_Sheet.pdf</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Financials & Structure tables -->
+    <section class="grid grid-cols-12 gap-4">
+      <div class="col-span-12 lg:col-span-6">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="banknote" class="w-5 h-5"></i> Financials</h2>
+          <table class="mt-3 w-full text-sm">
+            <tbody class="divide-y">
+              <tr><td class="py-2 text-gray-500">Revenue (LTM)</td><td class="py-2 text-right font-medium">$375mm</td></tr>
+              <tr><td class="py-2 text-gray-500">EBITDA (LTM)</td><td class="py-2 text-right font-medium">$60mm</td></tr>
+              <tr><td class="py-2 text-gray-500">EBITDA Margin</td><td class="py-2 text-right font-medium">16%</td></tr>
+              <tr><td class="py-2 text-gray-500">CapEx (LTM)</td><td class="py-2 text-right font-medium">$8mm</td></tr>
+              <tr><td class="py-2 text-gray-500">Cash</td><td class="py-2 text-right font-medium">$15mm</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-span-12 lg:col-span-6">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5"></i> Structure & Terms</h2>
+          <table class="mt-3 w-full text-sm">
+            <tbody class="divide-y">
+              <tr><td class="py-2 text-gray-500">Debt Amount (New)</td><td class="py-2 text-right font-medium">$300mm</td></tr>
+              <tr><td class="py-2 text-gray-500">Use of Proceeds</td><td class="py-2 text-right font-medium">$175mm refi / $75mm dividend</td></tr>
+              <tr><td class="py-2 text-gray-500">Term</td><td class="py-2 text-right font-medium">7 years</td></tr>
+              <tr><td class="py-2 text-gray-500">Pricing</td><td class="py-2 text-right font-medium">TLB: SOFR + 525 bps (1.00% floor); RCF: SOFR + 375 bps</td></tr>
+              <tr><td class="py-2 text-gray-500">Structure</td><td class="py-2 text-right font-medium">TLB $250mm / RCF $50mm</td></tr>
+              <tr><td class="py-2 text-gray-500">Equity Contribution</td><td class="py-2 text-right font-medium">35%</td></tr>
+              <tr><td class="py-2 text-gray-500">Leverage (Gross / Net)</td><td class="py-2 text-right font-medium">5.4x / 3.69x</td></tr>
+              <tr><td class="py-2 text-gray-500">Security</td><td class="py-2 text-right font-medium">1st lien on substantially all assets</td></tr>
+              <tr><td class="py-2 text-gray-500">Covenants</td><td class="py-2 text-right font-medium">Net Lev ≤ 5.00x; IC ≥ 2.25x; Liquidity ≥ $15mm</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Analysis -->
+    <section class="grid grid-cols-12 gap-4">
+      <div class="col-span-12 lg:col-span-8">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="analysis" class="w-5 h-5"></i> Analysis & Commentary</h2>
+          <div class="mt-3 grid md:grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl border p-3">
+              <div class="text-xs font-medium text-gray-500">Key Strengths</div>
+              <ul class="mt-2 list-disc list-inside space-y-1">
+                <li>Brand loyalty and trust</li>
+                <li>Clean-label ingredients</li>
+                <li>Recurring DTC revenue</li>
+                <li>High customer retention</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border p-3">
+              <div class="text-xs font-medium text-gray-500">Key Risks</div>
+              <ul class="mt-2 list-disc list-inside space-y-1">
+                <li>Non-payment / covenant breach</li>
+                <li>Insolvency or bankruptcy events</li>
+                <li>Cross-default to other indebtedness</li>
+                <li>MAC (material adverse change)</li>
+              </ul>
+            </div>
+          </div>
+          <p class="mt-3 text-sm text-gray-700">Notes: This document is a summary and not legally binding. Refer to the full executed Credit Agreement for definitive terms and conditions.</p>
+        </div>
+      </div>
+      <div class="col-span-12 lg:col-span-4">
+        <div class="rounded-2xl border bg-white p-4">
+          <h3 class="text-sm font-medium flex items-center gap-2"><i data-lucide="code" class="w-4 h-4"></i> Final JSON (view)</h3>
+          <details class="mt-2 text-xs">
+            <summary class="cursor-pointer select-none text-gray-600">Toggle JSON</summary>
+            <pre class="mt-2 p-3 bg-gray-50 rounded-xl overflow-x-auto">{
+  "Deal Title": "$300,000,000 Senior Secured Credit Facility",
+  "Company Name": "Pawsitive Brands, Inc.",
+  "Industry": "Pet Care",
+  "Business Description": "Manufacturer and distributor of premium pet food and wellness products. The Company serves over 10,000 retail outlets and a rapidly growing DTC channel.",
+  "Ownership": "At least 51% owned by the Sponsor",
+  "Revenue (LTM, $mm)": 375,
+  "EBITDA (LTM, $mm)": 60,
+  "EBITDA Margin (%)": 16,
+  "CapEx (LTM, $mm)": 8,
+  "Cash on Balance Sheet ($mm)": 15,
+  "Debt Amount (New Loan, $mm)": 300,
+  "Use of Proceeds": "$175MM for refinancing of existing debt and $75MM for sponsor dividend",
+  "Term (Years)": 7,
+  "Interest Rate / Pricing": "SOFR + 525 bps (with a 1.00% SOFR floor) for Term Loan B, SOFR + 375 bps for Revolver",
+  "Structure": "Term Loan B: $250,000,000, Revolving Credit Facility: $50,000,000",
+  "Leverage (Gross)": 5.4,
+  "Leverage (Net)": "3.69:1.00",
+  "Equity Contribution (%)": 35,
+  "Security": "First priority lien on substantially all existing and future assets of the Borrower and Guarantors, including accounts receivable, inventory, intellectual property, equipment, and equity interests in subsidiaries",
+  "Covenants": {"Total Net Leverage Ratio": "5.00:1.00", "Interest Coverage Ratio": "2.25:1.00", "Liquidity Covenant": "$15,000,000"},
+  "Key Risk Factors": "Non-payment of interest or principal, Breach of covenants, Insolvency or bankruptcy events, Cross-default to other material indebtedness, Material adverse change (MAC) clause",
+  "Key Strengths":
