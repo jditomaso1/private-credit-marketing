@@ -213,4 +213,37 @@
   "Security": "First priority lien on substantially all existing and future assets of the Borrower and Guarantors, including accounts receivable, inventory, intellectual property, equipment, and equity interests in subsidiaries",
   "Covenants": {"Total Net Leverage Ratio": "5.00:1.00", "Interest Coverage Ratio": "2.25:1.00", "Liquidity Covenant": "$15,000,000"},
   "Key Risk Factors": "Non-payment of interest or principal, Breach of covenants, Insolvency or bankruptcy events, Cross-default to other material indebtedness, Material adverse change (MAC) clause",
-  "Key Strengths":
+  "Key Strengths": "Brand loyalty and trust, Clean-label ingredients, Recurring DTC revenue, High customer retention",
+  "Sponsor": "Summit Hill Partners",
+  "Deal Status": "In Compliance",
+  "Notes / Commentary": "This document is a summary and not legally binding. Refer to the full executed Credit Agreement for definitive terms and conditions"
+}</pre>
+        </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-6 text-center text-xs text-gray-500">Pawsitive Brands — Tear Sheet • Static HTML demo</footer>
+
+  <script>
+    if (window.lucide) window.lucide.createIcons();
+  </script>
+
+  <!-- Tiny inline component helper for metrics (works in static HTML via custom elements) -->
+  <script>
+    customElements.define('metric-card', class extends HTMLElement {
+      connectedCallback(){
+        const label = this.getAttribute('label')||'';
+        const value = this.getAttribute('value')||'';
+        this.innerHTML = `
+          <div class="rounded-2xl border bg-white p-3">
+            <div class="text-xs text-gray-500">${label}</div>
+            <div class="text-lg font-semibold">${value}</div>
+          </div>`;
+      }
+    });
+    function Metric(){return null}
+  </script>
+</body>
+</html>
