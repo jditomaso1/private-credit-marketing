@@ -261,6 +261,165 @@
         </div>
       </div>
     </section>
+
+    <!-- Comments & Approvals (drop this anywhere below your tables, e.g., before </main>) -->
+    <section id="comments" class="grid grid-cols-12 gap-4">
+      <div class="col-span-12">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2">
+            <i data-lucide="messages-square" class="w-5 h-5"></i> Comments & Approvals
+          </h2>
+    
+          <!-- Optional: light intro / instructions -->
+          <p class="mt-1 text-sm text-gray-500">
+            Centralized notes by role. (Static mock; wiring to a backend can come later.)
+          </p>
+    
+          <!-- Four comment buckets -->
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 1) Analyst Comments -->
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-medium flex items-center gap-2">
+                  <i data-lucide="user-pen" class="w-4 h-4"></i> Analyst Comments
+                </div>
+                <span class="text-xs rounded-full border px-2 py-0.5 bg-gray-50">3</span>
+              </div>
+              <ul class="mt-2 space-y-3">
+                <!-- Comment item -->
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">JS</div>
+                    <div class="text-xs text-gray-500">Jake S • 2025-09-24</div>
+                  </div>
+                  <p class="mt-1">Margin stability supported by pricing power and mix. Watch input costs into Q4.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">AK</div>
+                    <div class="text-xs text-gray-500">Anita K • 2025-09-26</div>
+                  </div>
+                  <p class="mt-1">Customer concentration below 15% across top 5—comfortable for category.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">RM</div>
+                    <div class="text-xs text-gray-500">Ravi M • 2025-09-27</div>
+                  </div>
+                  <p class="mt-1">LTM cash conversion ≈ 85%; inventory rebuild explains near-term WC drag.</p>
+                </li>
+              </ul>
+            </div>
+    
+            <!-- 2) Credit Approval (underwriter / approver notes) -->
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-medium flex items-center gap-2">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i> Credit Approval
+                </div>
+                <span class="text-xs rounded-full border px-2 py-0.5 bg-gray-50">2</span>
+              </div>
+              <ul class="mt-2 space-y-3">
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">LG</div>
+                    <div class="text-xs text-gray-500">Liam G • 2025-09-27</div>
+                  </div>
+                  <p class="mt-1">Approve at proposed terms. Require quarterly KPI pack and annual supplier audit.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">MS</div>
+                    <div class="text-xs text-gray-500">Maya S • 2025-09-27</div>
+                  </div>
+                  <p class="mt-1">Add springing cash sweep if Net Lev &gt; 5.0x for 2 consecutive quarters.</p>
+                </li>
+              </ul>
+            </div>
+    
+            <!-- 3) Historical Comments -->
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-medium flex items-center gap-2">
+                  <i data-lucide="clock" class="w-4 h-4"></i> Historical Comments
+                </div>
+                <span class="text-xs rounded-full border px-2 py-0.5 bg-gray-50">4</span>
+              </div>
+              <ul class="mt-2 space-y-3">
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">EC</div>
+                    <div class="text-xs text-gray-500">2025-06-15</div>
+                  </div>
+                  <p class="mt-1">Closed FY24 with outperformance vs plan; DTC mix +300 bps YoY.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">TR</div>
+                    <div class="text-xs text-gray-500">2025-03-28</div>
+                  </div>
+                  <p class="mt-1">Temporary logistics surcharge rolled off; expect +50bps margin tailwind.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">AK</div>
+                    <div class="text-xs text-gray-500">2024-12-08</div>
+                  </div>
+                  <p class="mt-1">Covenant headroom widened post refi; liquidity buffer now &gt; $15mm.</p>
+                </li>
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">JS</div>
+                    <div class="text-xs text-gray-500">2024-08-31</div>
+                  </div>
+                  <p class="mt-1">Added new pet wellness SKU line; early sell-through promising.</p>
+                </li>
+              </ul>
+            </div>
+    
+            <!-- 4) Credit Committee Comments -->
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-medium flex items-center gap-2">
+                  <i data-lucide="gavel" class="w-4 h-4"></i> Credit Committee
+                </div>
+                <span class="text-xs rounded-full border px-2 py-0.5 bg-gray-50">1</span>
+              </div>
+              <ul class="mt-2 space-y-3">
+                <li class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-gray-200 grid place-content-center text-[10px]">CC</div>
+                    <div class="text-xs text-gray-500">2025-09-27</div>
+                  </div>
+                  <p class="mt-1">Approved as presented. Include monitoring of DTC retention and raw-material volatility as standing agenda items.</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+    
+          <!-- Optional: simple add-a-comment form (static mock) -->
+          <form class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <div class="md:col-span-1">
+              <label class="text-xs text-gray-500">Category</label>
+              <select class="w-full mt-1 border rounded-lg px-2 py-1 text-sm">
+                <option>Analyst</option>
+                <option>Credit Approval</option>
+                <option>Historical</option>
+                <option>Credit Committee</option>
+              </select>
+            </div>
+            <div class="md:col-span-3">
+              <label class="text-xs text-gray-500">Comment</label>
+              <textarea class="w-full mt-1 border rounded-lg px-3 py-2 text-sm" rows="2" placeholder="Add a note (mock UI)…"></textarea>
+            </div>
+            <div class="md:col-span-4 flex justify-end">
+              <button type="button" class="text-xs border rounded-lg px-3 py-1.5 hover:bg-gray-50">Add Comment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
   </main>
 
   <footer class="py-6 text-center text-xs text-gray-500">Pawsitive Brands — Tear Sheet • Static HTML demo</footer>
