@@ -419,6 +419,154 @@
         </div>
       </div>
     </section>
+    <!-- Data Room / Source Files (placeholder for future Drive integration) -->
+    <section id="dataroom" class="grid grid-cols-12 gap-4">
+      <div class="col-span-12">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2">
+            <i data-lucide="folder-open" class="w-5 h-5"></i> Data Room & Source Files
+          </h2>
+          <p class="mt-1 text-sm text-gray-500">
+            Connected drive view (mock). Later we’ll surface files from the primary deal folder.
+          </p>
+    
+          <!-- Top row: path + actions -->
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <div class="text-xs px-2 py-1 rounded-full border bg-gray-50">/Deals/Pawsitive/Execution/Final</div>
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Open in Drive</a>
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Sync</a>
+            <span class="ml-auto text-xs text-gray-500">Last synced: 2025-09-27 10:32</span>
+          </div>
+    
+          <!-- File list -->
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Pawsitive_Credit_Agreement.pdf</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">vFinal • 2.8MB • uploaded 2025-09-20</div>
+            </div>
+    
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Pawsitive_Term_Sheet.pdf</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">v3 • 0.7MB • uploaded 2025-09-18</div>
+            </div>
+    
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Pawsitive_CIM.pdf</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">v2 • 5.1MB • uploaded 2025-09-10</div>
+            </div>
+    
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Pawsitive_Notes.pdf</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">0.9MB • uploaded 2025-09-08</div>
+            </div>
+    
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Pawsitive__2025-09__Compliance_Certificate.pdf</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">0.4MB • uploaded 2025-09-25</div>
+            </div>
+    
+            <div class="rounded-xl border p-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                <div class="text-sm font-medium">Brand_Assets.zip</div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">12.3MB • uploaded 2025-09-05</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Client Communications (placeholder for future messaging integration) -->
+    <section id="client-comms" class="grid grid-cols-12 gap-4">
+      <div class="col-span-12">
+        <div class="rounded-2xl border bg-white p-4">
+          <h2 class="text-lg font-medium flex items-center gap-2">
+            <i data-lucide="messages-square" class="w-5 h-5"></i> Client Communications
+          </h2>
+          <p class="mt-1 text-sm text-gray-500">
+            Timeline of borrower-facing comms (mock). Later we’ll pull from email / portal messages.
+          </p>
+    
+          <!-- Filters / actions -->
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <select class="text-xs border rounded-lg px-2 py-1">
+              <option>All</option>
+              <option>Emails</option>
+              <option>Portal Messages</option>
+              <option>Calls / Meetings</option>
+            </select>
+            <a href="#" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Export CSV</a>
+            <span class="ml-auto text-xs text-gray-500">Borrower: Pawsitive Brands, Inc.</span>
+          </div>
+    
+          <!-- Timeline -->
+          <ol class="mt-4 space-y-4">
+            <!-- Item -->
+            <li class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                  <div class="text-sm font-medium">Term Sheet sent to CFO</div>
+                </div>
+                <div class="text-xs text-gray-500">2025-09-19 • Email</div>
+              </div>
+              <p class="mt-1 text-sm">Shared redline of TLB pricing and covenants; requested signatures by 9/23.</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">Owner: J. Smith</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">Status: Sent</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">Attachment: Term_Sheet_v3.pdf</span>
+              </div>
+            </li>
+    
+            <li class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="phone" class="w-4 h-4"></i>
+                  <div class="text-sm font-medium">Diligence call w/ Ops & Supply Chain</div>
+                </div>
+                <div class="text-xs text-gray-500">2025-09-22 • Call</div>
+              </div>
+              <p class="mt-1 text-sm">Discussed input cost hedging and inventory normalization; no material risks flagged.</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">Participants: CFO, COO, AP team</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">Notes: added follow-ups</span>
+              </div>
+            </li>
+    
+            <li class="rounded-xl border p-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="message-square" class="w-4 h-4"></i>
+                  <div class="text-sm font-medium">Portal message: Compliance Certificate upload</div>
+                </div>
+                <div class="text-xs text-gray-500">2025-09-25 • Portal</div>
+              </div>
+              <p class="mt-1 text-sm">Borrower uploaded Sep certificate; leverage 5.0x, IC 2.25x, liquidity $15mm.</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-green-50 text-green-700">On-time</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full border bg-gray-50">File: Pawsitive__2025-09__Compliance_Certificate.pdf</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
     
   </main>
 
