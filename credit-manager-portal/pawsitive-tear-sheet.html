@@ -122,73 +122,80 @@
       </aside>
     </section>
 
-    <!-- Financials & Structure tables -->
-    <section class="grid grid-cols-12 gap-4">
-      <div class="col-span-12 lg:col-span-6">
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide="banknote" class="w-5 h-5"></i> Financials</h2>
-          <table class="mt-1 w-full text-sm">
-            <thead>
-              <tr class="text-gray-500">
-                <th class="py-1 text-left font-medium"></th>
-                <th class="py-1 text-right font-medium">2023</th>
-                <th class="py-1 text-right font-medium">2024</th>
-                <th class="py-1 text-right font-medium">LTM</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y">
-              <tr><td class="py-2 text-gray-500">Revenue ($mm)</td><td class="py-2 text-right">340</td><td class="py-2 text-right">360</td><td class="py-2 text-right font-medium">375</td></tr>
-              <tr><td class="py-2 text-gray-500">EBITDA ($mm)</td><td class="py-2 text-right">52</td><td class="py-2 text-right">57</td><td class="py-2 text-right font-medium">60</td></tr>
-              <tr><td class="py-2 text-gray-500">EBITDA Margin (%)</td><td class="py-2 text-right">15%</td><td class="py-2 text-right">15.5%</td><td class="py-2 text-right font-medium">16%</td></tr>
-              <tr><td class="py-2 text-gray-500">CapEx ($mm)</td><td class="py-2 text-right">7</td><td class="py-2 text-right">8</td><td class="py-2 text-right font-medium">8</td></tr>
-              <tr><td class="py-2 text-gray-500">Cash ($mm)</td><td class="py-2 text-right">12</td><td class="py-2 text-right">14</td><td class="py-2 text-right font-medium">15</td></tr>
-            </tbody>
-          </table>
-        </div>
+  <!-- Financials, Structure & Covenants -->
+  <section class="grid grid-cols-12 gap-4">
+    <!-- Left: Financials -->
+    <div class="col-span-12 lg:col-span-6">
+      <div class="rounded-2xl border bg-white p-4">
+        <h2 class="text-lg font-medium flex items-center gap-2 mb-1">
+          <i data-lucide="banknote" class="w-5 h-5"></i> Financials
+        </h2>
+        <table class="mt-1 w-full text-sm">
+          <thead>
+            <tr class="text-gray-500">
+              <th class="py-1 text-left font-medium"></th>
+              <th class="py-1 text-right font-medium">2023</th>
+              <th class="py-1 text-right font-medium">2024</th>
+              <th class="py-1 text-right font-medium">LTM</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr><td class="py-2 text-gray-500">Revenue ($mm)</td><td class="py-2 text-right">340</td><td class="py-2 text-right">360</td><td class="py-2 text-right font-medium">375</td></tr>
+            <tr><td class="py-2 text-gray-500">EBITDA ($mm)</td><td class="py-2 text-right">52</td><td class="py-2 text-right">57</td><td class="py-2 text-right font-medium">60</td></tr>
+            <tr><td class="py-2 text-gray-500">EBITDA Margin (%)</td><td class="py-2 text-right">15%</td><td class="py-2 text-right">15.5%</td><td class="py-2 text-right font-medium">16%</td></tr>
+            <tr><td class="py-2 text-gray-500">CapEx ($mm)</td><td class="py-2 text-right">7</td><td class="py-2 text-right">8</td><td class="py-2 text-right font-medium">8</td></tr>
+            <tr><td class="py-2 text-gray-500">Cash ($mm)</td><td class="py-2 text-right">12</td><td class="py-2 text-right">14</td><td class="py-2 text-right font-medium">15</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="col-span-12 lg:col-span-6">
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide="scale" class="w-5 h-5"></i> Structure & Terms</h2>
-          <table class="mt-1 w-full text-sm">
-            <tbody class="divide-y">
-              <tr><td class="py-2 text-gray-500">Debt Amount (New)</td><td class="py-2 text-right font-medium">$300mm</td></tr>
-              <tr><td class="py-2 text-gray-500">Use of Proceeds</td><td class="py-2 text-right font-medium">$175mm refi / $75mm dividend</td></tr>
-              <tr><td class="py-2 text-gray-500">Term</td><td class="py-2 text-right font-medium">7 years</td></tr>
-              <tr><td class="py-2 text-gray-500">Pricing</td><td class="py-2 text-right font-medium">TLB: SOFR + 525 bps (1.00% floor); RCF: SOFR + 375 bps</td></tr>
-              <tr><td class="py-2 text-gray-500">Structure</td><td class="py-2 text-right font-medium">TLB $250mm / RCF $50mm</td></tr>
-              <tr><td class="py-2 text-gray-500">Equity Contribution</td><td class="py-2 text-right font-medium">35%</td></tr>
-              <tr><td class="py-2 text-gray-500">Leverage (Gross / Net)</td><td class="py-2 text-right font-medium">5.4x / 3.69x</td></tr>
-              <tr><td class="py-2 text-gray-500">Security</td><td class="py-2 text-right font-medium">1st lien on substantially all assets</td></tr>
-              <tr><td class="py-2 text-gray-500">Covenants</td><td class="py-2 text-right font-medium">Net Lev ≤ 5.00x; IC ≥ 2.25x; Liquidity ≥ $15mm</td></tr>
-            </tbody>
-          </table>
-        </div>
+    </div>
+  
+    <!-- Right: Structure & Terms -->
+    <div class="col-span-12 lg:col-span-6">
+      <div class="rounded-2xl border bg-white p-4">
+        <h2 class="text-lg font-medium flex items-center gap-2 mb-1">
+          <i data-lucide="scale" class="w-5 h-5"></i> Structure & Terms
+        </h2>
+        <table class="mt-1 w-full text-sm">
+          <tbody class="divide-y">
+            <tr><td class="py-2 text-gray-500">Debt Amount (New)</td><td class="py-2 text-right font-medium">$300mm</td></tr>
+            <tr><td class="py-2 text-gray-500">Use of Proceeds</td><td class="py-2 text-right font-medium">$175mm refi / $75mm dividend</td></tr>
+            <tr><td class="py-2 text-gray-500">Term</td><td class="py-2 text-right font-medium">7 years</td></tr>
+            <tr><td class="py-2 text-gray-500">Pricing</td><td class="py-2 text-right font-medium">TLB: SOFR + 525 bps (1.00% floor); RCF: SOFR + 375 bps</td></tr>
+            <tr><td class="py-2 text-gray-500">Structure</td><td class="py-2 text-right font-medium">TLB $250mm / RCF $50mm</td></tr>
+            <tr><td class="py-2 text-gray-500">Equity Contribution</td><td class="py-2 text-right font-medium">35%</td></tr>
+            <tr><td class="py-2 text-gray-500">Leverage (Gross / Net)</td><td class="py-2 text-right font-medium">5.4x / 3.69x</td></tr>
+            <tr><td class="py-2 text-gray-500">Security</td><td class="py-2 text-right font-medium">1st lien on substantially all assets</td></tr>
+            <tr><td class="py-2 text-gray-500">Covenants</td><td class="py-2 text-right font-medium">Net Lev ≤ 5.00x; IC ≥ 2.25x; Liquidity ≥ $15mm</td></tr>
+          </tbody>
+        </table>
       </div>
-    </section>
-
-    <!-- Covenant Metrics -->
-    <section class="grid grid-cols-12 gap-4 -mt-8 lg:-mt-12">
-      <div class="col-span-12 lg:col-span-6">
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide=\"shield\" class=\"w-5 h-5\"></i> Covenant Metrics</h2>
-          <table class="mt-1 w-full text-sm">
-            <thead>
-              <tr class="text-gray-500">
-                <th class="py-1 text-left font-medium"></th>
-                <th class="py-1 text-right font-medium">2023</th>
-                <th class="py-1 text-right font-medium">2024</th>
-                <th class="py-1 text-right font-medium">LTM</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y">
-              <tr><td class="py-2 text-gray-500">Total Net Leverage</td><td class="py-2 text-right">4.9x</td><td class="py-2 text-right">5.1x</td><td class="py-2 text-right font-medium">5.0x</td></tr>
-              <tr><td class="py-2 text-gray-500">Interest Coverage</td><td class="py-2 text-right">2.3x</td><td class="py-2 text-right">2.4x</td><td class="py-2 text-right font-medium">2.25x</td></tr>
-              <tr><td class="py-2 text-gray-500">Liquidity ($mm)</td><td class="py-2 text-right">$16</td><td class="py-2 text-right">$17</td><td class="py-2 text-right font-medium">$15</td></tr>
-            </tbody>
-          </table>
-        </div>
+    </div>
+  
+    <!-- Left below Financials: Covenant Metrics -->
+    <div class="col-span-12 lg:col-span-6">
+      <div class="rounded-2xl border bg-white p-4">
+        <h2 class="text-lg font-medium flex items-center gap-2 mb-1">
+          <i data-lucide="shield" class="w-5 h-5"></i> Covenant Metrics
+        </h2>
+        <table class="mt-1 w-full text-sm">
+          <thead>
+            <tr class="text-gray-500">
+              <th class="py-1 text-left font-medium"></th>
+              <th class="py-1 text-right font-medium">2023</th>
+              <th class="py-1 text-right font-medium">2024</th>
+              <th class="py-1 text-right font-medium">LTM</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr><td class="py-2 text-gray-500">Total Net Leverage</td><td class="py-2 text-right">4.9x</td><td class="py-2 text-right">5.1x</td><td class="py-2 text-right font-medium">5.0x</td></tr>
+            <tr><td class="py-2 text-gray-500">Interest Coverage</td><td class="py-2 text-right">2.3x</td><td class="py-2 text-right">2.4x</td><td class="py-2 text-right font-medium">2.25x</td></tr>
+            <tr><td class="py-2 text-gray-500">Liquidity ($mm)</td><td class="py-2 text-right">$16</td><td class="py-2 text-right">$17</td><td class="py-2 text-right font-medium">$15</td></tr>
+          </tbody>
+        </table>
       </div>
-    </section>
+    </div>
+  </section>
 
     <!-- Analysis -->
     <section class="grid grid-cols-12 gap-4">
