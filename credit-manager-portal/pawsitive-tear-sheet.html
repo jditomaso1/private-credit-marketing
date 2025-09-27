@@ -38,7 +38,7 @@
             <i data-lucide="file-text" class="w-5 h-5"></i>
             Pawsitive Brands, Inc. — Tear Sheet
           </h1>
-          <p class="text-sm text-gray-600">$300,000,000 Senior Secured Credit Facility</p>
+          <p class="mt-1 text-sm text-gray-600">$300,000,000 Senior Secured Credit Facility</p>
         </div>
         <div class="flex flex-wrap gap-2 items-start">
           <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border bg-green-50 text-green-700"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> In Compliance</span>
@@ -51,26 +51,26 @@
 
     <!-- Key metrics cards -->
     <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-      <Metric label="Revenue (LTM)" value="$375mm" />
-      <Metric label="EBITDA (LTM)" value="$60mm" />
-      <Metric label="EBITDA Margin" value="16%" />
-      <Metric label="CapEx (LTM)" value="$8mm" />
-      <Metric label="Cash" value="$15mm" />
-      <Metric label="Debt (New)" value="$300mm" />
-      <Metric label="Term" value="7 years" />
-      <Metric label="Pricing" value="SOFR + 525 bps (1.00% floor)" />
-      <Metric label="Revolver" value="SOFR + 375 bps" />
-      <Metric label="Leverage (Gross)" value="5.4x" />
-      <Metric label="Leverage (Net)" value="3.69x" />
-      <Metric label="Equity Contrib." value="35%" />
+      <metric-card label="Revenue (LTM)" value="$375mm"></metric-card>
+      <metric-card label="EBITDA (LTM)" value="$60mm"></metric-card>
+      <metric-card label="EBITDA Margin" value="16%"></metric-card>
+      <metric-card label="CapEx (LTM)" value="$8mm"></metric-card>
+      <metric-card label="Cash" value="$15mm"></metric-card>
+      <metric-card label="Debt (New)" value="$300mm"></metric-card>
+      <metric-card label="Term" value="7 years"></metric-card>
+      <metric-card label="Pricing" value="SOFR + 525 bps (1.00% floor)"></metric-card>
+      <metric-card label="Revolver" value="SOFR + 375 bps"></metric-card>
+      <metric-card label="Leverage (Gross)" value="5.4x"></metric-card>
+      <metric-card label="Leverage (Net)" value="3.69x"></metric-card>
+      <metric-card label="Equity Contrib." value="35%"></metric-card>
     </section>
 
     <!-- Deal Overview & Strategy -->
     <section class="grid grid-cols-12 gap-4">
       <div class="col-span-12 lg:col-span-8">
         <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="notebook-text" class="w-5 h-5"></i> Deal Overview</h2>
-          <div class="mt-3 text-sm text-gray-800 space-y-2">
+          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide="notebook-text" class="w-5 h-5"></i> Deal Overview</h2>
+          <div class="mt-1 text-sm text-gray-800 space-y-2">
             <p><span class="text-gray-500">Company:</span> Pawsitive Brands, Inc. — Manufacturer and distributor of premium pet food and wellness products. The Company serves over 10,000 retail outlets and a rapidly growing DTC channel.</p>
             <p><span class="text-gray-500">Structure:</span> Term Loan B $250mm; Revolving Credit Facility $50mm.</p>
             <p><span class="text-gray-500">Use of Proceeds:</span> $175mm refi, $75mm sponsor dividend.</p>
@@ -126,22 +126,30 @@
     <section class="grid grid-cols-12 gap-4">
       <div class="col-span-12 lg:col-span-6">
         <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="banknote" class="w-5 h-5"></i> Financials</h2>
-          <table class="mt-3 w-full text-sm">
+          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide="banknote" class="w-5 h-5"></i> Financials</h2>
+          <table class="mt-1 w-full text-sm">
+            <thead>
+              <tr class="text-gray-500">
+                <th class="py-1 text-left font-medium"></th>
+                <th class="py-1 text-right font-medium">2023</th>
+                <th class="py-1 text-right font-medium">2024</th>
+                <th class="py-1 text-right font-medium">LTM</th>
+              </tr>
+            </thead>
             <tbody class="divide-y">
-              <tr><td class="py-2 text-gray-500">Revenue (LTM)</td><td class="py-2 text-right font-medium">$375mm</td></tr>
-              <tr><td class="py-2 text-gray-500">EBITDA (LTM)</td><td class="py-2 text-right font-medium">$60mm</td></tr>
-              <tr><td class="py-2 text-gray-500">EBITDA Margin</td><td class="py-2 text-right font-medium">16%</td></tr>
-              <tr><td class="py-2 text-gray-500">CapEx (LTM)</td><td class="py-2 text-right font-medium">$8mm</td></tr>
-              <tr><td class="py-2 text-gray-500">Cash</td><td class="py-2 text-right font-medium">$15mm</td></tr>
+              <tr><td class="py-2 text-gray-500">Revenue ($mm)</td><td class="py-2 text-right">$340</td><td class="py-2 text-right">$360</td><td class="py-2 text-right font-medium">$375</td></tr>
+              <tr><td class="py-2 text-gray-500">EBITDA ($mm)</td><td class="py-2 text-right">$52</td><td class="py-2 text-right">$57</td><td class="py-2 text-right font-medium">$60</td></tr>
+              <tr><td class="py-2 text-gray-500">EBITDA Margin (%)</td><td class="py-2 text-right">15%</td><td class="py-2 text-right">15.5%</td><td class="py-2 text-right font-medium">16%</td></tr>
+              <tr><td class="py-2 text-gray-500">CapEx ($mm)</td><td class="py-2 text-right">$7</td><td class="py-2 text-right">$8</td><td class="py-2 text-right font-medium">$8</td></tr>
+              <tr><td class="py-2 text-gray-500">Cash ($mm)</td><td class="py-2 text-right">$12</td><td class="py-2 text-right">$14</td><td class="py-2 text-right font-medium">$15</td></tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="col-span-12 lg:col-span-6">
         <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5"></i> Structure & Terms</h2>
-          <table class="mt-3 w-full text-sm">
+          <h2 class="text-lg font-medium flex items-center gap-2 mb-1"><i data-lucide="scale" class="w-5 h-5"></i> Structure & Terms</h2>
+          <table class="mt-1 w-full text-sm">
             <tbody class="divide-y">
               <tr><td class="py-2 text-gray-500">Debt Amount (New)</td><td class="py-2 text-right font-medium">$300mm</td></tr>
               <tr><td class="py-2 text-gray-500">Use of Proceeds</td><td class="py-2 text-right font-medium">$175mm refi / $75mm dividend</td></tr>
