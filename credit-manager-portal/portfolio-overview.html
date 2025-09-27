@@ -61,59 +61,55 @@
       <metric-card label="Wtd Avg Leverage" value="4.7x"></metric-card>
       <metric-card label="Wtd Avg Maturity" value="4.2 yrs"></metric-card>
       <metric-card label="% Floating" value="88%"></metric-card>
-
+    
       <metric-card label="Cash (Avail.)" value="$210mm"></metric-card>
       <metric-card label="30D Net CF" value="+$38mm"></metric-card>
       <metric-card label="Wtd Avg Price" value="98.7"></metric-card>
-      <metric-card label""> </metric-card><!-- spacer for grid balance -->
+      <metric-card label="Non-accruals" value="1.2%"></metric-card> <!-- NEW -->
       <metric-card label="Top Issuer Exp." value="3.9%"></metric-card>
       <metric-card label="Top Sponsor Exp." value="6.1%"></metric-card>
     </section>
 
     <!-- Mix & ladder charts -->
     <section class="grid grid-cols-12 gap-4">
-      <!-- Industry mix -->
-      <div class="col-span-12 lg:col-span-6">
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="factory" class="w-5 h-5"></i> Industry Concentration</h2>
-          <div class="mt-3 space-y-2 text-sm">
-            <!-- simple bar rows -->
-            <div class="flex items-center gap-3">
-              <span class="w-28 text-gray-600">Software</span>
-              <div class="flex-1 h-3 rounded bg-gray-100">
-                <div class="h-3 rounded" style="width:28%"></div>
-              </div>
-              <span class="w-12 text-right">28%</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-28 text-gray-600">Healthcare</span>
-              <div class="flex-1 h-3 rounded bg-gray-100">
-                <div class="h-3 rounded" style="width:19%"></div>
-              </div>
-              <span class="w-12 text-right">19%</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-28 text-gray-600">Consumer</span>
-              <div class="flex-1 h-3 rounded bg-gray-100">
-                <div class="h-3 rounded" style="width:16%"></div>
-              </div>
-              <span class="w-12 text-right">16%</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-28 text-gray-600">Industrials</span>
-              <div class="flex-1 h-3 rounded bg-gray-100">
-                <div class="h-3 rounded" style="width:14%"></div>
-              </div>
-              <span class="w-12 text-right">14%</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-28 text-gray-600">Other</span>
-              <div class="flex-1 h-3 rounded bg-gray-100">
-                <div class="h-3 rounded" style="width:23%"></div>
-              </div>
-              <span class="w-12 text-right">23%</span>
-            </div>
+      <!-- Industry Concentration -->
+      <div class="mt-3 space-y-2 text-sm">
+        <div class="flex items-center gap-3">
+          <span class="w-28 text-gray-600">Software</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:28%"></div>
           </div>
+          <span class="w-12 text-right">28%</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-28 text-gray-600">Healthcare</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:19%"></div>
+          </div>
+          <span class="w-12 text-right">19%</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-28 text-gray-600">Consumer</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:16%"></div>
+          </div>
+          <span class="w-12 text-right">16%</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-28 text-gray-600">Industrials</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:14%"></div>
+          </div>
+          <span class="w-12 text-right">14%</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-28 text-gray-600">Other</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:23%"></div>
+          </div>
+          <span class="w-12 text-right">23%</span>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -158,38 +154,44 @@
 
     <!-- Ladder & cashflows -->
     <section class="grid grid-cols-12 gap-4">
-      <!-- Maturity ladder -->
-      <div class="col-span-12 lg:col-span-8">
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium flex items-center gap-2"><i data-lucide="calendar-range" class="w-5 h-5"></i> Maturity Ladder</h2>
-          <div class="mt-3 space-y-2 text-sm">
-            <!-- bars for years -->
-            <div class="flex items-center gap-3">
-              <span class="w-16 text-gray-600">2026</span>
-              <div class="flex-1 h-3 rounded bg-gray-100"><div class="h-3 rounded" style="width:18%"></div></div>
-              <span class="w-16 text-right">$830mm</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-16 text-gray-600">2027</span>
-              <div class="flex-1 h-3 rounded bg-gray-100"><div class="h-3 rounded" style="width:22%"></div></div>
-              <span class="w-16 text-right">$1.01bn</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-16 text-gray-600">2028</span>
-              <div class="flex-1 h-3 rounded bg-gray-100"><div class="h-3 rounded" style="width:27%"></div></div>
-              <span class="w-16 text-right">$1.24bn</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-16 text-gray-600">2029</span>
-              <div class="flex-1 h-3 rounded bg-gray-100"><div class="h-3 rounded" style="width:15%"></div></div>
-              <span class="w-16 text-right">$690mm</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="w-16 text-gray-600">2030+</span>
-              <div class="flex-1 h-3 rounded bg-gray-100"><div class="h-3 rounded" style="width:18%"></div></div>
-              <span class="w-16 text-right">$830mm</span>
-            </div>
+      <!-- Maturity Ladder -->
+      <div class="mt-3 space-y-2 text-sm">
+        <div class="flex items-center gap-3">
+          <span class="w-16 text-gray-600">2026</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:18%"></div>
           </div>
+          <span class="w-16 text-right">$830mm</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-16 text-gray-600">2027</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:22%"></div>
+          </div>
+          <span class="w-16 text-right">$1.01bn</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-16 text-gray-600">2028</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:27%"></div>
+          </div>
+          <span class="w-16 text-right">$1.24bn</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-16 text-gray-600">2029</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:15%"></div>
+          </div>
+          <span class="w-16 text-right">$690mm</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="w-16 text-gray-600">2030+</span>
+          <div class="flex-1 h-3 rounded bg-gray-100 overflow-hidden">
+            <div class="h-3 bg-gray-800 rounded" style="width:18%"></div>
+          </div>
+          <span class="w-16 text-right">$830mm</span>
+        </div>
+      </div>
         </div>
       </div>
 
