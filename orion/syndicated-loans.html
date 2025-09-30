@@ -3,103 +3,326 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Orion | Private Credit AI — Distiller (Pawsitive)</title>
+  <title>Orion | Private Credit AI — Distiller</title>
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg: #0f172a; /* Dark slate background */
-      --card: #1e293b; /* Card background */
-      --accent: #14b8a6; /* Teal accent */
-      --highlight: #38bdf8; /* Blue highlight */
-      --ink: #f1f5f9; /* Light text */
-      --muted: #94a3b8; /* Muted text */
-      --ring: #334155; /* Border */
-      --font: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    :root{
+      --pc-bg:#f8fafc;        /* page background */
+      --pc-surface:#ffffff;   /* cards */
+      --pc-ink:#0f172a;       /* primary text */
+      --pc-sub:#475569;       /* secondary text */
+      --pc-ring:#e2e8f0;      /* borders */
+      --pc-accent:#0ea5a4;    /* teal */
+      --pc-accent-2:#334155;  /* slate/navy */
+      --pc-pill:#f1f5f9;      /* soft chip */
+      --pc-good:#16a34a;      /* green */
     }
-    html, body { background: var(--bg); color: var(--ink); font-family: var(--font); }
-    .card { background: var(--card); border: 1px solid var(--ring); border-radius: 1rem; }
-    .chip { background: rgba(20,184,166,0.2); border: 1px solid rgba(20,184,166,0.5); color: #5eead4; padding: 0.15rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; }
-    .pill { background: rgba(56,189,248,0.2); border: 1px solid rgba(56,189,248,0.5); color: #bae6fd; padding: 0.35rem 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; }
-    .label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .05em; }
-    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    html,body{background:var(--pc-bg);color:var(--pc-ink);font-family:'Inter',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,'Helvetica Neue',Arial,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';}
+    .card{background:var(--pc-surface);border:1px solid var(--pc-ring);border-radius:1rem;}
+    .chip{background:var(--pc-pill);border:1px solid var(--pc-ring);border-radius:.75rem;padding:.25rem .5rem;font-size:.75rem;}
+    .accent{color:var(--pc-accent)}
+    .btn{border-radius:.75rem;border:1px solid var(--pc-ring);background:var(--pc-surface);padding:.5rem .75rem;}
+    .btn-primary{background:var(--pc-accent);color:white;border-color:transparent;}
+    .btn:hover{box-shadow:0 1px 0 rgba(2,6,23,.06),0 1px 2px rgba(2,6,23,.08)}
+    pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .kbd{background:#f8fafc;border:1px solid var(--pc-ring);border-radius:.5rem;padding:.125rem .375rem;font-variant-numeric:tabular-nums}
+    .shadow-soft{box-shadow:0 1px 0 rgba(2,6,23,.04),0 2px 6px rgba(2,6,23,.08)}
+    .divider{border-color:var(--pc-ring)}
   </style>
 </head>
-<body class="min-h-screen">
-  <!-- Navigation Bar -->
-  <header class="sticky top-0 z-30 backdrop-blur bg-slate-900/80 border-b border-slate-700">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-14">
-        <div class="flex items-center gap-3">
-          <div class="h-8 w-8 rounded-full bg-teal-600/30 grid place-items-center border border-teal-400/50">
-            <span class="text-teal-300 text-sm font-semibold">AI</span>
-          </div>
-          <div class="text-sm sm:text-base">
-            <span class="font-semibold">Orion</span> <span class="text-slate-400">| Private Credit AI</span>
-          </div>
-        </div>
-        <nav class="flex items-center gap-1 text-sm">
-          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Dashboard</a>
-          <a class="px-3 py-1.5 rounded-xl bg-slate-700/50 border border-slate-600" href="#">Distiller</a>
-          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Bouncer</a>
-          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Monitor</a>
-        </nav>
+<body>
+  <!-- Top Nav -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl grid place-items-center bg-teal-50 border border-teal-200 text-teal-700 font-semibold">AI</div>
+        <div class="text-slate-800 font-semibold">Orion <span class="text-slate-400 font-normal">| Private Credit AI</span></div>
       </div>
+      <nav class="hidden sm:flex items-center gap-1 text-sm">
+        <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="#">Dashboard</a>
+        <a class="px-3 py-2 rounded-lg bg-slate-900 text-white" href="#">Distiller</a>
+        <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="#">Bouncer</a>
+        <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="#">Monitor</a>
+      </nav>
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-    <!-- Page Header -->
-    <section class="space-y-4">
-      <div class="flex items-center gap-3">
-        <div class="text-2xl">🧪</div>
-        <h1 class="text-2xl sm:text-3xl font-semibold">The Distiller</h1>
+  <!-- Hero / Header Section -->
+  <section class="border-b divider bg-gradient-to-b from-white to-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex items-start justify-between gap-6">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">🧪 The Distiller</h1>
+          <p class="text-slate-600 mt-1">Summarize credit materials into a clean, investor-ready snapshot.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn">Save View</button>
+          <button class="btn btn-primary">Run Summary</button>
+        </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="card p-4">
-          <div class="label mb-1">Choose Asset Class</div>
-          <select class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2">
+    </div>
+  </section>
+
+  <!-- Main Layout -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Left column: Controls + Files -->
+      <aside class="space-y-6 lg:col-span-1">
+        <div class="card p-4 shadow-soft">
+          <div class="text-xs tracking-wider uppercase text-slate-500 mb-2">Inputs</div>
+          <label class="block text-sm text-slate-700 mb-1">Asset Class</label>
+          <select class="w-full border rounded-lg px-3 py-2 mb-3">
             <option>Syndicated Loans</option>
           </select>
-        </div>
-        <div class="card p-4">
-          <div class="label mb-1">Choose a Company Folder</div>
-          <select class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2">
+          <label class="block text-sm text-slate-700 mb-1">Company Folder</label>
+          <select class="w-full border rounded-lg px-3 py-2 mb-3">
             <option>Pawsitive (Syndicated Loans)</option>
           </select>
+          <label class="block text-sm text-slate-700 mb-1">PDFs</label>
+          <button class="w-full border rounded-lg px-3 py-2 text-left">&lt;All PDFs&gt;</button>
         </div>
-        <div class="card p-4">
-          <div class="label mb-1">📄 Select PDF(s)</div>
-          <button class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2 text-left">&lt;All PDFs&gt;</button>
-        </div>
-      </div>
-    </section>
 
-    <!-- Combined Deal Summary -->
-    <section class="space-y-6">
-      <div class="flex items-center gap-3">
-        <div class="text-xl">📊</div>
-        <h2 class="text-xl sm:text-2xl font-semibold">Combined Deal Summary</h2>
-      </div>
-      <!-- Example Deal Overview Card -->
-      <div class="card p-5 space-y-4">
-        <div class="flex items-center gap-3">
-          <div class="text-lg">🧾</div>
-          <h3 class="text-lg font-semibold">Deal Overview</h3>
+        <div class="card p-4 shadow-soft">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-semibold">Files Used in Summary</h3>
+            <span class="chip">5 files</span>
+          </div>
+          <ul class="text-sm text-slate-700 space-y-2">
+            <li class="flex items-center justify-between"><span>Pawsitive__2025-09__Compliance_Certificate.pdf</span><span class="chip">Used</span></li>
+            <li class="flex items-center justify-between"><span>Pawsitive_Notes.pdf</span><span class="chip">Used</span></li>
+            <li class="flex items-center justify-between"><span>Pawsitive_Credit_Agreement.pdf</span><span class="chip">Used</span></li>
+            <li class="flex items-center justify-between"><span>Pawsitive_CIM.pdf</span><span class="chip">Used</span></li>
+            <li class="flex items-center justify-between"><span>Pawsitive_Term_Sheet.pdf</span><span class="chip">Used</span></li>
+          </ul>
         </div>
-        <div class="space-y-2">
-          <div class="label">Deal Title</div>
-          <div class="rounded-xl bg-slate-800 border border-slate-600 p-3">
-            Pawsitive Brands, Inc. $300,000,000 Senior Secured Credit Facility
-            <div class="mt-2 text-xs text-slate-400">Confidence: <span class="chip">🟢 High</span> | Sources: Pawsitive_CIM.pdf, Pawsitive_Credit_Agreement.pdf, ...</div>
+
+        <div class="card p-4 shadow-soft">
+          <h3 class="text-sm font-semibold mb-2">Per-File Summaries</h3>
+          <div class="space-y-3 text-sm text-slate-700">
+            <details class="border rounded-lg p-3">
+              <summary class="cursor-pointer select-none">📄 Pawsitive__2025-09__Compliance_Certificate.pdf</summary>
+              <div class="mt-2 text-slate-600">
+                <div><span class="text-slate-500">Deal Title</span>: Not Provided</div>
+                <div><span class="text-slate-500">Company Name</span>: Pawsitive Brands, Inc.</div>
+                <div><span class="text-slate-500">Industry</span>: Not Provided</div>
+              </div>
+            </details>
+            <details class="border rounded-lg p-3">
+              <summary class="cursor-pointer select-none">📄 Pawsitive_Notes.pdf</summary>
+              <div class="mt-2 text-slate-600">
+                <div><span class="text-slate-500">Deal Title</span>: Pawsitive Brands, Inc. $300,000,000 Senior Secured Credit Facility</div>
+                <div><span class="text-slate-500">Company Name</span>: Pawsitive Brands, Inc.</div>
+                <div><span class="text-slate-500">Industry</span>: Not Provided</div>
+              </div>
+            </details>
+            <details class="border rounded-lg p-3">
+              <summary class="cursor-pointer select-none">📄 Pawsitive_Credit_Agreement.pdf</summary>
+              <div class="mt-2 text-slate-600">
+                <div><span class="text-slate-500">Deal Title</span>: Not Provided</div>
+                <div><span class="text-slate-500">Company Name</span>: Pawsitive Brands, Inc.</div>
+                <div><span class="text-slate-500">Industry</span>: Not Provided</div>
+              </div>
+            </details>
+            <details class="border rounded-lg p-3">
+              <summary class="cursor-pointer select-none">📄 Pawsitive_CIM.pdf</summary>
+              <div class="mt-2 text-slate-600">
+                <div><span class="text-slate-500">Deal Title</span>: $300,000,000 Senior Secured Credit Facility</div>
+                <div><span class="text-slate-500">Company Name</span>: Pawsitive Brands, Inc.</div>
+                <div><span class="text-slate-500">Industry</span>: Pet Care</div>
+              </div>
+            </details>
+            <details class="border rounded-lg p-3">
+              <summary class="cursor-pointer select-none">📄 Pawsitive_Term_Sheet.pdf</summary>
+              <div class="mt-2 text-slate-600">
+                <div><span class="text-slate-500">Deal Title</span>: $300,000,000 Senior Secured Credit Facility</div>
+                <div><span class="text-slate-500">Company Name</span>: Pawsitive Brands, Inc.</div>
+                <div><span class="text-slate-500">Industry</span>: Not Provided</div>
+              </div>
+            </details>
           </div>
         </div>
-      </div>
-      <!-- Add Financials, Structure, Analysis, JSON Output, etc. following same card pattern -->
-    </section>
+      </aside>
+
+      <!-- Right column: Summary -->
+      <section class="lg:col-span-3 space-y-6">
+        <!-- Combined Summary -->
+        <div class="card p-6 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold">📊 Combined Deal Summary</h2>
+            <div class="flex items-center gap-2">
+              <span class="chip">Last run <span class="ml-1 kbd">now</span></span>
+              <button class="btn">Refresh</button>
+            </div>
+          </div>
+
+          <!-- Deal Overview grid -->
+          <div class="mt-6">
+            <h3 class="text-base font-semibold mb-3">🧾 Deal Overview</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Deal Title</div>
+                <div>Pawsitive Brands, Inc. $300,000,000 Senior Secured Credit Facility</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                  <span class="chip border-green-200">Confidence: 🟢 High</span>
+                  <span>Sources: CIM, Credit Agreement, Notes, Term Sheet, Compliance Cert</span>
+                </div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Company Name</div>
+                <div>Pawsitive Brands, Inc.</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                  <span class="chip">Confidence: 🟢 High</span><span>Multiple sources</span>
+                </div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Industry</div>
+                <div>Pet Care</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                  <span class="chip">Confidence: 🟢 High</span><span>CIM + others</span>
+                </div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Business Description</div>
+                <div>Pawsitive Brands, Inc. is a market-leading manufacturer and distributor of premium pet food and wellness products. The Company serves over 10,000 retail outlets and a rapidly growing DTC channel, now representing 35% of sales.</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                  <span class="chip">Confidence: 🟢 High</span><span>All sources</span>
+                </div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Ownership</div>
+                <div>Summit Hill Partners</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600"><span class="chip">Confidence: 🟢 High</span></div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Sponsor</div>
+                <div>Summit Hill Partners</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600"><span class="chip">Confidence: 🟢 High</span></div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase tracking-wider text-slate-500 mb-1">Deal Status</div>
+                <div>In Compliance</div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600"><span class="chip">Confidence: 🟢 High</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financials -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold mb-3">🧾 Financials</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Revenue (LTM, $mm)</div><div class="text-lg font-semibold">375</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">EBITDA (LTM, $mm)</div><div class="text-lg font-semibold">60</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">EBITDA Margin (%)</div><div class="text-lg font-semibold">16</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">CapEx (LTM, $mm)</div><div class="text-lg font-semibold">8</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Cash on Balance Sheet ($mm)</div><div class="text-lg font-semibold">15</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+            </div>
+          </div>
+
+          <!-- Structure & Terms -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold mb-3">🧾 Structure & Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Debt Amount (New Loan, $mm)</div><div class="font-medium">300</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Use of Proceeds</div><div class="font-medium">$175MM refi, $75MM dividend recap</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Term (Years)</div><div class="font-medium">7</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Interest Rate / Pricing</div><div class="font-medium">TLB: SOFR + 525 bps (1.00% floor); RCF: SOFR + 375 bps</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Structure</div><div class="font-medium">TLB: $250,000,000; Revolver: $50,000,000</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Equity Contribution (%)</div><div class="font-medium">35</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Leverage (Gross)</div><div class="font-medium">5.4</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4"><div class="text-xs uppercase text-slate-500 mb-1">Leverage (Net)</div><div class="font-medium">3.69:1.00</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4 md:col-span-2"><div class="text-xs uppercase text-slate-500 mb-1">Security</div><div class="font-medium">First priority lien on substantially all existing and future assets of the Borrower and Guarantors…</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+              <div class="border rounded-xl p-4 md:col-span-2"><div class="text-xs uppercase text-slate-500 mb-1">Covenants</div><div class="font-medium">Total Net Leverage ≤ 5.00x; Interest Coverage ≥ 2.25x; Liquidity ≥ $15mm</div><div class="mt-1 chip inline-block">🟢 High</div></div>
+            </div>
+          </div>
+
+          <!-- Analysis & Commentary -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold mb-3">🧾 Analysis & Commentary</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase text-slate-500 mb-1">Key Strengths</div>
+                <div class="text-slate-700">Brand loyalty and trust; Clean-label ingredients; Recurring DTC revenue; High retention; Category tailwinds; Multi-channel strategy; Scalable supply; Consistent margins; Resilient through cycles.</div>
+                <div class="mt-2 chip inline-block">🟢 High</div>
+              </div>
+              <div class="border rounded-xl p-4">
+                <div class="text-xs uppercase text-slate-500 mb-1">Key Risk Factors</div>
+                <div class="text-slate-700">Raw material cost volatility; Margin pressure in DTC; Competitive landscape.</div>
+                <div class="mt-2 chip inline-block">🟢 High</div>
+              </div>
+              <div class="border rounded-xl p-4 md:col-span-2">
+                <div class="text-xs uppercase text-slate-500 mb-1">Notes / Commentary</div>
+                <div class="text-slate-700">Deal oversubscribed; pricing flex tightened by 25 bps. Lender base includes top-tier accounts & BDCs. Documentation includes pet-industry-specific carve-outs.</div>
+                <div class="mt-2 chip inline-block">🟢 High</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final JSON + Strategy -->
+          <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="border rounded-xl p-4 lg:col-span-2">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold">🔍 Final JSON Output</h3>
+                <div class="flex gap-2">
+                  <button class="btn">Copy</button>
+                  <button class="btn">Beautify</button>
+                </div>
+              </div>
+              <pre class="p-4 bg-slate-50 rounded-lg overflow-x-auto text-sm border">{
+  "Deal Title": "Pawsitive Brands, Inc. $300,000,000 Senior Secured Credit Facility",
+  "Company Name": "Pawsitive Brands, Inc.",
+  "Industry": "Pet Care",
+  "Business Description": "Pawsitive Brands, Inc. is a market-leading manufacturer and distributor of premium pet food and wellness products. The Company serves over 10,000 retail outlets and a rapidly growing DTC channel, now representing 35% of sales.",
+  "Ownership": "Summit Hill Partners",
+  "Revenue (LTM, $mm)": 375,
+  "EBITDA (LTM, $mm)": 60,
+  "EBITDA Margin (%)": 16,
+  "CapEx (LTM, $mm)": 8,
+  "Cash on Balance Sheet ($mm)": 15,
+  "Debt Amount (New Loan, $mm)": 300,
+  "Use of Proceeds": "$175MM refi, $75MM dividend recap",
+  "Term (Years)": 7,
+  "Interest Rate / Pricing": "Term Loan B: SOFR + 525 bps (with a 1.00% SOFR floor), Revolver: SOFR + 375 bps",
+  "Structure": "Term Loan B: $250,000,000, Revolving Credit Facility: $50,000,000",
+  "Leverage (Gross)": 5.4,
+  "Leverage (Net)": "3.69:1.00",
+  "Equity Contribution (%)": 35,
+  "Security": "First priority lien on substantially all existing and future assets of the Borrower and Guarantors, including accounts receivable, inventory, intellectual property, equipment, and equity interests in subsidiaries.",
+  "Covenants": "Total Net Leverage Ratio ≤ 5.00:1.00, Interest Coverage Ratio ≥ 2.25:1.00, Liquidity Covenant ≥ $15,000,000",
+  "Key Risk Factors": "Raw material cost volatility, Margin pressure in DTC, Competitive landscape",
+  "Key Strengths": "Brand loyalty and trust, Clean-label ingredients, Recurring DTC revenue, High customer retention, Strong category tailwinds, Proven multi-channel strategy, Scalable supply chain, Consistent margin profile, Resilient through economic cycles",
+  "Sponsor": "Summit Hill Partners",
+  "Deal Status": "In Compliance",
+  "Notes / Commentary": "Deal was significantly oversubscribed; pricing flexed tighter by 25bps. Lender base included top-tier institutional accounts and BDCs. Documentation included pet-industry-specific covenant carve-outs"
+}</pre>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button class="btn">⬇ Download JSON</button>
+                <button class="btn">⬇ Download CSV</button>
+                <button class="btn">⬇ Download Text</button>
+                <button class="btn">⬇ Download PDF</button>
+              </div>
+            </div>
+            <div class="border rounded-xl p-4">
+              <h3 class="text-base font-semibold mb-2">🧠 Strategy Recommendation</h3>
+              <div class="border rounded-lg p-3 bg-white">
+                <div class="text-xs uppercase text-slate-500 mb-1">📌 Suggested Strategy</div>
+                <div class="font-medium">Opportunistic Credit or BDC</div>
+              </div>
+              <button class="btn w-full mt-3">📤 Export Deal Summary</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <footer class="mt-8 py-6 border-t border-slate-700 text-center text-xs text-slate-400">
-    Orion — Private Credit AI • Static mock for demo purposes
+  <footer class="mt-12 border-t divider">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-xs text-slate-500 flex items-center justify-between">
+      <span>Orion — Private Credit AI</span>
+      <span>Static mock for demo purposes</span>
+    </div>
   </footer>
 </body>
 </html>
