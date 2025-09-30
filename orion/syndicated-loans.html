@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Orion | Private Credit AI — Distiller (Pawsitive)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #0f172a; /* Dark slate background */
+      --card: #1e293b; /* Card background */
+      --accent: #14b8a6; /* Teal accent */
+      --highlight: #38bdf8; /* Blue highlight */
+      --ink: #f1f5f9; /* Light text */
+      --muted: #94a3b8; /* Muted text */
+      --ring: #334155; /* Border */
+      --font: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    html, body { background: var(--bg); color: var(--ink); font-family: var(--font); }
+    .card { background: var(--card); border: 1px solid var(--ring); border-radius: 1rem; }
+    .chip { background: rgba(20,184,166,0.2); border: 1px solid rgba(20,184,166,0.5); color: #5eead4; padding: 0.15rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; }
+    .pill { background: rgba(56,189,248,0.2); border: 1px solid rgba(56,189,248,0.5); color: #bae6fd; padding: 0.35rem 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; }
+    .label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .05em; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-30 backdrop-blur bg-slate-900/80 border-b border-slate-700">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 rounded-full bg-teal-600/30 grid place-items-center border border-teal-400/50">
+            <span class="text-teal-300 text-sm font-semibold">AI</span>
+          </div>
+          <div class="text-sm sm:text-base">
+            <span class="font-semibold">Orion</span> <span class="text-slate-400">| Private Credit AI</span>
+          </div>
+        </div>
+        <nav class="flex items-center gap-1 text-sm">
+          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Dashboard</a>
+          <a class="px-3 py-1.5 rounded-xl bg-slate-700/50 border border-slate-600" href="#">Distiller</a>
+          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Bouncer</a>
+          <a class="px-3 py-1.5 rounded-xl hover:bg-slate-700/50 transition" href="#">Monitor</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Page Header -->
+    <section class="space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="text-2xl">🧪</div>
+        <h1 class="text-2xl sm:text-3xl font-semibold">The Distiller</h1>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card p-4">
+          <div class="label mb-1">Choose Asset Class</div>
+          <select class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2">
+            <option>Syndicated Loans</option>
+          </select>
+        </div>
+        <div class="card p-4">
+          <div class="label mb-1">Choose a Company Folder</div>
+          <select class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2">
+            <option>Pawsitive (Syndicated Loans)</option>
+          </select>
+        </div>
+        <div class="card p-4">
+          <div class="label mb-1">📄 Select PDF(s)</div>
+          <button class="w-full rounded-xl bg-slate-800 border border-slate-600 px-3 py-2 text-left">&lt;All PDFs&gt;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combined Deal Summary -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="text-xl">📊</div>
+        <h2 class="text-xl sm:text-2xl font-semibold">Combined Deal Summary</h2>
+      </div>
+      <!-- Example Deal Overview Card -->
+      <div class="card p-5 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="text-lg">🧾</div>
+          <h3 class="text-lg font-semibold">Deal Overview</h3>
+        </div>
+        <div class="space-y-2">
+          <div class="label">Deal Title</div>
+          <div class="rounded-xl bg-slate-800 border border-slate-600 p-3">
+            Pawsitive Brands, Inc. $300,000,000 Senior Secured Credit Facility
+            <div class="mt-2 text-xs text-slate-400">Confidence: <span class="chip">🟢 High</span> | Sources: Pawsitive_CIM.pdf, Pawsitive_Credit_Agreement.pdf, ...</div>
+          </div>
+        </div>
+      </div>
+      <!-- Add Financials, Structure, Analysis, JSON Output, etc. following same card pattern -->
+    </section>
+  </main>
+
+  <footer class="mt-8 py-6 border-t border-slate-700 text-center text-xs text-slate-400">
+    Orion — Private Credit AI • Static mock for demo purposes
+  </footer>
+</body>
+</html>
