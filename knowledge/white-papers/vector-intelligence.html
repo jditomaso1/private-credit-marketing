@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vector Intelligence White Paper | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png?v=8" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GY4CQ6ZFH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6GY4CQ6ZFH');
+  </script>
+
+  <style>
+    :root{
+      --pcai-blue:#3a71b0;
+      --pcai-accent:#007bff;
+      --pcai-bg:#f4f4f4;
+      --pcai-text:#333;
+    }
+    body{font-family:'Poppins',sans-serif;margin:0;background:var(--pcai-bg);color:var(--pcai-text)}
+    header{background:#fff;color:#000;padding:10px 20px}
+    .header-container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    .site-title{font-size:24px;font-weight:700}
+    nav{padding:10px 0}
+    .nav-links{display:flex;align-items:center;gap:.1px;flex-wrap:wrap}
+    .nav-item a{color:#000;text-decoration:none;font-weight:400;padding:10px 16px;font-size:14.5px;letter-spacing:.25px}
+
+    /* Container */
+    .contact-container{display:flex;flex-wrap:wrap;gap:40px;max-width:1200px;margin:40px auto;background:#fff;padding:40px;box-shadow:0 8px 24px rgba(0,0,0,.08);border-radius:8px}
+    .contact-info{flex:1;min-width:300px}
+    .contact-form{flex:1;min-width:300px;display:flex;flex-direction:column;gap:15px}
+
+    /* Left panel content */
+    .cover-wrap{border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;background:#fafafa}
+    .cover-wrap img{width:100%;display:block}
+    .abstract{margin-top:18px;line-height:1.6}
+    .abstract h2{margin:.2rem 0 .6rem 0;font-size:24px}
+    .abstract p{margin:.5rem 0}
+    .bullets{margin:12px 0 0 0;padding-left:18px}
+    .bullets li{margin:.35rem 0}
+
+    /* Form */
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea{
+      padding:12px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box
+    }
+    .contact-form button{
+      padding:14px;background:var(--pcai-accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:16px
+    }
+    .contact-form button:hover{background:#1a242f}
+    .helper{font-size:12px;color:#666;margin-top:-6px}
+
+    /* Success modal */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:9999
+    }
+    .modal{
+      background:#fff;max-width:560px;width:92%;padding:24px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.15);text-align:center
+    }
+    .modal h3{margin:.25rem 0 .5rem 0}
+    .modal p{margin:.35rem 0}
+    .modal .ok{margin-top:12px;background:var(--pcai-blue);border:none;color:#fff;padding:12px 18px;border-radius:8px;font-weight:600;cursor:pointer}
+    .muted{color:#666;font-size:13px}
+
+    /* Footer */
+    footer{background:var(--pcai-blue);padding:40px 20px}
+    footer a{color:#fff;text-decoration:none}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="https://private-credit.ai" style="text-decoration:none;color:inherit;">
+        <div class="site-title" style="display:flex;align-items:center;gap:10px;">
+          <img src="img/favicon.png" alt="Private Credit AI logo" style="height:28px">
+          <span>Private Credit AI</span>
+        </div>
+      </a>
+      <nav>
+        <div class="nav-links">
+          <div class="nav-item"><a href="/index.html">Home</a></div>
+          <div class="nav-item"><a href="/about.html">About</a></div>
+          <div class="nav-item"><a href="/contact.html">Contact</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Gated white paper layout -->
+  <div class="contact-container">
+    <!-- Left: cover + abstract -->
+    <div class="contact-info">
+      <div class="cover-wrap">
+        <!-- Replace src with your final cover asset path -->
+        <img src="img/vector-intelligence-cover.png" alt="Vector Intelligence White Paper Cover" loading="lazy">
+      </div>
+
+      <div class="abstract">
+        <h2>Vector Intelligence: How AI and Semantic Parsing Will Redefine Credit</h2>
+        <p><em>Demystifying the world of NLP, AI, and Parsing in the Credit Markets.</em></p>
+        <p>Access the full 30-page white paper and see how vectorization and semantic search transform underwriting, monitoring, and compliance — turning documents into data and analysis into action.</p>
+        <ul class="bullets">
+          <li>Case study: parsing a 1,000-page credit agreement in 15 minutes</li>
+          <li>Architecture: the Credit Intelligence Stack (Ingest → Parse → Vectorize → Present)</li>
+          <li>Impact: 85% time reduction, real-time covenant tracking, predictive ratings</li>
+        </ul>
+        <p class="muted" style="margin-top:10px">Already shared with senior leaders at top private-credit platforms.</p>
+      </div>
+    </div>
+
+    <!-- Right: request form -->
+    <form id="contact-form" class="contact-form">
+      <!-- Hidden routing fields -->
+      <input type="hidden" name="requestType" value="whitepaper_vector_intelligence">
+      <input type="hidden" name="message" value="White Paper Request: Vector Intelligence">
+
+      <input type="text" name="firstName" id="firstName" placeholder="First Name *" required />
+      <input type="text" name="lastName" id="lastName" placeholder="Last Name *" required />
+      <input type="email" name="email" id="email" placeholder="Work Email *" required />
+      <input type="text" name="company" id="company" placeholder="Company / Firm *" required />
+      <input type="text" name="role" id="role" placeholder="Role / Title *" required />
+
+      <select name="industry" id="industry" required>
+        <option value="" disabled selected>Firm Type *</option>
+        <option>Private Credit</option>
+        <option>Direct Lending</option>
+        <option>Structured Credit</option>
+        <option>PE / Alternatives</option>
+        <option>Bank / Insurance</option>
+        <option>Other</option>
+      </select>
+
+      <select name="interest" id="interest" required>
+        <option value="" disabled selected>Area of Interest *</option>
+        <option>Origination</option>
+        <option>Monitoring</option>
+        <option>Compliance</option>
+        <option>Portfolio / Strategy</option>
+        <option>Technology / Data</option>
+      </select>
+
+      <input type="text" name="country" id="country" placeholder="Country/Region" />
+      <input type="text" name="city" id="city" placeholder="City" />
+      <input type="text" name="phone" id="phone" placeholder="Phone (optional)" />
+
+      <label class="helper">
+        <input type="checkbox" name="walkthrough" value="yes" checked>
+        Yes — offer a brief walkthrough tailored to our platform.
+      </label>
+
+      <button id="submitBtn" type="submit">Access the White Paper</button>
+      <div class="helper">By requesting access you agree to be contacted about the paper and related insights.</div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;text-align:center;color:#fff;gap:20px;">
+      <div style="flex:1;min-width:250px;">
+        <strong style="font-size:16px;">Private Credit AI</strong><br/>
+        <span style="font-size:14px;">© 2025 All rights reserved.</span>
+      </div>
+      <div style="flex:1;min-width:250px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+        <a href="/about.html">About</a>
+        <a href="#">Terms</a>
+        <a href="https://www.linkedin.com/company/private-credit-ai" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Success Modal -->
+  <div class="modal-backdrop" id="successModal">
+    <div class="modal">
+      <h3>Thank you — your access request is in.</h3>
+      <p>We’ll send your copy shortly and follow up to offer a quick walkthrough of the most relevant findings.</p>
+      <p class="muted">If you need to reach us sooner: contact@private-credit.ai</p>
+      <button class="ok" onclick="document.getElementById('successModal').style.display='none'">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Reuse your existing Apps Script endpoint
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz5_NVluA-BQ6hKOszC3ogrpxuE8G89T89AMwI3oC1SVACRLCzNBqWQoqFfgYHPPyRFGA/exec";
+    const form = document.getElementById("contact-form");
+    const submitBtn = document.getElementById("submitBtn");
+    const successModal = document.getElementById("successModal");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Processing…";
+
+      // Build payload (keep compatibility with your Apps Script)
+      const fd = new URLSearchParams();
+      [...new FormData(form)].forEach(([k, v]) => fd.append(k, v));
+
+      fetch(scriptURL, { method: "POST", body: fd })
+        .then(() => {
+          // “Immediate access” feel without serving a file
+          successModal.style.display = "flex";
+          form.reset();
+        })
+        .catch(err => {
+          alert("⚠️ Error sending your request. Please try again.");
+          console.error(err);
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Access the White Paper";
+        });
+    });
+  </script>
+</body>
+</html>
