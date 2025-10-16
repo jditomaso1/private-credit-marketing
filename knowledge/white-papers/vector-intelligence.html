@@ -118,46 +118,36 @@
 
     <!-- Right: request form -->
     <form id="contact-form" class="contact-form">
-      <!-- Hidden routing fields -->
-      <input type="hidden" name="requestType" value="whitepaper_vector_intelligence">
-      <input type="hidden" name="message" value="White Paper Request: Vector Intelligence">
-
       <input type="text" name="firstName" id="firstName" placeholder="First Name *" required />
       <input type="text" name="lastName" id="lastName" placeholder="Last Name *" required />
-      <input type="email" name="email" id="email" placeholder="Work Email *" required />
-      <input type="text" name="company" id="company" placeholder="Company / Firm *" required />
-      <input type="text" name="role" id="role" placeholder="Role / Title *" required />
-
+      <input type="text" name="phone" id="phone" placeholder="Phone Number or WhatsApp *" required />
+      <input type="email" name="email" id="email" placeholder="Email *" required />
+      <input type="text" name="country" id="country" placeholder="Country/Region *" required />
+      <input type="text" name="city" id="city" placeholder="City *" required />
+    
       <select name="industry" id="industry" required>
-        <option value="" disabled selected>Firm Type *</option>
-        <option>Private Credit</option>
-        <option>Direct Lending</option>
-        <option>Structured Credit</option>
-        <option>PE / Alternatives</option>
-        <option>Bank / Insurance</option>
-        <option>Other</option>
+        <option value="" disabled selected>Industry</option>
+        <option value="Private Credit">Private Credit</option>
+        <option value="Direct Lending">Direct Lending</option>
+        <option value="Structured Credit">Structured Credit</option>
+        <option value="PE / Alternatives">PE / Alternatives</option>
+        <option value="Other">Other</option>
       </select>
-
-      <select name="interest" id="interest" required>
-        <option value="" disabled selected>Area of Interest *</option>
-        <option>Origination</option>
-        <option>Monitoring</option>
-        <option>Compliance</option>
-        <option>Portfolio / Strategy</option>
-        <option>Technology / Data</option>
+    
+      <select name="referral" id="referral" required>
+        <option value="" disabled selected>How did you find us?</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Referral">Referral</option>
+        <option value="Google Search">Google Search</option>
+        <option value="Event or Webinar">Event or Webinar</option>
+        <option value="Other">Other</option>
       </select>
-
-      <input type="text" name="country" id="country" placeholder="Country/Region" />
-      <input type="text" name="city" id="city" placeholder="City" />
-      <input type="text" name="phone" id="phone" placeholder="Phone (optional)" />
-
-      <label class="helper">
-        <input type="checkbox" name="walkthrough" value="yes" checked>
-        Yes — offer a brief walkthrough tailored to our platform.
-      </label>
-
-      <button id="submitBtn" type="submit">Access the White Paper</button>
-      <div class="helper">By requesting access you agree to be contacted about the paper and related insights.</div>
+    
+      <input type="text" name="company" id="company" placeholder="Company Name" />
+      <input type="text" name="dataProvider" id="dataProvider" placeholder="Do you currently use AI?" />
+    
+      <textarea name="message" id="message" rows="5" placeholder="Your message *" required></textarea>
+      <button type="submit">Send Message</button>
     </form>
   </div>
 
