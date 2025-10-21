@@ -83,14 +83,16 @@
         </div>
 
         <!-- Migration Matrix (bottom-left) -->
-        <div class="rounded-2xl border bg-white p-4">
-          <h2 class="text-lg font-medium mb-1">Ratings Migration Matrix (1-Year)</h2>
-          <p class="text-xs text-gray-500">Illustrative; rows = starting rating, columns = next-year rating.</p>
-          <div class="mt-3 overflow-x-auto">
+        <!-- Migration Matrix (bottom-left) -->
+        <div class="rounded-2xl border bg-white p-4 h-[520px] flex flex-col justify-between">
+          <div>
+            <h2 class="text-lg font-medium mb-1">Ratings Migration Matrix (1-Year)</h2>
+            <p class="text-xs text-gray-500">Illustrative; rows = starting rating, columns = next-year rating.</p>
+          </div>
+          <div class="mt-3 overflow-x-auto flex-1 flex items-center">
             <table id="migrationTable" class="w-full text-sm"></table>
           </div>
         </div>
-      </div>
 
       <!-- RIGHT PANEL -->
       <aside class="col-span-12 lg:col-span-5 space-y-4">
