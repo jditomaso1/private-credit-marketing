@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orion — Tear Sheet + Shadow Ratings (Combined)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- NEW: Chart.js for the bell distribution -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -170,6 +172,19 @@
       </aside>
     </section>
 
+    <!-- NEW: Bell curve projection at the bottom -->
+    <section class="rounded-2xl border bg-white p-4">
+      <h2 class="text-lg font-medium mb-2">
+        Private Credit Portfolio Quality Drift — 5-Year Bell Curve Projection
+      </h2>
+      <div class="h-[420px]">
+        <canvas id="bellChart"></canvas>
+      </div>
+      <p class="mt-2 text-xs text-gray-500">
+        Illustrative only. X-axis: rating bucket continuum (BBB → D). Curves show gradual drift & dispersion.
+      </p>
+    </section>
+
     <p class="text-xs text-gray-500">Methodology-inspired demo. Replace with true RCF and Net Debt when available.</p>
   </main>
 
@@ -257,6 +272,90 @@
       document.getElementById("calc")?.addEventListener("click", ()=>{ calc(); });
       document.getElementById("reset")?.addEventListener("click", ()=>location.reload());
     });
+  </script>
+
+  <!-- NEW: Bell curve script -->
+  <script>
+    // ------- Bell curve demo (Chart.js) -------
+    const X_POINTS = Array.from({length: 301}, (_,i)=> i*(5/300)); // 0..5
+
+    function normalPdf(x, mu, sigma){
+      const z = (x - mu) / sigma;
+      return Math.exp(-0.5*z*z) / (sigma * Math.sqrt(2*Math.PI));
+    }
+
+    function makeSeries(mu, sigma){
+      const y = X_POINTS.map(x => normalPdf(x, mu, sigma));
+      const max = Math.max(...y) || 1;
+      const scale = 1 / max;
+      return y.map(v => v * scale * 0.9); // normalize heights
+    }
+
+    const curves = [
+      {name:'Current', data: makeSeries(1.8, 0.45)},
+      {name:'Year 1',  data: makeSeries(2.1, 0.50)},
+      {name:'Year 2',  data: makeSeries(2.3, 0.55)},
+      {name:'Year 3',  data: makeSeries(2.4, 0.60)},
+      {name:'Year 4',  data: makeSeries(2.5, 0.65)},
+      {name:'Year 5',  data: makeSeries(2.6, 0.70)},
+    ];
+
+    const bellCtx = document.getElementById('bellChart')?.getContext('2d');
+    if (bellCtx){
+      new Chart(bellCtx, {
+        type: 'line',
+        data: {
+          labels: X_POINTS,
+          datasets: curves.map((c, i) => ({
+            label: c.name,
+            data: c.data,
+            parsing: false,
+            pointRadius: 0,
+            tension: 0.35,
+            borderWidth: 2,
+            fill: true,
+            backgroundColor: 'rgba(0,0,0,0.06)',
+          }))
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'nearest' },
+          plugins: {
+            legend: { position: 'right' },
+            tooltip: {
+              callbacks: {
+                title: (items)=> {
+                  const x = items?.[0]?.parsed?.x ?? 0;
+                  const buckets = ['BBB','BB','B','CCC','D'];
+                  const idx = Math.min(buckets.length-1, Math.max(0, Math.round(x)));
+                  return buckets[idx];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: true, text: 'Rating Bucket (Lower = Stronger Credit)' },
+              min: 0, max: 5,
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: {
+                callback: (val) => {
+                  const buckets = ['BBB','BB','B','CCC','D'];
+                  const idx = Math.min(buckets.length-1, Math.max(0, Math.round(val)));
+                  return Number.isInteger(val) ? buckets[idx] : '';
+                }
+              }
+            },
+            y: {
+              title: { display: true, text: 'Relative Probability Density' },
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: { callback: (v)=> (v===0 ? '0' : v.toFixed(3)) }
+            }
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
