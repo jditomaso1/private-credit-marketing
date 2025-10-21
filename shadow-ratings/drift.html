@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orion — Tear Sheet + Shadow Ratings (Combined)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- NEW: Chart.js for the bell distribution -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <!-- Chart.js (UMD build) for the bell distribution -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -93,7 +93,7 @@
             <table id="migrationTable" class="w-full text-sm table-fixed"></table>
           </div>
         </div>
-      </div> <!-- ✅ CLOSE LEFT COLUMN -->
+      </div> <!-- CLOSE LEFT COLUMN -->
 
       <!-- RIGHT PANEL -->
       <aside class="col-span-12 md:col-span-5 space-y-4">
@@ -172,7 +172,7 @@
       </aside>
     </section>
 
-    <!-- NEW: Bell curve projection at the bottom -->
+    <!-- Bell curve projection at the bottom -->
     <section class="rounded-2xl border bg-white p-4">
       <h2 class="text-lg font-medium mb-2">
         Private Credit Portfolio Quality Drift — 5-Year Bell Curve Projection
@@ -274,24 +274,20 @@
     });
   </script>
 
-  <!-- NEW: Bell curve script -->
-  <script>
-  <!-- Bell curve script (fixed) -->
+  <!-- Bell curve script -->
   <script>
     // x from 0..5 → BBB, BB, B, CCC, D
     const X_POINTS = Array.from({ length: 301 }, (_, i) => i * (5 / 300));
-  
+
     function normalPdf(x, mu, sigma){
       const z = (x - mu) / sigma;
       return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
     }
-  
-    // Return [{x, y}, ...]
+
     function makeSeries(mu, sigma){
       return X_POINTS.map(x => ({ x, y: normalPdf(x, mu, sigma) }));
     }
-  
-    // Build raw curves
+
     const rawCurves = [
       { name: 'Current', data: makeSeries(1.8, 0.45) },
       { name: 'Year 1',  data: makeSeries(2.1, 0.50) },
@@ -300,26 +296,22 @@
       { name: 'Year 4',  data: makeSeries(2.5, 0.65) },
       { name: 'Year 5',  data: makeSeries(2.6, 0.70) },
     ];
-  
-    // Normalize all curves so tallest peak ≈ 0.9 on y-axis
-    const globalMax = Math.max(
-      ...rawCurves.flatMap(s => s.data.map(p => p.y))
-    ) || 1;
+
+    const globalMax = Math.max(...rawCurves.flatMap(s => s.data.map(p => p.y))) || 1;
     const scale = 0.9 / globalMax;
     const curves = rawCurves.map(s => ({
       name: s.name,
       data: s.data.map(p => ({ x: p.x, y: p.y * scale }))
     }));
-  
+
     const bellCtx = document.getElementById('bellChart')?.getContext('2d');
     if (bellCtx){
       new Chart(bellCtx, {
         type: 'line',
         data: {
-          // When using {x,y} points, Chart.js ignores labels
           datasets: curves.map((c) => ({
             label: c.name,
-            data: c.data,         // [{x,y}]
+            data: c.data,
             pointRadius: 0,
             tension: 0.35,
             borderWidth: 2,
@@ -330,7 +322,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          parsing: false,  // <-- now valid because we provided {x,y} pairs
+          parsing: false,
           interaction: { intersect: false, mode: 'nearest' },
           plugins: {
             legend: { position: 'right' },
