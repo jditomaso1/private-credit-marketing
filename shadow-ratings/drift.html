@@ -12,6 +12,7 @@
   </style>
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900">
+  <!-- Header -->
   <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center gap-3">
       <div class="text-sm text-gray-600">Orion • Private Credit AI</div>
@@ -25,6 +26,7 @@
   </header>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 py-6 space-y-6">
+    <!-- Title -->
     <section class="flex items-start justify-between gap-4">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight">Pawsitive Brands, Inc. — Combined Tear Sheet + Rating</h1>
@@ -87,9 +89,6 @@
           <div class="mt-3 overflow-x-auto">
             <table id="migrationTable" class="min-w-[580px] text-sm"></table>
           </div>
-          <div class="mt-2 text-xs text-gray-500">
-            Row is auto-highlighted to match the current Shadow Rating bucket.
-          </div>
         </div>
       </div>
 
@@ -97,7 +96,7 @@
       <aside class="col-span-12 lg:col-span-5 space-y-4">
         <div class="rounded-2xl border bg-white p-4">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-medium">Shadow Rating — Moody’s Retail & Apparel (demo)</h2>
+            <h2 class="text-lg font-medium">Shadow Rating — Moody’s Pet Care</h2>
             <span class="text-xs rounded-full border px-2 py-0.5 bg-gray-50">Scorecard</span>
           </div>
 
@@ -183,7 +182,7 @@
     });
   </script>
 
-  <!-- Ratings calc -->
+  <!-- Rating calculation -->
   <script>
     const QUAL_TO_NUM={'Exceptional':1.00,'Strong':0.85,'Good':0.70,'Fair':0.50,'Weak':0.30,'Poor':0.15,'Conservative':0.85,'Moderate':0.60,'Aggressive':0.35};
     function interp(v,b,w,h){let t=(v-w)/(b-w);if(!h)t=(v-b)/(w-b);return Math.max(0,Math.min(1,isNaN(t)?0:t))}
@@ -213,21 +212,18 @@
     }
   </script>
 
-  <!-- Migration matrix render + wiring to rating -->
+  <!-- Migration matrix render (no highlight) -->
   <script>
-    // Buckets and matrix values (from your screenshot)
     const MIG_BUCKETS=["aaa/aa","a","bbb","bb","b","c"];
     const MIG_MATRIX=[
-      [85.7,14.3,0.0,0.0,0.0,0.0],   // from aaa/aa
-      [0.0,76.5,20.2,2.5,0.8,0.0],   // from a
-      [0.0,4.3,65.1,24.7,4.3,1.6],   // from bbb
-      [0.0,0.0,4.8,68.7,21.0,5.5],   // from bb
-      [0.0,0.0,0.7,10.1,67.4,21.7],  // from b
-      [0.0,0.0,0.0,0.0,0.0,100.0],   // from c
+      [85.7,14.3,0.0,0.0,0.0,0.0],
+      [0.0,76.5,20.2,2.5,0.8,0.0],
+      [0.0,4.3,65.1,24.7,4.3,1.6],
+      [0.0,0.0,4.8,68.7,21.0,5.5],
+      [0.0,0.0,0.7,10.1,67.4,21.7],
+      [0.0,0.0,0.0,0.0,0.0,100.0],
     ];
-
     function cellColor(pct){ const L=97-(pct/100)*72; return `hsl(200 70% ${L}%)`; }
-
     function renderMigrationMatrix(){
       const tbl=document.getElementById("migrationTable"); if(!tbl) return;
       let thead=`<thead>
@@ -238,7 +234,7 @@
       </thead>`;
       let tbody="<tbody>";
       for(let r=0;r<MIG_BUCKETS.length;r++){
-        tbody+=`<tr data-row="${MIG_BUCKETS[r]}">`;
+        tbody+=`<tr>`;
         tbody+=`<th class="text-xs text-gray-600 font-medium text-left pr-2 py-1">${MIG_BUCKETS[r]}</th>`;
         for(let c=0;c<MIG_BUCKETS.length;c++){
           const val=MIG_MATRIX[r][c]??0, bg=cellColor(val);
@@ -253,32 +249,11 @@
       tbl.innerHTML=thead+tbody;
     }
 
-    function letterToBucket(letter){
-      if(!letter) return null; const L=letter.toUpperCase();
-      if(L.startsWith("AAA")||L.startsWith("AA")) return "aaa/aa";
-      if(L.startsWith("A")&&!L.startsWith("AA")) return "a";
-      if(L.startsWith("BAA")) return "bbb";
-      if(L.startsWith("BA")&&!L.startsWith("BAA")) return "bb";
-      if(L.startsWith("B")&&!L.startsWith("BA")) return "b";
-      return "c";
-    }
-
-    function highlightRowFromRating(){
-      const letterEl=document.getElementById("letter"); if(!letterEl) return;
-      const bucket=letterToBucket(letterEl.textContent.trim());
-      const rows=document.querySelectorAll("#migrationTable tbody tr");
-      rows.forEach(tr=>tr.classList.remove("ring","ring-1","ring-indigo-400","rounded"));
-      if(!bucket) return;
-      const target=[...rows].find(tr=>tr.getAttribute("data-row")===bucket);
-      if(target){ target.classList.add("ring","ring-1","ring-indigo-400","rounded"); }
-    }
-
     // Boot
     window.addEventListener("DOMContentLoaded", ()=>{
       renderMigrationMatrix();
       calc();
-      highlightRowFromRating();
-      document.getElementById("calc")?.addEventListener("click", ()=>{ calc(); highlightRowFromRating(); });
+      document.getElementById("calc")?.addEventListener("click", ()=>{ calc(); });
       document.getElementById("reset")?.addEventListener("click", ()=>location.reload());
     });
   </script>
