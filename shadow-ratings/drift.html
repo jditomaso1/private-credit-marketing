@@ -276,40 +276,50 @@
 
   <!-- NEW: Bell curve script -->
   <script>
-    // ------- Bell curve demo (Chart.js) -------
-    const X_POINTS = Array.from({length: 301}, (_,i)=> i*(5/300)); // 0..5
-
+  <!-- Bell curve script (fixed) -->
+  <script>
+    // x from 0..5 → BBB, BB, B, CCC, D
+    const X_POINTS = Array.from({ length: 301 }, (_, i) => i * (5 / 300));
+  
     function normalPdf(x, mu, sigma){
       const z = (x - mu) / sigma;
-      return Math.exp(-0.5*z*z) / (sigma * Math.sqrt(2*Math.PI));
+      return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
     }
-
+  
+    // Return [{x, y}, ...]
     function makeSeries(mu, sigma){
-      const y = X_POINTS.map(x => normalPdf(x, mu, sigma));
-      const max = Math.max(...y) || 1;
-      const scale = 1 / max;
-      return y.map(v => v * scale * 0.9); // normalize heights
+      return X_POINTS.map(x => ({ x, y: normalPdf(x, mu, sigma) }));
     }
-
-    const curves = [
-      {name:'Current', data: makeSeries(1.8, 0.45)},
-      {name:'Year 1',  data: makeSeries(2.1, 0.50)},
-      {name:'Year 2',  data: makeSeries(2.3, 0.55)},
-      {name:'Year 3',  data: makeSeries(2.4, 0.60)},
-      {name:'Year 4',  data: makeSeries(2.5, 0.65)},
-      {name:'Year 5',  data: makeSeries(2.6, 0.70)},
+  
+    // Build raw curves
+    const rawCurves = [
+      { name: 'Current', data: makeSeries(1.8, 0.45) },
+      { name: 'Year 1',  data: makeSeries(2.1, 0.50) },
+      { name: 'Year 2',  data: makeSeries(2.3, 0.55) },
+      { name: 'Year 3',  data: makeSeries(2.4, 0.60) },
+      { name: 'Year 4',  data: makeSeries(2.5, 0.65) },
+      { name: 'Year 5',  data: makeSeries(2.6, 0.70) },
     ];
-
+  
+    // Normalize all curves so tallest peak ≈ 0.9 on y-axis
+    const globalMax = Math.max(
+      ...rawCurves.flatMap(s => s.data.map(p => p.y))
+    ) || 1;
+    const scale = 0.9 / globalMax;
+    const curves = rawCurves.map(s => ({
+      name: s.name,
+      data: s.data.map(p => ({ x: p.x, y: p.y * scale }))
+    }));
+  
     const bellCtx = document.getElementById('bellChart')?.getContext('2d');
     if (bellCtx){
       new Chart(bellCtx, {
         type: 'line',
         data: {
-          labels: X_POINTS,
-          datasets: curves.map((c, i) => ({
+          // When using {x,y} points, Chart.js ignores labels
+          datasets: curves.map((c) => ({
             label: c.name,
-            data: c.data,
-            parsing: false,
+            data: c.data,         // [{x,y}]
             pointRadius: 0,
             tension: 0.35,
             borderWidth: 2,
@@ -320,6 +330,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          parsing: false,  // <-- now valid because we provided {x,y} pairs
           interaction: { intersect: false, mode: 'nearest' },
           plugins: {
             legend: { position: 'right' },
@@ -336,8 +347,9 @@
           },
           scales: {
             x: {
-              title: { display: true, text: 'Rating Bucket (Lower = Stronger Credit)' },
+              type: 'linear',
               min: 0, max: 5,
+              title: { display: true, text: 'Rating Bucket (Lower = Stronger Credit)' },
               grid: { color: 'rgba(0,0,0,0.05)' },
               ticks: {
                 callback: (val) => {
