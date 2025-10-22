@@ -198,31 +198,42 @@
   const clamp01 = v => Math.max(0, Math.min(1, v));
 
   // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
+  // ---- HEATMAP COLORS: Jade → Berry ----
+  // v in [0..1]; low = Jade (greens), high = Berry (magenta)
   function heatColor(v){
     v = Math.max(0, Math.min(1, v));
   
-    // FWUXDS Jade → Peach → Tangerine gradient
+    // Stops chosen to match your swatches:
+    // Jade-40%  #B2E2C0, Jade-80%  #65C581, Jade #3EB661,
+    // Berry-40% #ED9CC5, Berry-80% #DC398C, Berry #D3086F
     const stops = [
-      { stop: 0.00, color: [178, 226, 192] }, // Jade-40%  #B2E2C0
-      { stop: 0.25, color: [101, 197, 129] }, // Jade-80%  #65C581
-      { stop: 0.50, color: [255, 188, 205] }, // Peach-40% #FFCBCD
-      { stop: 0.75, color: [255, 152, 154] }, // Peach-80% #FF989A
-      { stop: 1.00, color: [250, 162, 60] }   // Tangerine #FAA23C
+      { t: 0.00, rgb: [178,226,192] }, // Jade-40%
+      { t: 0.20, rgb: [101,197,129] }, // Jade-80%
+      { t: 0.35, rgb: [ 62,182, 97] }, // Jade
+      { t: 0.55, rgb: [237,156,197] }, // Berry-40%
+      { t: 0.75, rgb: [220, 57,140] }, // Berry-80%
+      { t: 1.00, rgb: [211,  8,111] }  // Berry
     ];
   
     for (let i = 0; i < stops.length - 1; i++) {
-      const s1 = stops[i], s2 = stops[i + 1];
-      if (v >= s1.stop && v <= s2.stop) {
-        const t = (v - s1.stop) / (s2.stop - s1.stop);
-        const r = Math.round(s1.color[0] + (s2.color[0] - s1.color[0]) * t);
-        const g = Math.round(s1.color[1] + (s2.color[1] - s1.color[1]) * t);
-        const b = Math.round(s1.color[2] + (s2.color[2] - s1.color[2]) * t);
-        return `rgb(${r},${g},${b})`;
+      const a = stops[i], b = stops[i + 1];
+      if (v >= a.t && v <= b.t) {
+        const t = (v - a.t) / (b.t - a.t);
+        const r = Math.round(a.rgb[0] + (b.rgb[0] - a.rgb[0]) * t);
+        const g = Math.round(a.rgb[1] + (b.rgb[1] - a.rgb[1]) * t);
+        const bch = Math.round(a.rgb[2] + (b.rgb[2] - a.rgb[2]) * t);
+        return `rgb(${r},${g},${bch})`;
       }
     }
+    return "rgb(178,226,192)"; // fallback (light Jade)
+  }
   
-    // fallback (light jade)
-    return "rgb(178,226,192)";
+  // Ensure numbers stay legible over the new ramp
+  function textColorFor(v){
+    // compute luminance from the color we just produced
+    const m = heatColor(v).match(/\d+/g).map(Number);
+    const yiq = (m[0]*299 + m[1]*587 + m[2]*114) / 1000;
+    return yiq < 140 ? 'text-white' : 'text-gray-900';
   }
 
   // Choose readable text color over heat cell
