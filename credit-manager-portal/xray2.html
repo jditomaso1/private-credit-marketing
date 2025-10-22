@@ -292,7 +292,7 @@
         <label class="block text-gray-700">${label}</label>
         <div class="flex items-center gap-3">
           <input type="range" min="0" max="100" step="1" value="${DEFAULT_WEIGHTS[key]*100}"
-            data-key="${key}" class="w-full accent-[#002B51]">
+            data-key="${key}" class="w-full accent-[#002B51] bg-[#002B51]/20">
           <span class="w-14 text-right text-xs text-gray-600"><b id="w_${key}">${(DEFAULT_WEIGHTS[key]*100).toFixed(0)}</b>%</span>
         </div>`;
       wrap.appendChild(row);
