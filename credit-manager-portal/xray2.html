@@ -199,14 +199,17 @@
 
   // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
   function heatColor(v){
-    v = clamp01(v);
+    v = Math.max(0, Math.min(1, v));
+  
+    // FWUXDS Jade → Peach → Tangerine gradient
     const stops = [
-      { stop: 0.00, color: [157, 197, 202] }, // #9DC5CA
-      { stop: 0.25, color: [101, 197, 129] }, // #65C581
-      { stop: 0.50, color: [70, 149, 200] },  // #4695C8
-      { stop: 0.75, color: [24, 122, 186] },  // #187ABA
-      { stop: 1.00, color: [0, 43, 81] }      // #002B51
+      { stop: 0.00, color: [178, 226, 192] }, // Jade-40%  #B2E2C0
+      { stop: 0.25, color: [101, 197, 129] }, // Jade-80%  #65C581
+      { stop: 0.50, color: [255, 188, 205] }, // Peach-40% #FFCBCD
+      { stop: 0.75, color: [255, 152, 154] }, // Peach-80% #FF989A
+      { stop: 1.00, color: [250, 162, 60] }   // Tangerine #FAA23C
     ];
+  
     for (let i = 0; i < stops.length - 1; i++) {
       const s1 = stops[i], s2 = stops[i + 1];
       if (v >= s1.stop && v <= s2.stop) {
@@ -217,7 +220,9 @@
         return `rgb(${r},${g},${b})`;
       }
     }
-    return "rgb(157,197,202)";
+  
+    // fallback (light jade)
+    return "rgb(178,226,192)";
   }
 
   // Choose readable text color over heat cell
