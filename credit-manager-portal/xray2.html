@@ -198,21 +198,21 @@
   const clamp01 = v => Math.max(0, Math.min(1, v));
 
   // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
-  // ---- HEATMAP COLORS: Jade → Berry ----
-  // v in [0..1]; low = Jade (greens), high = Berry (magenta)
+  // ---- HEATMAP COLORS: Blue family ----
+  // v in [0..1]; low = light blue, high = deep blue
   function heatColor(v){
     v = Math.max(0, Math.min(1, v));
   
-    // Stops chosen to match your swatches:
-    // Jade-40%  #B2E2C0, Jade-80%  #65C581, Jade #3EB661,
-    // Berry-40% #ED9CC5, Berry-80% #DC398C, Berry #D3086F
+    // FWUXDS Blue palette (20% → 80% → Base)
+    // Blue-20%  #D1E4F1
+    // Blue-40%  #A3CAE3
+    // Blue-80%  #4695C8
+    // Blue      #187ABA
     const stops = [
-      { t: 0.00, rgb: [178,226,192] }, // Jade-40%
-      { t: 0.20, rgb: [101,197,129] }, // Jade-80%
-      { t: 0.35, rgb: [ 62,182, 97] }, // Jade
-      { t: 0.55, rgb: [237,156,197] }, // Berry-40%
-      { t: 0.75, rgb: [220, 57,140] }, // Berry-80%
-      { t: 1.00, rgb: [211,  8,111] }  // Berry
+      { t: 0.00, rgb: [209, 228, 241] }, // Blue-20%
+      { t: 0.33, rgb: [163, 202, 227] }, // Blue-40%
+      { t: 0.66, rgb: [ 70, 149, 200] }, // Blue-80%
+      { t: 1.00, rgb: [ 24, 122, 186] }  // Blue
     ];
   
     for (let i = 0; i < stops.length - 1; i++) {
@@ -225,15 +225,17 @@
         return `rgb(${r},${g},${bch})`;
       }
     }
-    return "rgb(178,226,192)"; // fallback (light Jade)
+  
+    // fallback (lightest blue)
+    return "rgb(209,228,241)";
   }
   
-  // Ensure numbers stay legible over the new ramp
+  // --- Text color contrast helper ---
   function textColorFor(v){
-    // compute luminance from the color we just produced
+    // compute perceived brightness for adaptive text color
     const m = heatColor(v).match(/\d+/g).map(Number);
-    const yiq = (m[0]*299 + m[1]*587 + m[2]*114) / 1000;
-    return yiq < 140 ? 'text-white' : 'text-gray-900';
+    const brightness = (m[0]*299 + m[1]*587 + m[2]*114) / 1000;
+    return brightness < 145 ? 'text-white' : 'text-gray-900';
   }
 
   // Choose readable text color over heat cell
