@@ -266,11 +266,29 @@
 
   // Pick active palette
   function heatColor(v){
-    const sel = document.getElementById('palette')?.value || 'Green→Red';
-    if (sel === 'Blue→Orange') return blueOrange(v);
-    if (sel === 'Grayscale')   return grayScale(v);
-    if (sel === 'Tiered')      return tiered(v);
-    return greenRed(v);
+    v = Math.max(0, Math.min(1, v));
+    const sel = document.getElementById('palette')?.value || 'Blue→Amber';
+  
+    // new blue→amber default
+    if (sel === 'Blue→Amber' || sel === 'Green→Red'){  
+      const blue = [37, 99, 235];   // #2563eb
+      const amber = [251, 191, 36]; // #fbbf24
+      const r = Math.round(blue[0] + (amber[0]-blue[0])*v);
+      const g = Math.round(blue[1] + (amber[1]-blue[1])*v);
+      const b = Math.round(blue[2] + (amber[2]-blue[2])*v);
+      return `rgb(${r},${g},${b})`;
+    }
+  
+    // keep your other palettes if you want multiple choices
+    if (sel === 'Grayscale') return `hsl(220 10% ${92 - Math.round(v*52)}%)`;
+    if (sel === 'Tiered') {
+      const p = Math.round(v*100);
+      if (p >= 80) return '#2563eb';
+      if (p >= 65) return '#60a5fa';
+      if (p >= 50) return '#fbbf24';
+      return '#f87171';
+    }
+    return `rgb(${Math.round(255*v)},${Math.round(255*v)},${Math.round(255*v)})`;
   }
 
   // Readable text color over heat cell
