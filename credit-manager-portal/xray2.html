@@ -198,23 +198,32 @@
   const clamp01 = v => Math.max(0, Math.min(1, v));
 
   // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
-  // ---- HEATMAP COLORS: Blue family ----
-  // v in [0..1]; low = light blue, high = deep blue
+  // ---- HEATMAP COLORS: Blue → Navy ----
+  // v in [0..1]; low = light blue, high = deep navy
   function heatColor(v){
     v = Math.max(0, Math.min(1, v));
   
-    // FWUXDS Blue palette (20% → 80% → Base)
+    // FWUXDS Blue & Navy palette combined
     // Blue-20%  #D1E4F1
     // Blue-40%  #A3CAE3
     // Blue-80%  #4695C8
     // Blue      #187ABA
+    // Navy-20%  #CCD5DC
+    // Navy-40%  #99AAB9
+    // Navy-80%  #335574
+    // Navy      #002B51
     const stops = [
       { t: 0.00, rgb: [209, 228, 241] }, // Blue-20%
-      { t: 0.33, rgb: [163, 202, 227] }, // Blue-40%
-      { t: 0.66, rgb: [ 70, 149, 200] }, // Blue-80%
-      { t: 1.00, rgb: [ 24, 122, 186] }  // Blue
+      { t: 0.15, rgb: [163, 202, 227] }, // Blue-40%
+      { t: 0.30, rgb: [ 70, 149, 200] }, // Blue-80%
+      { t: 0.45, rgb: [ 24, 122, 186] }, // Blue
+      { t: 0.65, rgb: [204, 213, 220] }, // Navy-20%
+      { t: 0.80, rgb: [153, 170, 185] }, // Navy-40%
+      { t: 0.90, rgb: [ 51,  85, 116] }, // Navy-80%
+      { t: 1.00, rgb: [  0,  43,  81] }  // Navy
     ];
   
+    // interpolate between stops
     for (let i = 0; i < stops.length - 1; i++) {
       const a = stops[i], b = stops[i + 1];
       if (v >= a.t && v <= b.t) {
@@ -230,11 +239,10 @@
     return "rgb(209,228,241)";
   }
   
-  // --- Text color contrast helper ---
+  // ---- Adaptive text color for contrast ----
   function textColorFor(v){
-    // compute perceived brightness for adaptive text color
-    const m = heatColor(v).match(/\d+/g).map(Number);
-    const brightness = (m[0]*299 + m[1]*587 + m[2]*114) / 1000;
+    const rgb = heatColor(v).match(/\d+/g).map(Number);
+    const brightness = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114) / 1000;
     return brightness < 145 ? 'text-white' : 'text-gray-900';
   }
 
