@@ -10,9 +10,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @media print {.no-print{display:none!important} a[href]:after{content:""} body{background:#fff}}
-    /* tiny heat cell style helpers */
     .heat { transition: background-color .15s ease, color .15s ease; }
-    /* replace @apply so it works w/ CDN */
+    /* chip helper (no @apply when using CDN) */
     .chip {
       display:inline-flex; align-items:center; gap:.25rem;
       font-size:.75rem; line-height:1rem;
@@ -73,9 +72,7 @@
             <div class="font-medium">Weighting (live)</div>
             <button id="btnReset" class="text-xs border rounded-lg px-2 py-1 hover:bg-gray-50">Reset</button>
           </div>
-          <div id="weights" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <!-- Sliders injected by JS -->
-          </div>
+          <div id="weights" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
           <p class="mt-3 text-xs text-gray-500">Weights auto-normalize to 100%. Score = Σ(weight × category score). Categories align to your rubric: Guardrails, Maintenance, EBITDA Def, RP, Debt, Transfers/Collat, MFN, Reporting, Sponsor/Transfer.</p>
         </div>
 
@@ -109,21 +106,17 @@
     <section class="rounded-2xl border bg-white overflow-hidden">
       <div class="px-4 py-3 border-b flex items-center justify-between">
         <div class="font-medium">Portfolio Heatmap</div>
-        <div class="flex items-center gap-2 text-xs text-gray-500">
-          <label for="palette" class="whitespace-nowrap">Palette</label>
-          <select id="palette" class="border rounded-md px-2 py-1 text-xs">
-            <option>Green→Red</option>
-            <option>Blue→Orange</option>
-            <option>Grayscale</option>
-            <option>Tiered</option>
-          </select>
-          <span id="hmNote">Normalized 0–100</span>
+        <div class="flex items-center gap-3 text-xs text-gray-500">
+          <span class="whitespace-nowrap">Palette</span>
+          <!-- Static legend for FWUXDS palette -->
+          <div class="h-3 w-40 rounded overflow-hidden border">
+            <div style="height:100%;background:linear-gradient(90deg,#9DC5CA,#65C581,#4695C8,#187ABA,#002B51)"></div>
+          </div>
+          <span>Normalized 0–100</span>
         </div>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm" id="heatmap">
-          <!-- table injected by JS -->
-        </table>
+        <table class="w-full text-sm" id="heatmap"></table>
       </div>
     </section>
 
@@ -134,9 +127,7 @@
           <div class="font-medium">Ranked List (weakest → strongest)</div>
           <div class="text-xs text-gray-500" id="rankMeta">–</div>
         </div>
-        <ol id="rankList" class="space-y-2">
-          <!-- items injected -->
-        </ol>
+        <ol id="rankList" class="space-y-2"></ol>
       </div>
 
       <aside class="col-span-12 lg:col-span-5 rounded-2xl border bg-white p-4">
@@ -159,7 +150,6 @@
 
   <script>
   // ------------------ Mock data (pre-normalized 0..1 category scores) ------------------
-  // Categories map to your rubric for v1
   const CATS = [
     ["guardrails","Guardrails"],
     ["maintenance","Maintenance"],
@@ -178,133 +168,60 @@
   };
 
   const MOCK_DEALS = [
-    {
-      id:"DL-001", borrower:"Pawsitive Brands, Inc.", sponsor:"Summit Hill Partners", sector:"Consumer", vintage:"2025",
+    { id:"DL-001", borrower:"Pawsitive Brands, Inc.", sponsor:"Summit Hill Partners", sector:"Consumer",   vintage:"2025",
       notes:"No maintenance (springing only); MFN @50 bps; RP builder moderate.",
       drivers:["No full maintenance covenant","RP builder w/ starters","MFN 50 bps (ok)"],
-      scores:{guardrails:.72, maintenance:.50, ebitda_def:.78, rp:.62, debt:.70, transfers_collat:.74, mfn:.85, reporting:.80, sponsor_transfer:.70}
-    },
-    {
-      id:"DL-002", borrower:"Meridian Behavioral Health", sponsor:"Apollo Growth Partners", sector:"Healthcare", vintage:"2025",
+      scores:{guardrails:.72, maintenance:.50, ebitda_def:.78, rp:.62, debt:.70, transfers_collat:.74, mfn:.85, reporting:.80, sponsor_transfer:.70} },
+    { id:"DL-002", borrower:"Meridian Behavioral Health", sponsor:"Apollo Growth Partners", sector:"Healthcare", vintage:"2025",
       notes:"Unitranche; maintenance present; EBITDA add-backs capped @20%; MFN 25 bps.",
       drivers:["Maintenance present","EBITDA add-backs capped","MFN only 25 bps"],
-      scores:{guardrails:.82, maintenance:1.00, ebitda_def:.85, rp:.74, debt:.65, transfers_collat:.80, mfn:.60, reporting:.85, sponsor_transfer:.80}
-    },
-    {
-      id:"DL-003", borrower:"Atlas Logistics Holdings", sponsor:"Northshore Equity", sector:"Industrials", vintage:"2024",
+      scores:{guardrails:.82, maintenance:1.00, ebitda_def:.85, rp:.74, debt:.65, transfers_collat:.80, mfn:.60, reporting:.85, sponsor_transfer:.80} },
+    { id:"DL-003", borrower:"Atlas Logistics Holdings", sponsor:"Northshore Equity", sector:"Industrials", vintage:"2024",
       notes:"Loose RP; portability allowed; MFN carve-outs; high leakage.",
       drivers:["Loose RP with large starters","Debt portability","Collateral leakage"],
-      scores:{guardrails:.60, maintenance:.40, ebitda_def:.70, rp:.35, debt:.45, transfers_collat:.40, mfn:.40, reporting:.70, sponsor_transfer:.30}
-    },
-    {
-      id:"DL-004", borrower:"NorthPeak SaaS", sponsor:"RiverPeak Capital", sector:"Software", vintage:"2024",
+      scores:{guardrails:.60, maintenance:.40, ebitda_def:.70, rp:.35, debt:.45, transfers_collat:.40, mfn:.40, reporting:.70, sponsor_transfer:.30} },
+    { id:"DL-004", borrower:"NorthPeak SaaS", sponsor:"RiverPeak Capital", sector:"Software", vintage:"2024",
       notes:"Aggressive EBITDA synergies (25%); no MFN; ratio debt sidecar.",
       drivers:["Aggressive EBITDA add-backs","No MFN","Sidecar ratio debt"],
-      scores:{guardrails:.68, maintenance:.50, ebitda_def:.45, rp:.55, debt:.40, transfers_collat:.62, mfn:.00, reporting:.75, sponsor_transfer:.55}
-    },
-    {
-      id:"DL-005", borrower:"VetWell Group", sponsor:"Summit Hill Partners", sector:"Healthcare", vintage:"2023",
+      scores:{guardrails:.68, maintenance:.50, ebitda_def:.45, rp:.55, debt:.40, transfers_collat:.62, mfn:.00, reporting:.75, sponsor_transfer:.55} },
+    { id:"DL-005", borrower:"VetWell Group", sponsor:"Summit Hill Partners", sector:"Healthcare", vintage:"2023",
       notes:"Strong liens; tight RP; MFN 50bps broad; maintenance present.",
       drivers:["Tight RP rules","MFN 50 bps broad scope","Maintenance present"],
-      scores:{guardrails:.86, maintenance:1.00, ebitda_def:.80, rp:.88, debt:.78, transfers_collat:.90, mfn:.90, reporting:.90, sponsor_transfer:.80}
-    },
-    {
-      id:"DL-006", borrower:"Everrail Holdings", sponsor:"Harbor Ridge", sector:"Industrials", vintage:"2023",
+      scores:{guardrails:.86, maintenance:1.00, ebitda_def:.80, rp:.88, debt:.78, transfers_collat:.90, mfn:.90, reporting:.90, sponsor_transfer:.80} },
+    { id:"DL-006", borrower:"Everrail Holdings", sponsor:"Harbor Ridge", sector:"Industrials", vintage:"2023",
       notes:"High leverage; springing maintenance; RP free-and-clear; MFN short window.",
       drivers:["High leverage vs peers","Springing only","RP free-and-clear"],
-      scores:{guardrails:.48, maintenance:.45, ebitda_def:.62, rp:.30, debt:.50, transfers_collat:.55, mfn:.35, reporting:.65, sponsor_transfer:.50}
-    }
+      scores:{guardrails:.48, maintenance:.45, ebitda_def:.62, rp:.30, debt:.50, transfers_collat:.55, mfn:.35, reporting:.65, sponsor_transfer:.50} }
   ];
 
   // ------------------ Utilities ------------------
-  const fmtPct = v => (v*100).toFixed(0);
   const clamp01 = v => Math.max(0, Math.min(1, v));
 
-  // ---------- Color utilities ----------
-  function HSL(h, s, l){ return `hsl(${h} ${s}% ${l}%)`; }
-
-  // Piecewise Green→Red (good = green)
-  // v=0 => red, v=0.5 => yellow, v=1 => green
-  function greenRed(v){
+  // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
+  function heatColor(v){
     v = clamp01(v);
-    if (v < 0.5){
-      const t = v / 0.5;
-      const h = 0 + (45 * t);      // 0° red -> 45° yellow
-      return HSL(h, 85, 50);
-    } else {
-      const t = (v - 0.5) / 0.5;
-      const h = 45 + (75 * t);     // 45° yellow -> 120° green
-      return HSL(h, 75, 45);
-    }
-  }
-
-  // Blue→Orange (color-blind friendlier contrast)
-  function blueOrange(v){
-    v = clamp01(v);
-    const h = 220 + (28 - 220) * v; // 220° blue -> 28° orange
-    const s = 85;
-    const l = 54 - 6 * v;           // slightly darker at high end
-    return HSL(h, s, l);
-  }
-
-  // Neutral grayscale
-  function grayScale(v){
-    v = clamp01(v);
-    const l = 92 - Math.round(v * 52); // 92% -> 40%
-    return HSL(220, 10, l);
-  }
-
-  // Discrete tiered bands aligned to your tiers
-  function tiered(v){
-    v = clamp01(v);
-    const p = Math.round(v * 100);
-    if (p >= 80) return HSL(140, 60, 38);   // strong  (green)
-    if (p >= 65) return HSL(210, 60, 45);   // balanced (blue)
-    if (p >= 50) return HSL(40, 85, 50);    // loose    (amber)
-    return HSL(355, 75, 48);                // aggressive (red)
-  }
-
-  // Pick active palette
-    function heatColor(v){
-      v = Math.max(0, Math.min(1, v));
-    
-      // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
-      const stops = [
-        { stop: 0.00, color: [157, 197, 202] }, // #9DC5CA Ocean-40%
-        { stop: 0.25, color: [101, 197, 129] }, // #65C581 Jade-80%
-        { stop: 0.50, color: [70, 149, 200] },  // #4695C8 Blue-80%
-        { stop: 0.75, color: [24, 122, 186] },  // #187ABA Blue
-        { stop: 1.00, color: [0, 43, 81] }      // #002B51 Navy
-      ];
-    
-      for (let i = 0; i < stops.length - 1; i++) {
-        const s1 = stops[i], s2 = stops[i + 1];
-        if (v >= s1.stop && v <= s2.stop) {
-          const t = (v - s1.stop) / (s2.stop - s1.stop);
-          const r = Math.round(s1.color[0] + (s2.color[0] - s1.color[0]) * t);
-          const g = Math.round(s1.color[1] + (s2.color[1] - s1.color[1]) * t);
-          const b = Math.round(s1.color[2] + (s2.color[2] - s1.color[2]) * t);
-          return `rgb(${r},${g},${b})`;
-        }
+    const stops = [
+      { stop: 0.00, color: [157, 197, 202] }, // #9DC5CA
+      { stop: 0.25, color: [101, 197, 129] }, // #65C581
+      { stop: 0.50, color: [70, 149, 200] },  // #4695C8
+      { stop: 0.75, color: [24, 122, 186] },  // #187ABA
+      { stop: 1.00, color: [0, 43, 81] }      // #002B51
+    ];
+    for (let i = 0; i < stops.length - 1; i++) {
+      const s1 = stops[i], s2 = stops[i + 1];
+      if (v >= s1.stop && v <= s2.stop) {
+        const t = (v - s1.stop) / (s2.stop - s1.stop);
+        const r = Math.round(s1.color[0] + (s2.color[0] - s1.color[0]) * t);
+        const g = Math.round(s1.color[1] + (s2.color[1] - s1.color[1]) * t);
+        const b = Math.round(s1.color[2] + (s2.color[2] - s1.color[2]) * t);
+        return `rgb(${r},${g},${b})`;
       }
-      return "rgb(157,197,202)"; // fallback Ocean-40%
     }
-  
-    // keep your other palettes if you want multiple choices
-    if (sel === 'Grayscale') return `hsl(220 10% ${92 - Math.round(v*52)}%)`;
-    if (sel === 'Tiered') {
-      const p = Math.round(v*100);
-      if (p >= 80) return '#2563eb';
-      if (p >= 65) return '#60a5fa';
-      if (p >= 50) return '#fbbf24';
-      return '#f87171';
-    }
-    return `rgb(${Math.round(255*v)},${Math.round(255*v)},${Math.round(255*v)})`;
+    return "rgb(157,197,202)";
   }
 
-  // Readable text color over heat cell
+  // Choose readable text color over heat cell
   function textColorFor(v){
-    // lighter backgrounds => dark text; darker => white
     return v > 0.60 ? 'text-white' : 'text-gray-900';
   }
 
@@ -349,8 +266,7 @@
         <label class="block text-gray-700">${label}</label>
         <div class="flex items-center gap-3">
           <input type="range" min="0" max="100" step="1" value="${DEFAULT_WEIGHTS[key]*100}"
-            data-key="${key}"
-            class="w-full accent-black">
+            data-key="${key}" class="w-full accent-black">
           <span class="w-14 text-right text-xs text-gray-600"><b id="w_${key}">${(DEFAULT_WEIGHTS[key]*100).toFixed(0)}</b>%</span>
         </div>`;
       wrap.appendChild(row);
@@ -533,7 +449,7 @@
     const rows = filteredDeals().map(d=>({
       id:d.id, borrower:d.borrower, sponsor:d.sponsor, sector:d.sector, vintage:d.vintage,
       score: Math.round(scoreDeal(d,weights)*100),
-      ...Object.fromEntries(CATS.map(([k,l])=>[k, Math.round((d.scores[k]||0)*100)]))
+      ...Object.fromEntries(CATS.map(([k])=>[k, Math.round((d.scores[k]||0)*100)]))
     }));
     const blob = new Blob([JSON.stringify({weights, rows}, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -568,7 +484,7 @@
   window.addEventListener('DOMContentLoaded', ()=>{
     if (window.lucide) window.lucide.createIcons();
     renderWeightSliders();
-    ['fSector','fVintage','fSearch','onlyLow','onlyHigh','palette'].forEach(id=>{
+    ['fSector','fVintage','fSearch','onlyLow','onlyHigh'].forEach(id=>{
       const ev = id==='fSearch' ? 'input' : 'change';
       document.getElementById(id).addEventListener(ev, updateAll);
     });
