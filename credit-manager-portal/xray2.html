@@ -265,31 +265,30 @@
   }
 
   // Pick active palette
-  function heatColor(v){
-    v = Math.max(0, Math.min(1, v));
-  
-    // FWUXDS Morgan Stanley gradient: Ocean → Jade → Blue → Navy
-    const stops = [
-      { stop: 0.00, color: [157, 197, 202] }, // Ocean-40% #9DC5CA
-      { stop: 0.25, color: [101, 197, 129] }, // Jade-80%  #65C581
-      { stop: 0.50, color: [70, 149, 200] },  // Blue-80%  #4695C8
-      { stop: 0.75, color: [24, 122, 186] },  // Blue      #187ABA
-      { stop: 1.00, color: [0, 43, 81] }      // Navy      #002B51
-    ];
-  
-    // find which segment v sits in
-    for (let i = 0; i < stops.length - 1; i++) {
-      const s1 = stops[i], s2 = stops[i + 1];
-      if (v >= s1.stop && v <= s2.stop) {
-        const t = (v - s1.stop) / (s2.stop - s1.stop);
-        const r = Math.round(s1.color[0] + (s2.color[0] - s1.color[0]) * t);
-        const g = Math.round(s1.color[1] + (s2.color[1] - s1.color[1]) * t);
-        const b = Math.round(s1.color[2] + (s2.color[2] - s1.color[2]) * t);
-        return `rgb(${r},${g},${b})`;
+    function heatColor(v){
+      v = Math.max(0, Math.min(1, v));
+    
+      // FWUXDS / Morgan Stanley gradient: Ocean → Jade → Blue → Navy
+      const stops = [
+        { stop: 0.00, color: [157, 197, 202] }, // #9DC5CA Ocean-40%
+        { stop: 0.25, color: [101, 197, 129] }, // #65C581 Jade-80%
+        { stop: 0.50, color: [70, 149, 200] },  // #4695C8 Blue-80%
+        { stop: 0.75, color: [24, 122, 186] },  // #187ABA Blue
+        { stop: 1.00, color: [0, 43, 81] }      // #002B51 Navy
+      ];
+    
+      for (let i = 0; i < stops.length - 1; i++) {
+        const s1 = stops[i], s2 = stops[i + 1];
+        if (v >= s1.stop && v <= s2.stop) {
+          const t = (v - s1.stop) / (s2.stop - s1.stop);
+          const r = Math.round(s1.color[0] + (s2.color[0] - s1.color[0]) * t);
+          const g = Math.round(s1.color[1] + (s2.color[1] - s1.color[1]) * t);
+          const b = Math.round(s1.color[2] + (s2.color[2] - s1.color[2]) * t);
+          return `rgb(${r},${g},${b})`;
+        }
       }
+      return "rgb(157,197,202)"; // fallback Ocean-40%
     }
-    return "rgb(157,197,202)";
-  }
   
     // keep your other palettes if you want multiple choices
     if (sel === 'Grayscale') return `hsl(220 10% ${92 - Math.round(v*52)}%)`;
