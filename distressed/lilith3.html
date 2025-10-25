@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Lilith Dashboard — Docket + Case Header + Chat</title>
+    <title>Lilith Dashboard — Case Box + Docket (Left) / Chat (Right)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -54,12 +54,12 @@
       ];
 
       // ---------------------------
-      // Small helpers
+      // Helpers
       // ---------------------------
       const cn = (...xs) => xs.filter(Boolean).join(" ");
 
       // ---------------------------
-      // Header card with stats
+      // Case box (top-left)
       // ---------------------------
       function Stat({ label, value }) {
         if (!value) return null;
@@ -71,38 +71,35 @@
         );
       }
 
-      function CaseHeader({ info }) {
+      function CaseBox({ info }) {
         return (
-          <div className="bg-neutral-100 border-b border-neutral-200">
-            <div className="max-w-[1600px] mx-auto px-4 py-4">
-              <div className="flex items-center gap-4">
+          <div className="bg-white border-b border-neutral-200">
+            <div className="px-4 py-3">
+              <div className="flex items-center gap-3">
                 {info.logoUrl ? (
                   <img
                     src={info.logoUrl}
                     alt={`${info.company} logo`}
-                    className="w-14 h-14 rounded-lg object-contain bg-white p-2 border border-neutral-200"
+                    className="w-10 h-10 rounded-lg object-contain bg-white border border-neutral-200"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-300 text-xl">
+                  <div className="w-10 h-10 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-300 text-lg">
                     ✓
                   </div>
                 )}
                 <div className="min-w-0">
-                  <div className="text-[20px] sm:text-[22px] font-semibold text-neutral-900">{info.company}</div>
-                  <div className="text-[13px] text-neutral-600">Case No. {info.caseNo}</div>
+                  <div className="text-[18px] font-semibold text-neutral-900">{info.company}</div>
+                  <div className="text-[12px] text-neutral-600">Case No. {info.caseNo}</div>
                 </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
                 <Stat label="District" value={info.district} />
                 <Stat label="Judge" value={info.judge} />
                 <Stat label="Chapter" value={info.chapter} />
                 <Stat label="Petition Date" value={info.petitionDate} />
                 <Stat label="Venue" value={info.venue} />
                 <Stat label="Debtor Counsel" value={info.debtorCounsel} />
-                <Stat label="Financial Advisor" value={info.financialAdvisor} />
-                <Stat label="UCC Counsel" value={info.uccCounsel} />
-                <Stat label="DIP Agent" value={info.dipAgent} />
               </div>
             </div>
           </div>
@@ -110,7 +107,77 @@
       }
 
       // ---------------------------
-      // Chat (unchanged behavior)
+      // Docket list (below case box, left column)
+      // ---------------------------
+      function DocketList({ entries }) {
+        const [query, setQuery] = React.useState("");
+
+        const filtered = React.useMemo(() => {
+          const q = query.trim().toLowerCase();
+          if (!q) return entries;
+          return entries.filter(
+            (e) =>
+              e.caseNo.toLowerCase().includes(q) ||
+              e.title.toLowerCase().includes(q) ||
+              e.dateFiled.toLowerCase().includes(q)
+          );
+        }, [entries, query]);
+
+        return (
+          <div className="flex-1 flex flex-col">
+            <div className="px-4 py-3 border-b border-neutral-200 bg-white flex items-center gap-2">
+              <h2 className="font-semibold text-neutral-800">Docket</h2>
+              <div className="ml-auto w-1/2">
+                <div className="flex items-center gap-2 bg-neutral-100 rounded-xl px-3 py-2">
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search case #, title, date…"
+                    className="bg-transparent outline-none text-sm w-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-4 py-2 border-b border-neutral-200 text-[12px] uppercase tracking-wide text-neutral-500 grid grid-cols-12 bg-white">
+              <div className="col-span-3">Case #</div>
+              <div className="col-span-7">Document Name</div>
+              <div className="col-span-2 text-right">Date Filed</div>
+            </div>
+
+            <div className="flex-1 overflow-auto bg-white">
+              <ul className="divide-y">
+                {filtered.map((d, idx) => (
+                  <li key={idx} className="px-4 py-3">
+                    <div className="grid grid-cols-12 items-start gap-3">
+                      <div className="col-span-3 font-mono text-[13px] text-neutral-800">{d.caseNo}</div>
+                      <div className="col-span-7 min-w-0">
+                        <a href="#" className="text-[14px] text-blue-700 hover:underline break-words" title={d.title}>
+                          {d.title}
+                        </a>
+                        <div className="mt-1 text-[12px] text-neutral-500">
+                          <span className="mr-4">
+                            <span className="text-neutral-400">Attachments:</span>{" "}
+                            {d.attachments?.length ? d.attachments.join(", ") : "—"}
+                          </span>
+                          <span>
+                            <span className="text-neutral-400">Related:</span>{" "}
+                            {d.related?.length ? d.related.join(", ") : d.dateFiled || "—"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="col-span-2 text-right text-[13px] text-neutral-700">{d.dateFiled}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      }
+
+      // ---------------------------
+      // Chat (right column spanning full height)
       // ---------------------------
       function ChatPane() {
         const [messages, setMessages] = React.useState([
@@ -122,7 +189,6 @@
           },
         ]);
         const [input, setInput] = React.useState("");
-        the
         const [sending, setSending] = React.useState(false);
 
         const onSend = async () => {
@@ -201,89 +267,19 @@
       }
 
       // ---------------------------
-      // Docket list (left pane)
-      // ---------------------------
-      function DocketList({ entries }) {
-        const [query, setQuery] = React.useState("");
-
-        const filtered = React.useMemo(() => {
-          const q = query.trim().toLowerCase();
-          if (!q) return entries;
-          return entries.filter(
-            (e) =>
-              e.caseNo.toLowerCase().includes(q) ||
-              e.title.toLowerCase().includes(q) ||
-              e.dateFiled.toLowerCase().includes(q)
-          );
-        }, [entries, query]);
-
-        return (
-          <aside className="w-[44%] max-w-[760px] min-w-[420px] border-r border-neutral-200 bg-white flex flex-col">
-            <div className="px-4 py-3 border-b border-neutral-200 flex items-center gap-2">
-              <h2 className="font-semibold text-neutral-800">Docket</h2>
-              <div className="ml-auto w-1/2">
-                <div className="flex items-center gap-2 bg-neutral-100 rounded-xl px-3 py-2">
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search case #, title, date…"
-                    className="bg-transparent outline-none text-sm w-full"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="px-4 py-2 border-b border-neutral-200 text-[12px] uppercase tracking-wide text-neutral-500 grid grid-cols-12">
-              <div className="col-span-3">Case #</div>
-              <div className="col-span-7">Document Name</div>
-              <div className="col-span-2 text-right">Date Filed</div>
-            </div>
-
-            <div className="flex-1 overflow-auto">
-              <ul className="divide-y">
-                {filtered.map((d, idx) => (
-                  <li key={idx} className="px-4 py-3">
-                    <div className="grid grid-cols-12 items-start gap-3">
-                      <div className="col-span-3 font-mono text-[13px] text-neutral-800">{d.caseNo}</div>
-                      <div className="col-span-7 min-w-0">
-                        <a href="#" className="text-[14px] text-blue-700 hover:underline break-words" title={d.title}>
-                          {d.title}
-                        </a>
-                        <div className="mt-1 text-[12px] text-neutral-500">
-                          <span className="mr-4">
-                            <span className="text-neutral-400">Attachments:</span>{" "}
-                            {d.attachments?.length ? d.attachments.join(", ") : "—"}
-                          </span>
-                          <span>
-                            <span className="text-neutral-400">Related:</span>{" "}
-                            {d.related?.length ? d.related.join(", ") : d.dateFiled || "—"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-span-2 text-right text-[13px] text-neutral-700">{d.dateFiled}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
-        );
-      }
-
-      // ---------------------------
       // Main layout
       // ---------------------------
       function LilithDashboard() {
         return (
-          <div className="w-full h-screen bg-neutral-50 flex flex-col">
-            {/* Header card w/ stats */}
-            <CaseHeader info={CASE_INFO} />
-
-            {/* Content */}
-            <div className="flex-1 flex overflow-hidden">
+          <div className="w-full h-screen bg-neutral-50 flex overflow-hidden">
+            {/* Left column: Case box (top) + Docket (bottom) */}
+            <div className="w-[44%] max-w-[760px] min-w-[420px] border-r border-neutral-200 bg-neutral-50 flex flex-col">
+              <CaseBox info={CASE_INFO} />
               <DocketList entries={DOCKET_ENTRIES} />
-              <ChatPane />
             </div>
+
+            {/* Right column: Chat spanning height */}
+            <ChatPane />
           </div>
         );
       }
