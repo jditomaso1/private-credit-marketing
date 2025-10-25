@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lilith — Preset Q&A + Case Box + Scrollable Docket + Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="h-screen bg-neutral-50">
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel">
+      // ================================
+      // Case + Docket demo data (edit)
+      // ================================
+      const CASE_INFO = {
+        company: "First Brands Group, LLC",
+        caseNo: "25-90399",
+        logoUrl: null,
+        district: "S.D. Texas (Houston)",
+        judge: "Hon. Christopher M. Lopez",
+        chapter: "Chapter 11",
+        petitionDate: "09/29/2025",
+        venue: "Houston, Courtroom 401",
+        debtorCounsel: "Kirkland & Ellis LLP",
+        financialAdvisor: "Lazard Frères & Co. LLC",
+        uccCounsel: "Paul Hastings LLP",
+        dipAgent: "JPMorgan Chase Bank, N.A.",
+      };
+
+      const DOCKET_ENTRIES = [
+        { caseNo: "25-90383", title: "Chapter 11 Voluntary Petition Filed by Global Assets LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90384", title: "Chapter 11 Voluntary Petition Filed by Global Lease Assets Holdings, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90385", title: "Chapter 11 Voluntary Petition Filed by Carnaby Capital Holdings, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90386", title: "Chapter 11 Voluntary Petition Filed by Broad Street Financial Holdings, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90387", title: "Chapter 11 Voluntary Petition Filed by Broad Street Financial, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90388", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory II, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90389", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory Holdings II, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90390", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory III, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90391", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory Holdings III, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90392", title: "Chapter 11 Voluntary Petition Filed by Patterson Inventory, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90393", title: "Chapter 11 Voluntary Petition Filed by Patterson Inventory Holdings, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90394", title: "Chapter 11 Voluntary Petition Filed by Starlight Inventory I, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90395", title: "Chapter 11 Voluntary Petition Filed by Starlight Inventory Holdings I, LLC.", dateFiled: "09/24/2025" },
+        { caseNo: "25-90396", title: "Chapter 11 Voluntary Petition Filed by Trico Technologies Corporation.", dateFiled: "09/28/2025" },
+      ];
+
+      // =========================================
+      // PRESET Q&A LIBRARY — EDIT THIS SECTION
+      // =========================================
+      // Each item supports:
+      // - question: shown as a clickable chip
+      // - match: array of strings/regex used to match incoming user text
+      // - answer: canned response (supports \n)
+      // - citations: optional [{label, url}]
+      const PRESET_QA = [
+        {
+          question: "What are the DIP terms?",
+          match: [/^dip\b/i, /dip terms/i, /debtor in possession/i, /priming/i],
+          answer:
+`**DIP Overview (Mock)**
+• Facility: $150mm superpriority, priming
+• Pricing: SOFR + 675 bps (1.00% floor); OID 2.50%
+• Milestones: Sale procedures D+21; Sale hearing D+45
+• Adequate Protection: replacement liens; §507(b) superpriority
+• Use of Proceeds: working capital, case costs, critical vendors`,
+          citations: [{ label: "Interim DIP Order (Dkt. 72) p.7", url: "#" }],
+        },
+        {
+          question: "Summarize the first-day motions",
+          match: [/first[-\s]?day/i, /day 1/i, /initial motions/i],
+          answer:
+`**First-Day Motions (Mock)**
+• Cash Management: continue existing system; §345(b) relief requested
+• Wages & Benefits: authority to continue programs and pay prepetition amounts
+• Taxes & Fees: authority to remit customary taxes/fees
+• Utilities: adequate assurance & objection procedures
+• Critical Vendors & 503(b)(9): limited authority to pay as necessary
+• Insurance, Surety, LOCs: authority to maintain and pay obligations`,
+          citations: [
+            { label: "Cash Management Motion (Dkt. 17)", url: "#" },
+            { label: "Wages & Benefits (Dkt. 16)", url: "#" },
+          ],
+        },
+        {
+          question: "Who are the advisors?",
+          match: [/advisors?/i, /counsel/i, /financial advisor/i],
+          answer:
+`**Advisory Roster (Mock)**
+• Debtor Counsel: ${CASE_INFO.debtorCounsel}
+• Debtor FA: ${CASE_INFO.financialAdvisor}
+• UCC Counsel: ${CASE_INFO.uccCounsel || "TBD"}
+• DIP Agent: ${CASE_INFO.dipAgent}`,
+          citations: [{ label: "First-Day Declaration (Dkt. 12)", url: "#" }],
+        },
+        {
+          question: "Key dates & milestones",
+          match: [/milestones?/i, /key dates?/i, /timeline/i],
+          answer:
+`**Key Dates (Mock)**
+• Petition: ${CASE_INFO.petitionDate}
+• First-Day Hearing: 10/01/2025, Houston Ctrm 401
+• Sale Procedures Motion: by D+21
+• Sale Hearing: by D+45
+• Schedules/SOFA: extension requested`,
+          citations: [{ label: "Case Docket", url: "#" }],
+        },
+        {
+          question: "What’s the lien stack?",
+          match: [/lien stack/i, /priority/i, /collateral/i],
+          answer:
+`**Indicative Lien Stack (Mock)**
+1) ABL: 1st lien on working-capital assets
+2) Term Loan: 1st lien on non-working-capital assets
+3) Notes/Mezz: junior liens / unsecured
+→ Confirm in credit docs & DIP order.`,
+          citations: [{ label: "Security Agreements (ref.)", url: "#" }],
+        },
+      ];
+
+      // Simple match: return first preset whose any matcher matches text
+      function findPreset(text) {
+        const t = (text || "").trim();
+        for (const item of PRESET_QA) {
+          for (const m of item.match) {
+            if (typeof m === "string" && t.toLowerCase().includes(m.toLowerCase())) return item;
+            if (m instanceof RegExp && m.test(t)) return item;
+          }
+        }
+        return null;
+      }
+
+      const cn = (...xs) => xs.filter(Boolean).join(" ");
+
+      // ================================
+      // Components
+      // ================================
+      function Stat({ label, value }) {
+        if (!value) return null;
+        return (
+          <div className="flex flex-col min-w-0">
+            <div className="text-[11px] uppercase tracking-wide text-neutral-500">{label}</div>
+            <div className="text-[13px] text-neutral-800 truncate">{value}</div>
+          </div>
+        );
+      }
+
+      function CaseBox({ info }) {
+        return (
+          <div className="bg-white border-b border-neutral-200 shrink-0">
+            <div className="px-4 py-3">
+              <div className="flex items-center gap-3">
+                {info.logoUrl ? (
+                  <img src={info.logoUrl} alt={`${info.company} logo`} className="w-10 h-10 rounded-lg object-contain border border-neutral-200" />
+                ) : (
+                  <div className="w-10 h-10 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-300 text-lg">✓</div>
+                )}
+                <div className="min-w-0">
+                  <div className="text-[18px] font-semibold text-neutral-900">{info.company}</div>
+                  <div className="text-[12px] text-neutral-600">Case No. {info.caseNo}</div>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+                <Stat label="District" value={info.district} />
+                <Stat label="Judge" value={info.judge} />
+                <Stat label="Chapter" value={info.chapter} />
+                <Stat label="Petition Date" value={info.petitionDate} />
+                <Stat label="Venue" value={info.venue} />
+                <Stat label="Debtor Counsel" value={info.debtorCounsel} />
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function DocketList({ entries }) {
+        const [query, setQuery] = React.useState("");
+        const filtered = entries.filter(
+          (e) =>
+            e.caseNo.toLowerCase().includes(query.toLowerCase()) ||
+            e.title.toLowerCase().includes(query.toLowerCase()) ||
+            e.dateFiled.toLowerCase().includes(query.toLowerCase())
+        );
+
+        return (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="px-4 py-3 border-b border-neutral-200 bg-white flex items-center gap-2">
+              <h2 className="font-semibold text-neutral-800">Docket</h2>
+              <div className="ml-auto w-1/2">
+                <div className="flex items-center gap-2 bg-neutral-100 rounded-xl px-3 py-2">
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search case #, title, date…"
+                    className="bg-transparent outline-none text-sm w-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-4 py-2 border-b border-neutral-200 text-[12px] uppercase tracking-wide text-neutral-500 grid grid-cols-12 bg-white">
+              <div className="col-span-3">Case #</div>
+              <div className="col-span-7">Document Name</div>
+              <div className="col-span-2 text-right">Date Filed</div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto bg-white">
+              <ul className="divide-y">
+                {filtered.map((d, idx) => (
+                  <li key={idx} className="px-4 py-3">
+                    <div className="grid grid-cols-12 items-start gap-3">
+                      <div className="col-span-3 font-mono text-[13px] text-neutral-800">{d.caseNo}</div>
+                      <div className="col-span-7">
+                        <a href="#" className="text-[14px] text-blue-700 hover:underline">{d.title}</a>
+                        <div className="text-[12px] text-neutral-500 mt-1">Filed: {d.dateFiled}</div>
+                      </div>
+                      <div className="col-span-2 text-right text-[13px] text-neutral-700">{d.dateFiled}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      }
+
+      // Chat with PRESET Q&A
+      function ChatPane() {
+        const [messages, setMessages] = React.useState([
+          { id: "welcome", role: "assistant", content: "Welcome to **Lilith — Your Restructuring and Distressed AI Banker**. Pick a FAQ below or ask a question." },
+        ]);
+        const [input, setInput] = React.useState("");
+        const [sending, setSending] = React.useState(false);
+
+        const sendPreset = (item) => {
+          const userMsg = { id: String(Date.now()), role: "user", content: item.question };
+          const asstMsg = {
+            id: String(Date.now() + 1),
+            role: "assistant",
+            content: item.answer,
+            citations: item.citations || [],
+          };
+          setMessages((m) => [...m, userMsg, asstMsg]);
+        };
+
+        const onSend = async () => {
+          const content = input.trim();
+          if (!content) return;
+          const userMsg = { id: String(Date.now()), role: "user", content };
+          setMessages((m) => [...m, userMsg]);
+          setInput("");
+          setSending(true);
+
+          // Match against presets
+          const preset = findPreset(content);
+          const asstMsg = preset
+            ? {
+                id: String(Date.now() + 1),
+                role: "assistant",
+                content: preset.answer,
+                citations: preset.citations || [],
+              }
+            : {
+                id: String(Date.now() + 1),
+                role: "assistant",
+                content:
+                  "I don't have a preset for that yet. Please add one to PRESET_QA, or connect the chat to your backend.",
+              };
+
+          await new Promise((r) => setTimeout(r, 200));
+          setMessages((m) => [...m, asstMsg]);
+          setSending(false);
+        };
+
+        return (
+          <section className="flex-1 flex flex-col">
+            {/* Title bar */}
+            <div className="px-5 py-3 bg-neutral-900 text-white flex items-center justify-between border-b border-neutral-800">
+              <h2 className="font-semibold text-[15px] tracking-wide">Lilith — Your Restructuring and Distressed AI Banker</h2>
+              <span className="text-xs text-neutral-400">Preset Q&A</span>
+            </div>
+
+            {/* FAQ chips */}
+            <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-200">
+              <div className="flex flex-wrap gap-2">
+                {PRESET_QA.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => sendPreset(q)}
+                    className="text-xs px-2.5 py-1.5 rounded-full border border-neutral-300 bg-white hover:bg-neutral-100"
+                    title={q.question}
+                  >
+                    {q.question}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-auto p-4 space-y-4 bg-neutral-50">
+              {messages.map((m) => (
+                <div key={m.id} className={m.role === "user" ? "text-right" : ""}>
+                  <div
+                    className={cn(
+                      "inline-block rounded-2xl px-4 py-3 max-w-[75%] text-left align-top",
+                      m.role === "user" ? "bg-neutral-900 text-white" : "bg-white border border-neutral-200"
+                    )}
+                  >
+                    <div className="whitespace-pre-wrap">{m.content}</div>
+                    {Array.isArray(m.citations) && m.citations.length > 0 && (
+                      <div className="mt-3 flex items-center gap-2 flex-wrap">
+                        {m.citations.map((c, i) => (
+                          <a
+                            key={i}
+                            href={c.url || "#"}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
+                          >
+                            {c.label || "Source"}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input */}
+            <div className="border-t border-neutral-200 bg-white p-3">
+              <div className="flex items-end gap-2 bg-neutral-100 rounded-2xl px-3 py-2">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      onSend();
+                    }
+                  })}
+                  rows="1"
+                  placeholder="Type a question or click a preset above…"
+                  className="flex-1 bg-transparent outline-none resize-none text-sm max-h-32"
+                />
+                <button
+                  onClick={onSend}
+                  disabled={sending}
+                  className={cn(
+                    "px-3 py-2 rounded-xl text-sm",
+                    sending ? "bg-neutral-300 text-neutral-600" : "bg-neutral-900 text-white hover:bg-black"
+                  )}
+                >
+                  {sending ? "…" : "Ask"}
+                </button>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function LeftColumn() {
+        return (
+          <div className="w-[44%] max-w-[760px] min-w-[420px] border-r border-neutral-200 flex flex-col">
+            <CaseBox info={CASE_INFO} />
+            <DocketList entries={DOCKET_ENTRIES} />
+          </div>
+        );
+      }
+
+      function LilithDashboard() {
+        return (
+          <div className="w-full h-screen bg-neutral-50 flex overflow-hidden">
+            <LeftColumn />
+            <ChatPane />
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<LilithDashboard />);
+    </script>
+  </body>
+</html>
