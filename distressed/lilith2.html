@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lilith Dashboard — Docket List + Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React + ReactDOM + Babel (for JSX in browser) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="h-screen bg-neutral-50">
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel">
+      // ---------------------------
+      // Demo data (replace as needed)
+      // ---------------------------
+      const DOCKET_ENTRIES = [
+        { caseNo: "25-90383", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Global Assets LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90384", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Global Lease Assets Holdings, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90385", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Carnaby Capital Holdings, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90386", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Broad Street Financial Holdings, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90387", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Broad Street Financial, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90388", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Carnaby Inventory II, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90389", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Carnaby Inventory Holdings II, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90390", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Carnaby Inventory III, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90391", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Carnaby Inventory Holdings III, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90392", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Patterson Inventory, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90393", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Patterson Inventory Holdings, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90394", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Starlight Inventory I, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90395", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Starlight Inventory Holdings I, LLC.", dateFiled: "09/24/2025", attachments: [], related: [] },
+        { caseNo: "25-90396", title: "Chapter 11 Voluntary Petition Non-Individual Fee Amount $1738 Filed by Trico Technologies Corporation.", dateFiled: "09/28/2025", attachments: [], related: [] },
+      ];
+
+      // ---------------------------
+      // Chat (same structure as before)
+      // ---------------------------
+      function ChatPane() {
+        const [messages, setMessages] = React.useState([
+          {
+            id: "m-0001",
+            role: "assistant",
+            content:
+              "Ready. Ask me about capital structure, lien stack, DIP terms, milestones, advisors, or key dates. Select a docket row first if you want to ground context.",
+          },
+        ]);
+        const [input, setInput] = React.useState("");
+        const [sending, setSending] = React.useState(false);
+
+        const onSend = async () => {
+          const content = input.trim();
+          if (!content) return;
+          setMessages((m) => [...m, { id: `m-${Date.now()}`, role: "user", content }]);
+          setInput("");
+          setSending(true);
+
+          // Fake reply (replace with your API call)
+          const answer =
+            /dip|debtor in possession|priming/i.test(content)
+              ? "From available filings: DIP facility details not yet ingested for this sample. Connect your backend to return terms, milestones, and adequate protection with citations."
+              : "Here’s a mock response. Connect me to your case store / API for real answers with citations.";
+          await new Promise((r) => setTimeout(r, 500));
+          setMessages((m) => [
+            ...m,
+            { id: `m-${Date.now() + 1}`, role: "assistant", content: answer },
+          ]);
+          setSending(false);
+        };
+
+        return (
+          <section className="flex-1 flex flex-col">
+            <div className="px-4 py-3 border-b border-neutral-200 bg-white flex items-center gap-2">
+              <h2 className="font-semibold text-neutral-800">Lilith — Distressed Chat</h2>
+            </div>
+
+            <div className="flex-1 overflow-auto p-4 space-y-4">
+              {messages.map((m) => (
+                <div key={m.id} className={m.role === "user" ? "max-w-3xl ml-auto" : "max-w-3xl"}>
+                  <div
+                    className={
+                      "rounded-2xl px-4 py-3 shadow-sm " +
+                      (m.role === "user"
+                        ? "bg-neutral-900 text-white"
+                        : "bg-white border border-neutral-200")
+                    }
+                  >
+                    <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                      {m.content}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-neutral-200 bg-white p-3">
+              <div className="max-w-3xl mx-auto">
+                <div className="bg-neutral-100 rounded-2xl px-3 py-2 flex items-end gap-2">
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        onSend();
+                      }
+                    }}
+                    rows="1"
+                    placeholder="Ask about lien stack, DIP economics, milestones, advisors…"
+                    className="flex-1 bg-transparent outline-none resize-none text-sm max-h-40"
+                  />
+                  <button
+                    onClick={onSend}
+                    disabled={sending}
+                    className={
+                      "inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm " +
+                      (sending
+                        ? "bg-neutral-300 text-neutral-600"
+                        : "bg-neutral-900 text-white hover:bg-black")
+                    }
+                  >
+                    {sending ? "Thinking…" : "Ask"}
+                  </button>
+                </div>
+                <div className="mt-2 text-[11px] text-neutral-500">
+                  Shift+Enter for newline.
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      // ---------------------------
+      // Docket list (left pane)
+      // ---------------------------
+      function DocketList({ entries }) {
+        const [query, setQuery] = React.useState("");
+
+        const filtered = React.useMemo(() => {
+          const q = query.trim().toLowerCase();
+          if (!q) return entries;
+          return entries.filter(
+            (e) =>
+              e.caseNo.toLowerCase().includes(q) ||
+              e.title.toLowerCase().includes(q) ||
+              e.dateFiled.toLowerCase().includes(q)
+          );
+        }, [entries, query]);
+
+        return (
+          <aside className="w-[44%] max-w-[760px] min-w-[420px] border-r border-neutral-200 bg-white flex flex-col">
+            <div className="px-4 py-3 border-b border-neutral-200 flex items-center gap-2">
+              <h2 className="font-semibold text-neutral-800">Docket</h2>
+              <div className="ml-auto w-1/2">
+                <div className="flex items-center gap-2 bg-neutral-100 rounded-xl px-3 py-2">
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search case #, title, date…"
+                    className="bg-transparent outline-none text-sm w-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-4 py-2 border-b border-neutral-200 text-[12px] uppercase tracking-wide text-neutral-500 grid grid-cols-12">
+              <div className="col-span-3">Case #</div>
+              <div className="col-span-7">Document Name</div>
+              <div className="col-span-2 text-right">Date Filed</div>
+            </div>
+
+            <div className="flex-1 overflow-auto">
+              <ul className="divide-y">
+                {filtered.map((d, idx) => (
+                  <li key={idx} className="px-4 py-3">
+                    <div className="grid grid-cols-12 items-start gap-3">
+                      <div className="col-span-3 font-mono text-[13px] text-neutral-800">
+                        {d.caseNo}
+                      </div>
+                      <div className="col-span-7 min-w-0">
+                        <a
+                          href="#"
+                          className="text-[14px] text-blue-700 hover:underline break-words"
+                          title={d.title}
+                        >
+                          {d.title}
+                        </a>
+                        <div className="mt-1 text-[12px] text-neutral-500">
+                          <span className="mr-4">
+                            <span className="text-neutral-400">Attachments:</span>{" "}
+                            {d.attachments?.length
+                              ? d.attachments.join(", ")
+                              : "—"}
+                          </span>
+                          <span>
+                            <span className="text-neutral-400">Related:</span>{" "}
+                            {d.related?.length ? d.related.join(", ") : d.dateFiled || "—"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="col-span-2 text-right text-[13px] text-neutral-700">
+                        {d.dateFiled}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        );
+      }
+
+      // ---------------------------
+      // Main layout
+      // ---------------------------
+      function LilithDashboard() {
+        return (
+          <div className="w-full h-screen bg-neutral-50 flex overflow-hidden">
+            <DocketList entries={DOCKET_ENTRIES} />
+            <ChatPane />
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<LilithDashboard />);
+    </script>
+  </body>
+</html>
