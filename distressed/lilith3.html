@@ -16,14 +16,21 @@
 
     <script type="text/babel">
       // ---------------------------
-      // Case header config (edit this)
+      // Case header config (edit these)
       // ---------------------------
       const CASE_INFO = {
         company: "First Brands Group, LLC",
         caseNo: "25-90399",
-        // Put a URL here if you want a logo (PNG/SVG/JPG). Or set to null to hide.
-        // Example: "/distressed/first-brands-logo.png"
-        logoUrl: null,
+        logoUrl: null, // e.g., "/distressed/first-brands-logo.png" or null to hide
+        district: "S.D. Texas (Houston)",
+        judge: "Hon. Christopher M. Lopez",
+        chapter: "Chapter 11",
+        petitionDate: "09/29/2025",
+        venue: "Houston, Courtroom 401",
+        debtorCounsel: "Kirkland & Ellis LLP",
+        financialAdvisor: "Lazard Frères & Co. LLC",
+        uccCounsel: "Paul Hastings LLP",
+        dipAgent: "JPMorgan Chase Bank, N.A.",
       };
 
       // ---------------------------
@@ -52,8 +59,18 @@
       const cn = (...xs) => xs.filter(Boolean).join(" ");
 
       // ---------------------------
-      // Header card (company + case no.)
+      // Header card with stats
       // ---------------------------
+      function Stat({ label, value }) {
+        if (!value) return null;
+        return (
+          <div className="flex flex-col min-w-0">
+            <div className="text-[11px] uppercase tracking-wide text-neutral-500">{label}</div>
+            <div className="text-[13px] text-neutral-800 truncate">{value}</div>
+          </div>
+        );
+      }
+
       function CaseHeader({ info }) {
         return (
           <div className="bg-neutral-100 border-b border-neutral-200">
@@ -70,14 +87,22 @@
                     ✓
                   </div>
                 )}
-                <div>
-                  <div className="text-[20px] sm:text-[22px] font-semibold text-neutral-900">
-                    {info.company}
-                  </div>
-                  <div className="text-[13px] text-neutral-600">
-                    Case No. {info.caseNo}
-                  </div>
+                <div className="min-w-0">
+                  <div className="text-[20px] sm:text-[22px] font-semibold text-neutral-900">{info.company}</div>
+                  <div className="text-[13px] text-neutral-600">Case No. {info.caseNo}</div>
                 </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                <Stat label="District" value={info.district} />
+                <Stat label="Judge" value={info.judge} />
+                <Stat label="Chapter" value={info.chapter} />
+                <Stat label="Petition Date" value={info.petitionDate} />
+                <Stat label="Venue" value={info.venue} />
+                <Stat label="Debtor Counsel" value={info.debtorCounsel} />
+                <Stat label="Financial Advisor" value={info.financialAdvisor} />
+                <Stat label="UCC Counsel" value={info.uccCounsel} />
+                <Stat label="DIP Agent" value={info.dipAgent} />
               </div>
             </div>
           </div>
@@ -97,6 +122,7 @@
           },
         ]);
         const [input, setInput] = React.useState("");
+        the
         const [sending, setSending] = React.useState(false);
 
         const onSend = async () => {
@@ -250,7 +276,7 @@
       function LilithDashboard() {
         return (
           <div className="w-full h-screen bg-neutral-50 flex flex-col">
-            {/* Header card */}
+            {/* Header card w/ stats */}
             <CaseHeader info={CASE_INFO} />
 
             {/* Content */}
