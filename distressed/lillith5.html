@@ -132,6 +132,47 @@
       }
       return null;
     }
+    // ---------------------------------
+    // Typing helper for assistant output
+    // ---------------------------------
+    function addAssistant(mdText, afterHTML = "") {
+      const row = el("div", ""); // Assistant messages are left-aligned
+      const bubble = el(
+        "div",
+        "inline-block rounded-2xl px-4 py-3 bubble bg-white border border-neutral-200"
+      );
+      row.appendChild(bubble);
+      stream.appendChild(row);
+      stream.scrollTop = stream.scrollHeight;
+    
+      const raw = mdText || "";
+      const speed = 15; // milliseconds per character
+      let i = 0;
+    
+      // Start blinking cursor
+      bubble.classList.add("typing-cursor");
+    
+      const type = () => {
+        if (i <= raw.length) {
+          // progressively render Markdown as HTML
+          bubble.innerHTML = md(raw.slice(0, i));
+          stream.scrollTop = stream.scrollHeight;
+          i++;
+          setTimeout(type, speed);
+        } else {
+          // stop cursor when done
+          bubble.classList.remove("typing-cursor");
+          if (afterHTML) {
+            // append citations or extra HTML at the end
+            bubble.innerHTML += afterHTML;
+            stream.scrollTop = stream.scrollHeight;
+          }
+        }
+      };
+    
+      // small delay for realism
+      setTimeout(type, 250);
+    }
 
     // ------------------------
     // Build UI (no frameworks)
