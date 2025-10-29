@@ -14,6 +14,17 @@
     .thin-scrollbar { scrollbar-width: thin; scrollbar-color: #d4d4d8 transparent; }
     .bubble { max-width: 75%; }
   </style>
+  <style>
+  .typing-cursor::after {
+    content: "|";
+    animation: blink 0.7s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  </style>
+
+  
 </head>
 <body class="h-screen bg-neutral-50">
   <div id="app" class="w-full h-full flex overflow-hidden"></div>
@@ -265,6 +276,8 @@
       if (role === "assistant") {
         const chars = html.split("");
         bubble.innerHTML = ""; // start empty
+        bubble.classList.add("typing-cursor");
+
         let i = 0;
         const speed = 15; // ms per character — adjust for faster/slower
         const type = () => {
