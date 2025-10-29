@@ -300,6 +300,9 @@
     const chips = $("#faqChips", right);
 
     // Welcome message
+    // ---------------------------------
+    // Standard message (used for user only)
+    // ---------------------------------
     const addMsg = (role, html) => {
       const row = el("div", role === "user" ? "text-right" : "");
       const bubble = el(
@@ -309,50 +312,35 @@
             ? "bg-[#187ABA] text-white"
             : "bg-white border border-neutral-200")
       );
+      bubble.innerHTML = html;
       row.appendChild(bubble);
       stream.appendChild(row);
       stream.scrollTop = stream.scrollHeight;
-    
-      // ---- Typewriter effect ----
-      if (role === "assistant") {
-        const chars = html.split("");
-        bubble.innerHTML = ""; // start empty
-        bubble.classList.add("typing-cursor");
-
-        let i = 0;
-        const speed = 15; // ms per character — adjust for faster/slower
-        const type = () => {
-          if (i < chars.length) {
-            bubble.innerHTML += chars[i++];
-            stream.scrollTop = stream.scrollHeight; // keep scrolled to bottom
-            setTimeout(type, speed);
-          }
-        };
-        type();
-      } else {
-        // render user message instantly
-        bubble.innerHTML = html;
-      }
     };
 
-
-    addMsg("assistant", md("Welcome to **Lilith — Your Restructuring and Distressed AI Banker**. Pick a FAQ below or ask a question."));
+    addAssistant("Welcome to **Lilith — Your Restructuring and Distressed AI Banker**. Pick a FAQ below or ask a question.");
 
     // Chips
     PRESET_QA.forEach((item) => {
       const b = el("button", "text-xs px-2.5 py-1.5 rounded-full border border-neutral-300 bg-white hover:bg-neutral-100");
       b.textContent = item.q;
       b.addEventListener("click", () => {
+        // Show user question immediately
         addMsg("user", md(item.q));
-        addMsg("assistant", md(item.a) + (item.citations?.length
+      
+        // Build citations as HTML to append AFTER typing
+        const citationsHTML = (item.citations?.length)
           ? `<div class="mt-3 flex flex-wrap gap-2">
-               ${item.citations.map(c => `<a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">${c.label || 'Source'}</a>`).join("")}
+               ${item.citations.map(c => `
+                 <a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">
+                   ${c.label || 'Source'}
+                 </a>`).join("")}
              </div>`
-          : "")
-        );
+          : "";
+      
+        // Type the Markdown text, then append citations
+        addAssistant(item.a, citationsHTML);
       });
-      chips.appendChild(b);
-    });
 
     // Send handler
     function handleSend() {
