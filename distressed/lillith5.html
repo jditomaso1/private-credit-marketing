@@ -341,7 +341,10 @@
         // Type the Markdown text, then append citations
         addAssistant(item.a, citationsHTML);
       });
-
+      // ⚠️ Your code stops here — missing these two lines:
+      chips.appendChild(b);
+    }); // <-- this closing brace and parenthesis were missing!
+      
     // Send handler
     function handleSend() {
       const text = input.value.trim();
