@@ -252,13 +252,35 @@
       const row = el("div", role === "user" ? "text-right" : "");
       const bubble = el(
         "div",
-        "inline-block rounded-2xl px-4 py-3 bubble " + (role === "user" ? "bg-[#187ABA] text-white" : "bg-white border border-neutral-200")
+        "inline-block rounded-2xl px-4 py-3 bubble " +
+          (role === "user"
+            ? "bg-[#187ABA] text-white"
+            : "bg-white border border-neutral-200")
       );
-      bubble.innerHTML = html;
       row.appendChild(bubble);
       stream.appendChild(row);
       stream.scrollTop = stream.scrollHeight;
+    
+      // ---- Typewriter effect ----
+      if (role === "assistant") {
+        const chars = html.split("");
+        bubble.innerHTML = ""; // start empty
+        let i = 0;
+        const speed = 15; // ms per character — adjust for faster/slower
+        const type = () => {
+          if (i < chars.length) {
+            bubble.innerHTML += chars[i++];
+            stream.scrollTop = stream.scrollHeight; // keep scrolled to bottom
+            setTimeout(type, speed);
+          }
+        };
+        type();
+      } else {
+        // render user message instantly
+        bubble.innerHTML = html;
+      }
     };
+
 
     addMsg("assistant", md("Welcome to **Lilith — Your Restructuring and Distressed AI Banker**. Pick a FAQ below or ask a question."));
 
