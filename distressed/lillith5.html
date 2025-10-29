@@ -351,14 +351,17 @@
 
       const preset = matchPreset(text);
       if (preset) {
-        addMsg("assistant", md(preset.a) + (preset.citations?.length
+        const citationsHTML = (preset.citations?.length)
           ? `<div class="mt-3 flex flex-wrap gap-2">
-               ${preset.citations.map(c => `<a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">${c.label || 'Source'}</a>`).join("")}
+               ${preset.citations.map(c => `
+                 <a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">
+                   ${c.label || 'Source'}
+                 </a>`).join("")}
              </div>`
-          : "")
-        );
+          : "";
+        addAssistant(preset.a, citationsHTML);
       } else {
-        addMsg("assistant", md("I don't have a preset for that yet. Please add one to the preset list or connect a backend."));
+        addAssistant("I don't have a preset for that yet. Please add one to the preset list or connect a backend.");
       }
     }
 
