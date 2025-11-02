@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lilith — Case Box + Scrollable Docket + Preset Chat (No Framework)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CDN (styles only) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Optional: subtle scrollbar for docket list */
+    .thin-scrollbar::-webkit-scrollbar { width: 8px; }
+    .thin-scrollbar::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 8px; }
+    .thin-scrollbar { scrollbar-width: thin; scrollbar-color: #d4d4d8 transparent; }
+    .bubble { max-width: 75%; }
+  </style>
+  <style>
+  .typing-cursor::after {
+    content: "|";
+    animation: blink 0.7s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  </style>
+
+  
+</head>
+<body class="h-screen bg-neutral-50">
+  <div id="app" class="w-full h-full flex overflow-hidden"></div>
+
+  <script>
+    // ------------------------
+    // Data (edit as you like)
+    // ------------------------
+    const CASE_INFO = {
+      company: "First Brands Group, LLC",
+      caseNo: "25-90399",
+      district: "S.D. Texas (Houston)",
+      judge: "Hon. Christopher M. Lopez",
+      chapter: "Chapter 11",
+      petitionDate: "09/29/2025",
+      venue: "Houston, Courtroom 401",
+      debtorCounsel: "Kirkland & Ellis LLP",
+      financialAdvisor: "Lazard Frères & Co. LLC",
+    };
+
+    const DOCKET_ENTRIES = [
+      { caseNo: "25-90383", title: "Chapter 11 Voluntary Petition Filed by Global Assets LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/12a7yYhepK8Efwgi3AzCwkhR_dhvGIhBt/preview" },
+      { caseNo: "25-90384", title: "Chapter 11 Voluntary Petition Filed by Global Lease Assets Holdings, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1apg46Rg5rEvv-48gO44misECV2ZZbmsT/view?usp=drive_link" },
+      { caseNo: "25-90385", title: "Chapter 11 Voluntary Petition Filed by Carnaby Capital Holdings, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/10gjxREZv2eCK7NGa-u7OIIkGYcZ8Suvx/view?usp=drive_link" },
+      { caseNo: "25-90386", title: "Chapter 11 Voluntary Petition Filed by Broad Street Financial Holdings, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1ZWpWQgWoH_wxY-SOgdvXlz87tIt8h0BX/view?usp=drive_link" },
+      { caseNo: "25-90387", title: "Chapter 11 Voluntary Petition Filed by Broad Street Financial, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1FYzk7pN3DyWccw7Xnw2_jB7y9G2CmRpr/view?usp=drive_link" },
+      { caseNo: "25-90388", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory II, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1PZhheU9WbiEgXylcQBa5QmD4her-Jc4v/view?usp=drive_link" },
+      { caseNo: "25-90389", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory Holdings II, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/13B3e5w1_YEJOD40G6kNmzmFGaqGs-fyD/view?usp=drive_link" },
+      { caseNo: "25-90390", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory III, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1RrUcZA-UX9qQ6sDE3oqRlpme9vKXPK1_/view?usp=drive_link" },
+      { caseNo: "25-90391", title: "Chapter 11 Voluntary Petition Filed by Carnaby Inventory Holdings III, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/13VOfO8hpjoNLMZOoxQTwjURgBcrE0noX/view?usp=drive_link" },
+      { caseNo: "25-90392", title: "Chapter 11 Voluntary Petition Filed by Patterson Inventory, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1456W_WDzeqbFv6ArrvwspknhbXlwVT2y/view?usp=drive_link" },
+      { caseNo: "25-90393", title: "Chapter 11 Voluntary Petition Filed by Patterson Inventory Holdings, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/14zttXuZhrUoWQjPcOIplI0d5qe0laqQe/view?usp=drive_link" },
+      { caseNo: "25-90394", title: "Chapter 11 Voluntary Petition Filed by Starlight Inventory I, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/19iyWVP7kV2F-7aP0IAEaX7s4S9uBJGVu/view?usp=drive_link" },
+      { caseNo: "25-90395", title: "Chapter 11 Voluntary Petition Filed by Starlight Inventory Holdings I, LLC.", dateFiled: "09/24/2025", url: "https://drive.google.com/file/d/1QGEBnQxKYZYh6dSMag25-HnUc0JkP5Bn/view?usp=drive_link" },
+      { caseNo: "25-90396", title: "Chapter 11 Voluntary Petition Filed by Trico Technologies Corporation.", dateFiled: "09/28/2025", url: "https://drive.google.com/file/d/14-8BNJuoMlTk4LZxLbklL8t7PH5mIT1i/view?usp=drive_link" },
+    ];
+
+    const PRESET_QA = [
+      {
+        q: "What are the DIP terms?",
+        triggers: [/^dip\b/i, /dip terms/i, /debtor in possession/i, /priming/i],
+        a: `**DIP Overview (Mock)**
+• Facility: $150mm superpriority, priming
+• Pricing: SOFR + 675 bps (1.00% floor); OID 2.50%
+• Milestones: Sale procedures D+21; Sale hearing D+45
+• Adequate Protection: replacement liens; §507(b) superpriority
+• Use of Proceeds: working capital, case costs, critical vendors`,
+        citations: [{ label: "Interim DIP Order (Dkt. 72) p.7", url: "#" }],
+      },
+      {
+        q: "Summarize the first-day motions",
+        triggers: [/first[-\s]?day/i, /day 1/i, /initial motions/i],
+        a: `**First-Day Motions (Mock)**
+• Cash Management: continue existing system; §345(b) relief requested
+• Wages & Benefits: authority to continue programs and pay prepetition amounts
+• Taxes & Fees: authority to remit customary taxes/fees
+• Utilities: adequate assurance & objection procedures
+• Critical Vendors & 503(b)(9): limited authority to pay as necessary
+• Insurance, Surety, LOCs: authority to maintain and pay obligations`,
+        citations: [
+          { label: "Cash Management Motion (Dkt. 17)", url: "#" },
+          { label: "Wages & Benefits (Dkt. 16)", url: "#" },
+        ],
+      },
+      {
+        q: "Who are the advisors?",
+        triggers: [/advisors?/i, /counsel/i, /financial advisor/i],
+        a: `**Advisory Roster (Mock)**
+• Debtor Counsel: ${CASE_INFO.debtorCounsel}
+• Debtor FA: ${CASE_INFO.financialAdvisor}
+• UCC Counsel: TBD
+• DIP Agent: JPMorgan Chase Bank, N.A.`,
+        citations: [{ label: "First-Day Declaration (Dkt. 12)", url: "#" }],
+      },
+    ];
+
+    // ------------------------
+    // Utilities
+    // ------------------------
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const el = (tag, classes = "", text = "") => {
+      const n = document.createElement(tag);
+      if (classes) n.className = classes;
+      if (text) n.textContent = text;
+      return n;
+    };
+    const md = (text) => {
+      // minimal markdown: **bold**
+      return (text || "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br/>");
+    };
+
+    function matchPreset(text) {
+      const t = (text || "").trim();
+      for (const item of PRESET_QA) {
+        for (const trig of item.triggers) {
+          if ((typeof trig === "string" && t.toLowerCase().includes(trig.toLowerCase())) ||
+              (trig instanceof RegExp && trig.test(t))) {
+            return item;
+          }
+        }
+      }
+      return null;
+    }
+    // ---------------------------------
+    // Typing helper for assistant output
+    // ---------------------------------
+    function addAssistant(mdText, afterHTML = "") {
+      const row = el("div", ""); // Assistant messages are left-aligned
+      const bubble = el(
+        "div",
+        "inline-block rounded-2xl px-4 py-3 bubble bg-white border border-neutral-200"
+      );
+      row.appendChild(bubble);
+      stream.appendChild(row);
+      stream.scrollTop = stream.scrollHeight;
+    
+      const raw = mdText || "";
+      const speed = 15; // milliseconds per character
+      let i = 0;
+    
+      // Start blinking cursor
+      bubble.classList.add("typing-cursor");
+    
+      const type = () => {
+        if (i <= raw.length) {
+          // progressively render Markdown as HTML
+          bubble.innerHTML = md(raw.slice(0, i));
+          stream.scrollTop = stream.scrollHeight;
+          i++;
+          setTimeout(type, speed);
+        } else {
+          // stop cursor when done
+          bubble.classList.remove("typing-cursor");
+          if (afterHTML) {
+            // append citations or extra HTML at the end
+            bubble.innerHTML += afterHTML;
+            stream.scrollTop = stream.scrollHeight;
+          }
+        }
+      };
+    
+      // small delay for realism
+      setTimeout(type, 250);
+    }
+
+    // ------------------------
+    // Build UI (no frameworks)
+    // ------------------------
+    const app = $("#app");
+
+    // Left column wrapper
+    const left = el("div", "w-[44%] max-w-[760px] min-w-[420px] border-r border-neutral-200 flex flex-col bg-white");
+    app.appendChild(left);
+
+    // Case Box
+    const caseBox = el("div", "shrink-0 border-b border-neutral-200");
+    caseBox.innerHTML = `
+      <div class="px-4 py-3">
+        <div class="flex items-center gap-3">
+          <!-- <div class="w-10 h-10 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-300 text-lg">✓</div> -->
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <img src="../img/logo/firstbrandsgroupllc.png" alt="First Brands Group Logo" class="w-8 h-8 rounded-md object-contain"/>
+              <div class="text-[24px] font-semibold text-neutral-900">${CASE_INFO.company}</div>
+            </div>
+            <div class="text-[12px] text-neutral-600">Case No. ${CASE_INFO.caseNo}</div>
+          </div>
+        </div>
+        <div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+          ${[
+            ["District", CASE_INFO.district],
+            ["Judge", CASE_INFO.judge],
+            ["Chapter", CASE_INFO.chapter],
+            ["Petition Date", CASE_INFO.petitionDate],
+            ["Venue", CASE_INFO.venue],
+            ["Debtor Counsel", CASE_INFO.debtorCounsel],
+          ].map(([k,v]) => v ? `
+            <div class="flex flex-col min-w-0">
+              <div class="text-[11px] uppercase tracking-wide text-neutral-500">${k}</div>
+              <div class="text-[13px] text-neutral-800 truncate">${v}</div>
+            </div>` : "").join("")}
+        </div>
+      </div>
+    `;
+    left.appendChild(caseBox);
+
+    // Docket section container (header + list)
+    const docketWrap = el("div", "flex-1 flex flex-col overflow-hidden");
+    docketWrap.innerHTML = `
+      <div class="px-4 py-3 border-b border-neutral-200 bg-white flex items-center gap-2">
+        <h2 class="font-semibold text-neutral-800">Docket</h2>
+        <button id="uploadBtn" class="ml-4 px-3 py-1.5 rounded-lg bg-[#187ABA] text-white text-sm hover:bg-[#145c8b]">Upload</button>
+        <input type="file" id="fileInput" class="hidden" />
+        <div class="ml-auto w-1/2">
+          <div class="flex items-center gap-2 bg-neutral-100 rounded-xl px-3 py-2">
+            <input id="searchInput" placeholder="Search case #, title, date…" class="bg-transparent outline-none text-sm w-full"/>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 py-2 border-b border-neutral-200 text-[12px] uppercase tracking-wide text-neutral-500 grid grid-cols-12 bg-white">
+        <div class="col-span-3">Case #</div>
+        <div class="col-span-7">Document Name</div>
+        <div class="col-span-2 text-right">Date Filed</div>
+      </div>
+      <div id="docketList" class="flex-1 overflow-y-auto thin-scrollbar bg-white"></div>
+    `;
+    left.appendChild(docketWrap);
+
+    const renderDocket = (rows) => {
+      const host = $("#docketList", docketWrap);
+      host.innerHTML = "";
+      rows.forEach((d) => {
+        const li = el("div", "px-4 py-3 border-b");
+        li.innerHTML = `
+          <div class="grid grid-cols-12 items-start gap-3">
+            <div class="col-span-3 font-mono text-[13px] text-neutral-800">${d.caseNo}</div>
+            <div class="col-span-7">
+              <a href="${d.url || '#'}" target="_blank" class="text-[14px] text-blue-700 hover:underline">${d.title}</a>
+              <div class="text-[12px] text-neutral-500 mt-1">Filed: ${d.dateFiled}</div>
+            </div>
+            <div class="col-span-2 text-right text-[13px] text-neutral-700">${d.dateFiled}</div>
+          </div>
+        `;
+        host.appendChild(li);
+      });
+    };
+
+    let filtered = [...DOCKET_ENTRIES];
+    renderDocket(filtered);
+
+    $("#searchInput").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      filtered = DOCKET_ENTRIES.filter(d =>
+        d.caseNo.toLowerCase().includes(q) ||
+        d.title.toLowerCase().includes(q) ||
+        d.dateFiled.toLowerCase().includes(q)
+      );
+      renderDocket(filtered);
+    });
+
+    // Right column: Chat
+    const right = el("section", "flex-1 flex flex-col bg-white");
+    right.innerHTML = `
+      <div class="px-5 py-3 bg-[#187ABA] text-white flex items-center justify-between border-b border-[#187ABA]">
+        <h2 class="font-semibold text-[15px] tracking-wide">Lilith — Your Restructuring and Distressed AI Banker</h2>
+        <span class="text-xs text-neutral-400">Preset Q&A</span>
+      </div>
+      <div class="px-4 py-2 bg-neutral-50 border-b border-neutral-200">
+        <div id="faqChips" class="flex flex-wrap gap-2"></div>
+      </div>
+      <div id="chatStream" class="flex-1 overflow-auto p-4 space-y-4 bg-neutral-50"></div>
+      <div class="border-t border-neutral-200 bg-white p-3">
+        <div class="flex items-end gap-2 bg-neutral-100 rounded-2xl px-3 py-2">
+          <!-- <textarea id="chatInput" rows="1" placeholder="Type a question or click a preset above…" class="flex-1 bg-transparent outline-none resize-none text-sm max-h-32"></textarea> -->
+          <textarea
+            id="chatInput"
+            rows="1"
+            placeholder="Type a question or click a preset above…"
+            class="flex-1 bg-transparent outline-none resize-none text-sm max-h-32 py-[8px] leading-[1.4]"
+            style="vertical-align: middle;"
+          ></textarea>
+          <button id="sendBtn" class="px-3 py-2 rounded-xl text-sm bg-neutral-900 text-white hover:bg-black">Ask</button>
+        </div>
+      </div>
+    `;
+    app.appendChild(right);
+
+    const stream = $("#chatStream", right);
+    const input = $("#chatInput", right);
+    const sendBtn = $("#sendBtn", right);
+    const chips = $("#faqChips", right);
+
+    // Welcome message
+    // ---------------------------------
+    // Standard message (used for user only)
+    // ---------------------------------
+    const addMsg = (role, html) => {
+      const row = el("div", role === "user" ? "text-right" : "");
+      const bubble = el(
+        "div",
+        "inline-block rounded-2xl px-4 py-3 bubble " +
+          (role === "user"
+            ? "bg-[#187ABA] text-white"
+            : "bg-white border border-neutral-200")
+      );
+      bubble.innerHTML = html;
+      row.appendChild(bubble);
+      stream.appendChild(row);
+      stream.scrollTop = stream.scrollHeight;
+    };
+
+    addAssistant("Welcome to **Lilith — Your Restructuring and Distressed AI Banker**. Pick a FAQ below or ask a question.");
+
+    // Chips
+    PRESET_QA.forEach((item) => {
+      const b = el("button", "text-xs px-2.5 py-1.5 rounded-full border border-neutral-300 bg-white hover:bg-neutral-100");
+      b.textContent = item.q;
+      b.addEventListener("click", () => {
+        // Show user question immediately
+        addMsg("user", md(item.q));
+      
+        // Build citations as HTML to append AFTER typing
+        const citationsHTML = (item.citations?.length)
+          ? `<div class="mt-3 flex flex-wrap gap-2">
+               ${item.citations.map(c => `
+                 <a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">
+                   ${c.label || 'Source'}
+                 </a>`).join("")}
+             </div>`
+          : "";
+      
+        // Type the Markdown text, then append citations
+        addAssistant(item.a, citationsHTML);
+      });
+      // ⚠️ Your code stops here — missing these two lines:
+      chips.appendChild(b);
+    }); // <-- this closing brace and parenthesis were missing!
+      
+    // Send handler
+    function handleSend() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMsg("user", md(text));
+      input.value = "";
+
+      const preset = matchPreset(text);
+      if (preset) {
+        const citationsHTML = (preset.citations?.length)
+          ? `<div class="mt-3 flex flex-wrap gap-2">
+               ${preset.citations.map(c => `
+                 <a class="text-[11px] px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100" target="_blank" href="${c.url || '#'}">
+                   ${c.label || 'Source'}
+                 </a>`).join("")}
+             </div>`
+          : "";
+        addAssistant(preset.a, citationsHTML);
+      } else {
+        addAssistant("I don't have a preset for that yet. Please add one to the preset list or connect a backend.");
+      }
+    }
+
+    sendBtn.addEventListener("click", handleSend);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+    // Mock upload button logic
+  const uploadBtn = document.getElementById("uploadBtn");
+  const fileInput = document.getElementById("fileInput");
+  
+  uploadBtn.addEventListener("click", () => {
+    fileInput.click(); // opens the file chooser
+  });
+  
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      alert(`You selected: ${file.name}`);
+    }
+  });
+  </script>
+</body>
+</html>
