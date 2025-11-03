@@ -194,6 +194,7 @@
       <!-- Filters -->
       <nav id="filters" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px;">
         <button data-tag="All" class="pill pill--active">All</button>
+        <button data-tag="New Deals" class="pill">New Deals</button>
         <button data-tag="Direct Lending" class="pill">Direct Lending</button>
         <button data-tag="CLO" class="pill">CLO</button>
         <button data-tag="NAV" class="pill">NAV</button>
@@ -365,7 +366,7 @@
         return `
           <a class="card" href="${href}" target="_blank" rel="noopener">
             <div class="card-title">${cleanTitle(i.title||'')}</div>
-            <div class="card-meta">${badgeHTML(host)} ${when} · ${formatDate(i.published_at)}</div>
+            <div class="card-meta">${badgeHTML(host)} <strong>${host}</strong> · ${when} · ${formatDate(i.published_at)}</div>
             ${tagPills(i.tags)}
           </a>`;
       }).join('');
@@ -389,7 +390,18 @@
       const active = document.querySelector('#filters .pill.pill--active');
       return active ? active.dataset.tag : 'All';
     }
+    // --- Deal filter helpers ---
+    function isDealHeadline(text = '') {
+      // Match common deal/financing keywords
+      return /(deal|financing|loan|facility|term loan|credit agreement|raises|closes|priced|private credit|investment|funding)/i.test(text);
+    }
     
+    function isRecent(iso) {
+      const d = new Date(iso);
+      const days = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+      return days <= 14; // past 2 weeks
+    }
+  
     function applyFilter(tag = getSelectedTag()){
       const includeSEC = document.getElementById('toggle-sec')?.checked !== false;
     
@@ -398,6 +410,14 @@
     
       // tag filter
       const selected = normalizeTag(tag);
+      // --- New Deals custom filter ---
+      if (selected === 'New Deals') {
+        filtered = _items.filter(i =>
+          isDealHeadline(`${i.title} ${i.description || ''}`) &&
+          isRecent(i.published_at)
+        );
+      }
+
       if (selected !== 'All') {
         filtered = filtered.filter(i =>
           toTagArray(i.tags).map(t => normalizeTag(t)).includes(selected)
