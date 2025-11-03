@@ -418,7 +418,7 @@
         );
       }
 
-      if (selected !== 'All') {
+      if (selected !== 'All' && selected !== 'New Deals') {
         filtered = filtered.filter(i =>
           toTagArray(i.tags).map(t => normalizeTag(t)).includes(selected)
         );
