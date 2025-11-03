@@ -411,11 +411,10 @@
       // tag filter
       const selected = normalizeTag(tag);
       // --- New Deals custom filter ---
+      // --- New Deals custom filter ---
       if (selected === 'New Deals') {
-        filtered = _items.filter(i =>
-          isDealHeadline(`${i.title} ${i.description || ''}`) &&
-          isRecent(i.published_at)
-        );
+        // Give a slightly wider window (e.g., 21 days) so you actually see matches
+        filtered = _items.filter(i => isDeal(i) && isRecentItem(i, 21));
       }
 
       if (selected !== 'All' && selected !== 'New Deals') {
@@ -430,7 +429,17 @@
     
       // build ordered list: non-SEC first, SEC after (if toggle is on)
       const ordered = includeSEC ? [...nonSec, ...sec] : nonSec;
-    
+
+      // If nothing matches, show an empty state instead of a blank page
+      if (!ordered.length) {
+        const top = document.getElementById('top10');
+        if (top) top.innerHTML = '';
+        const feed = document.getElementById('feed');
+        if (feed) {
+          feed.innerHTML = '<div style="color:#6b7280">No matching new deals in the recent window. Try widening the window or keywords.</div>';
+        }
+        return; // stop here so we don't try to render empty lists below
+      }
       // render
       renderTop10(ordered);
       renderFeed(ordered.slice(10, 280));
@@ -440,7 +449,7 @@
     function massageItem(raw = {}) {
       const url = rewriteGoogleNewsUrl(raw.url || '');
       const published = raw.published_at || raw.pubDate || raw.date || null;
-      let published_at;
+      let published_at = null;
       if (published) {
         const d = new Date(published);
         if (!isNaN(d.getTime())) published_at = d.toISOString();
@@ -448,6 +457,7 @@
       const tags = toTagArray(raw.tags || []);
       return { ...raw, url, published_at, tags };
     }
+
 
     // --- Data load (tolerant of payload shapes) ---
     function normalizeFeedData(data) {
