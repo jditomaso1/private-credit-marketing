@@ -390,18 +390,30 @@
       const active = document.querySelector('#filters .pill.pill--active');
       return active ? active.dataset.tag : 'All';
     }
-    // --- Deal filter helpers ---
-    function isDealHeadline(text = '') {
-      // Match common deal/financing keywords
-      return /(deal|financing|loan|facility|term loan|credit agreement|raises|closes|priced|private credit|investment|funding)/i.test(text);
+    // --- Deal filter helpers (required for "New Deals") ---
+    function getPublishedDate(item) {
+      const cand = item?.published_at || item?.pubDate || item?.date;
+      if (!cand) return null;
+      const d = new Date(cand);
+      return isNaN(d) ? null : d;
     }
     
-    function isRecent(iso) {
-      const d = new Date(iso);
-      const days = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
-      return days <= 14; // past 2 weeks
+    function isRecentItem(item, days = 14) {
+      const d = getPublishedDate(item);
+      if (!d) return false;
+      const diffDays = (Date.now() - d.getTime()) / 86400000;
+      return diffDays <= days;
     }
-  
+    
+    function isDeal(item) {
+      const text = `${item?.title || ''} ${item?.summary || ''} ${item?.description || ''}`;
+      const tagText = (toTagArray(item?.tags).join(' ') || '');
+      const dealRegex = /(deal|financ(ing|e)|loan|facility|term loan|unitranche|credit agreement|arrang|syndicat|priced?|launch|refinanc|raise[sd]?|close[sd]?|private credit|investment|funding|debt package|senior secured|mezzanine)/i;
+      return dealRegex.test(`${text} ${tagText}`);
+    }
+
+    
+    // --- Deal filter helpers ---  
     function applyFilter(tag = getSelectedTag()){
       const includeSEC = document.getElementById('toggle-sec')?.checked !== false;
     
