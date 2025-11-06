@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>White Papers | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../img/favicon.png?v=8" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GY4CQ6ZFH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6GY4CQ6ZFH');
+  </script>
+
+  <style>
+    :root {
+      --pcai-blue:#3a71b0;
+      --pcai-accent:#007bff;
+      --pcai-bg:#f4f4f4;
+      --pcai-text:#333;
+    }
+    body {
+      font-family:'Poppins',sans-serif;
+      margin:0;
+      background:var(--pcai-bg);
+      color:var(--pcai-text);
+    }
+    header {
+      background:#fff;
+      color:#000;
+      padding:10px 20px;
+    }
+    .header-container {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .site-title {
+      font-size:24px;
+      font-weight:700;
+    }
+    nav {padding:10px 0;}
+    .nav-links {
+      display:flex;
+      align-items:center;
+      gap:.1px;
+      flex-wrap:wrap;
+    }
+    .nav-item a {
+      color:#000;
+      text-decoration:none;
+      font-weight:400;
+      padding:10px 16px;
+      font-size:14.5px;
+      letter-spacing:.25px;
+    }
+
+    /* Page container */
+    .wrapper {
+      max-width:1200px;
+      margin:40px auto;
+      background:#fff;
+      border-radius:8px;
+      box-shadow:0 8px 24px rgba(0,0,0,.08);
+      padding:40px;
+    }
+    h1 {
+      text-align:center;
+      font-size:28px;
+      margin-bottom:30px;
+      color:var(--pcai-blue);
+    }
+    p.intro {
+      text-align:center;
+      max-width:800px;
+      margin:0 auto 40px;
+      color:#555;
+    }
+
+    /* Grid of cards */
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:30px;
+    }
+    .card {
+      background:#fafafa;
+      border:1px solid #e8e8e8;
+      border-radius:10px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
+    }
+    .card img {
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-bottom:1px solid #ddd;
+    }
+    .card-content {
+      padding:20px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .card h3 {
+      font-size:18px;
+      margin:0 0 10px 0;
+      color:var(--pcai-text);
+    }
+    .card p {
+      font-size:14px;
+      color:#555;
+      line-height:1.5;
+      flex:1;
+    }
+    .card a {
+      margin-top:15px;
+      display:inline-block;
+      background:var(--pcai-accent);
+      color:#fff;
+      text-decoration:none;
+      padding:10px 14px;
+      border-radius:6px;
+      font-weight:500;
+      text-align:center;
+      transition:background .2s;
+    }
+    .card a:hover {
+      background:#1a242f;
+    }
+
+    footer {
+      background:var(--pcai-blue);
+      padding:40px 20px;
+      color:#fff;
+      margin-top:60px;
+    }
+    footer a {
+      color:#fff;
+      text-decoration:none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="https://private-credit.ai" style="text-decoration:none;color:inherit;">
+        <div class="site-title" style="display:flex;align-items:center;gap:10px;">
+          <img src="../../img/favicon.png" alt="Private Credit AI logo" style="height:28px">
+          <span>Private Credit AI</span>
+        </div>
+      </a>
+      <nav>
+        <div class="nav-links">
+          <div class="nav-item"><a href="/index.html">Home</a></div>
+          <div class="nav-item"><a href="/about.html">About</a></div>
+          <div class="nav-item"><a href="/contact.html">Contact</a></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- White Papers Index -->
+  <div class="wrapper">
+    <h1>Private Credit AI White Papers</h1>
+    <p class="intro">
+      Explore the research defining the intersection of artificial intelligence, private markets, and credit analysis.
+      Each white paper offers data-driven insights and forward-looking frameworks for credit managers and allocators.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <img src="../../img/white-paper/vectorized-due-diligence.png" alt="Vectorized Due Diligence">
+        <div class="card-content">
+          <h3>Vectorized Due Diligence</h3>
+          <p>How semantic AI compresses weeks of document review into hours—enabling instant cross-document insights.</p>
+          <a href="vectorized-due-diligence.html">Read More ›</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../../img/white-paper/compliance-singularity.png" alt="Compliance Singularity">
+        <div class="card-content">
+          <h3>The Compliance Singularity</h3>
+          <p>Automation is redefining compliance. Discover how AI-driven oversight transforms monitoring and assurance.</p>
+          <a href="compliance-singularity.html">Read More ›</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../../img/white-paper/ai-enabled-clos.png" alt="AI Enabled CLOs">
+        <div class="card-content">
+          <h3>AI-Enabled CLOs</h3>
+          <p>See how machine intelligence reshapes the structuring and ongoing analysis of CLO portfolios.</p>
+          <a href="ai-enabled-clos.html">Read More ›</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../../img/white-paper/private-credit+ESG.png" alt="Private Credit + ESG">
+        <div class="card-content">
+          <h3>Private Credit + ESG</h3>
+          <p>How NLP quantifies non-financial risk, bridging sustainability metrics and credit performance.</p>
+          <a href="private-credit+ESG.html">Read More ›</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../../img/white-paper/infrastructure-of-trust.png" alt="Infrastructure of Trust">
+        <div class="card-content">
+          <h3>Infrastructure of Trust</h3>
+          <p>Establishing data integrity frameworks for AI-driven credit systems across private markets.</p>
+          <a href="infrastructure-of-trust.html">Read More ›</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../../img/white-paper/human+machine-frontier.png" alt="Human + Machine Frontier">
+        <div class="card-content">
+          <h3>The Human + Machine Frontier</h3>
+          <p>Examining collaboration between analysts and AI—reshaping underwriting and diligence workflows.</p>
+          <a href="human+machine-frontier.html">Read More ›</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;text-align:center;gap:20px;">
+      <div style="flex:1;min-width:250px;">
+        <strong style="font-size:16px;">Private Credit AI</strong><br/>
+        <span style="font-size:14px;">© 2025 All rights reserved.</span>
+      </div>
+      <div style="flex:1;min-width:250px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+        <a href="/about.html">About</a>
+        <a href="#">Terms</a>
+        <a href="https://www.linkedin.com/company/private-credit-ai" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
