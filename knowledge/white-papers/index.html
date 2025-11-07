@@ -178,46 +178,52 @@
       color:#fff;
       text-decoration:none;
     }
+    /* --- Compact White Papers Grid --- */
     .white-papers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 2.5rem;
-      padding: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 3+ cards per row on large screens */
+      gap: 1.5rem;
+      padding: 1.5rem;
     }
     
+    /* Card size tuning */
     .white-papers-grid .card {
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      height: 520px; /* was ~420px */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      height: 380px; /* smaller than 520px */
     }
     
     .white-papers-grid .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
     }
     
     .white-papers-grid .card img {
-      height: 220px; /* was ~160px */
+      height: 140px; /* smaller image */
       object-fit: cover;
       width: 100%;
     }
     
     .white-papers-grid .card h3 {
-      font-size: 1.2rem;
-      margin: 1rem 0 0.5rem;
+      font-size: 1rem;
+      margin: 0.75rem 0 0.4rem;
     }
     
     .white-papers-grid .card p {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       line-height: 1.4;
       padding: 0 1rem;
     }
     
-    .white-papers-grid .card .btn {
-      margin: 1rem;
+    .white-papers-grid .card .btn,
+    .white-papers-grid .card a {
+      margin: 0.75rem 1rem;
+      padding: 6px 10px;
+      font-size: 0.85rem;
     }
+
   </style>
 </head>
 
