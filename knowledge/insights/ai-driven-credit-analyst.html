@@ -3,48 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Rise of the AI-Driven Credit Analyst | Private Credit AI</title>
-  <meta name="description" content="The Rise of the AI-Driven Credit Analyst. How automation, AI underwriting tools, predictive analytics, and workflow automation are redefining the credit analyst role in private credit." />
+  <title>Hello Joe</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Placeholder for injected styles -->
-  <style id="style-placeholder"></style>
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="/includes/global.css">
 
-  <!-- Load styles -->
-  <script>
-    async function loadStyles() {
-      const res = await fetch('/_includes/styles.html');
-      const html = await res.text();
-      document.getElementById('style-placeholder').innerHTML = html;
-    }
-
-    // Hide page until styles apply
-    document.write('<style>body{opacity:0;}</style>');
-    loadStyles().then(() => {
-      document.body.style.opacity = 1;
-    });
-  </script>
-
-  <!-- Header + footer injection -->
-  <script>
-    async function inject(partial, elementId) {
-      const res = await fetch(partial);
-      const html = await res.text();
-      document.getElementById(elementId).innerHTML = html;
-    }
-
-    window.onload = () => {
-      inject('/_includes/header.html', 'header-placeholder');
-      inject('/_includes/footer.html', 'footer-placeholder');
-    };
-  </script>
+  <!-- Include system -->
+  <script src="/includes/include.js" defer></script>
 </head>
-<body>
-<div id="header-placeholder"></div>
-<article>
-<div class="article-wrapper">
+
+<body data-header="basic">
+
+  <!-- Header -->
+  <div id="site-header"></div>
+
+  <!-- Article Content -->
+  <article>
+  <div class="article-wrapper">
+  <!-- YOUR FULL ARTICLE CONTENT — EXACTLY AS PROVIDED -->
+  
 <h1>The Rise of the AI-Driven Credit Analyst</h1>
 <h2>How Automation and Intelligence Are Redefining Underwriting in Private Credit</h2>
 
@@ -614,6 +594,9 @@ It’s eliminating the inefficiencies that kept analysts buried in grunt work.</
 <p><strong>“Which analysts will embrace AI soon enough to lead — and which ones will get left behind?”</strong></p>
 </div>
 </article>
-<div id="footer-placeholder"></div>
+
+  <!-- Footer (injected by master-footer.html) -->
+  <div id="site-footer"></div>
+
 </body>
 </html>
