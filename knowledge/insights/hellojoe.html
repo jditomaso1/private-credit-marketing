@@ -5,48 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hello Joe</title>
 
-  <!-- hide body until includes are injected -->
-  <style>
-    body { visibility: hidden; }
-  </style>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- styles placeholder -->
-  <style id="styles-placeholder"></style>
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="/includes/global.css">
+
+  <!-- Include system -->
+  <script src="/includes/include.js" defer></script>
 </head>
 
-<body>
+<body data-header="basic">
 
-<script>
-async function inject(path, id) {
-  try {
-    const res = await fetch(path);
-    if (!res.ok) throw new Error("Failed: " + path);
-    document.getElementById(id).innerHTML = await res.text();
-  } catch (e) {
-    console.error("Inject error:", e);
-  }
-}
+  <!-- Header -->
+  <div id="site-header"></div>
 
-(async () => {
-  await inject('/includes/styles.html', 'styles-placeholder');
-  await inject('/includes/header.html', 'header-placeholder');
-  await inject('/includes/footer2.html', 'footer-placeholder');
-  document.body.style.visibility = 'visible';
-})();
-</script>
+  <!-- Main Content -->
+  <main style="padding: 40px; font-size: 32px;">
+    Hello Joe!
+  </main>
 
-<!-- header -->
-<div id="header-placeholder"></div>
-
-<!-- PAGE CONTENT -->
-<article>
-  <div class="article-wrapper">
-    <h1>Hello Joe!</h1>
-  </div>
-</article>
-
-<!-- footer -->
-<div id="footer-placeholder"></div>
+  <!-- Footer -->
+  <div id="site-footer"></div>
 
 </body>
 </html>
