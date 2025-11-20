@@ -21,9 +21,9 @@
   }
 
   Promise.all([
-    inject('/_includes/styles.html', 'styles-placeholder'),
-    inject('/_includes/header.html', 'header-placeholder'),
-    inject('/_includes/footer.html', 'footer-placeholder')
+    inject('/includes/styles.html', 'styles-placeholder'),
+    inject('/includes/header.html', 'header-placeholder'),
+    inject('/includes/footer.html', 'footer-placeholder')
   ]).then(() => {
     document.body.style.visibility = 'visible';  // ← removes flicker
   });
