@@ -8,11 +8,20 @@
     <!-- ADD THIS LINE -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
-
   <style id="style-placeholder"></style>
-
 </head>
 
+<script>
+  async function inject(path, id) {
+    const res = await fetch(path);
+    document.getElementById(id).innerHTML = await res.text();
+  }
+
+  inject('/_includes/styles.html', 'styles-placeholder');
+  inject('/_includes/header.html', 'header-placeholder');
+  inject('/_includes/footer.html', 'footer-placeholder');
+</script>
+  
 <body>
   <div id="styles-placeholder"></div>
   <div id="header-placeholder"></div>
