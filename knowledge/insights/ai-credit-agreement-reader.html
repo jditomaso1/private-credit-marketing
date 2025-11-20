@@ -7,35 +7,9 @@
   <meta name="description" content="AI Credit Agreement Reader: Transform dense legal credit agreements into structured, analyzable deal intelligence. Learn how AI accelerates underwriting, monitoring, and portfolio surveillance." />
     <!-- ADD THIS LINE -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
-  <style id="style-placeholder"></style>
+  <link rel="stylesheet" href="/_includes/styles.html">
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
 
-  <script>
-    async function loadStyles() {
-      const res = await fetch('/_includes/styles.html');
-      const html = await res.text();
-      document.getElementById('style-placeholder').innerHTML = html;
-    }
-  
-    // Hide page until styles are applied
-    document.write('<style>body{opacity:0;}</style>');
-  
-    loadStyles().then(() => {
-      document.body.style.opacity = 1;
-    });
-  </script>
-
-  <script>
-    async function inject(partial, elementId) {
-      const res = await fetch(partial);
-      const html = await res.text();
-      document.getElementById(elementId).innerHTML = html;
-    }
-    window.onload = () => {
-      inject('/_includes/header.html', 'header-placeholder');
-      inject('/_includes/footer.html', 'footer-placeholder');
-    };
-  </script>
-  
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -557,4 +531,13 @@ it’s the new foundation of private credit operations.</p>
 </article>
 <div id="footer-placeholder"></div>
 </body>
+<script>
+  async function inject(p, id) {
+    const r = await fetch(p);
+    document.getElementById(id).innerHTML = await r.text();
+  }
+  inject('/_includes/header.html','header-placeholder');
+  inject('/_includes/footer.html','footer-placeholder');
+</script>
+
 </html>
