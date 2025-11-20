@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+  body { visibility: hidden; }
+</style>
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,9 +22,13 @@
     document.getElementById(id).innerHTML = await res.text();
   }
 
-  inject('/_includes/styles.html', 'styles-placeholder');
-  inject('/_includes/header.html', 'header-placeholder');
-  inject('/_includes/footer.html', 'footer-placeholder');
+  Promise.all([
+    inject('/_includes/styles.html', 'styles-placeholder'),
+    inject('/_includes/header.html', 'header-placeholder'),
+    inject('/_includes/footer.html', 'footer-placeholder')
+  ]).then(() => {
+    document.body.style.visibility = 'visible';  // ← removes flicker
+  });
 </script>
   
 <body>
