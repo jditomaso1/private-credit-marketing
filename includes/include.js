@@ -16,5 +16,5 @@
   }
 
   await inject("#site-header", `/includes/master-header-${variant}.html`);
-  await inject("#site-footer", "/includes/footer.html");
+  await inject("#site-footer", "/includes/master-footer.html");
 })();
