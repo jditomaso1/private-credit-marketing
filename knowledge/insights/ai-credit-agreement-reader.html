@@ -8,6 +8,18 @@
     <!-- ADD THIS LINE -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
+
+  <style id="style-placeholder"></style>
+<script>
+  document.write('<style>body{opacity:0;}</style>');
+  async function loadStyles() {
+    const res = await fetch('/_includes/styles.html');
+    document.getElementById('style-placeholder').innerHTML = await res.text();
+    document.body.style.opacity = 1;
+  }
+  loadStyles();
+</script>
+
 </head>
 
 <body>
