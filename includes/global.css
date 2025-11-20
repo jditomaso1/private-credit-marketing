@@ -7,20 +7,22 @@ body {
   color: #333;
 }
 
-/* Footer Styling */
 footer {
-  background: #0d6efd;   /* blue banner */
+  background-color: #3a71b0; /* match About page */
   color: #fff;
-  padding: 20px 0;
+  padding: 40px 20px;
   width: 100%;
+  font-family: 'Poppins', sans-serif;
 }
 
 footer a {
   color: #fff;
   text-decoration: none;
+  font-size: 14px;
   font-weight: 500;
 }
 
 footer a:hover {
   text-decoration: underline;
 }
+
