@@ -1,101 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Insights | Private Credit AI Knowledge Hub</title>
-  <meta name="description" content="Weekly insights into private credit markets: spreads, CLO issuance, LP allocations, AI adoption, and more." />
-  <link rel="canonical" href="https://private-credit.ai/knowledge/insights" />
+  <meta charset="UTF-8" />
+  <title>Insights | Private Credit AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Favicons & Fonts -->
+  <!-- Fonts & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    :root { --maxw: 1100px; --fg:#111; --muted:#666; --bg:#fff; --accent:#0f766e; --border:#eaeaea; }
-    body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
-    .container{max-width:var(--maxw);margin:0 auto;padding:28px 20px 80px;}
-    header.hero{padding:18px 0 20px;}
-    .eyebrow{color:var(--accent);font-weight:600;letter-spacing:.02em;text-transform:uppercase;font-size:12px;}
-    h1{font-size:36px;line-height:1.2;margin:8px 0 10px;}
-    .lede{font-size:18px;color:#222;max-width:800px;line-height:1.6;}
-    .searchbar{margin:22px 0 8px;display:flex;gap:10px}
-    .searchbar input{flex:1;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:16px}
-    .searchbar button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px 16px;font-weight:600;cursor:pointer}
-    .tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 20px}
-    .tag{font-size:12px;border:1px solid #cde8e4;background:#eef6f5;color:#0f4b45;border-radius:999px;padding:6px 10px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin:20px 0}
-    .card{border:1px solid var(--border);border-radius:14px;padding:18px;background:#fff;transition:box-shadow .2s, transform .05s;}
-    .card:hover{box-shadow:0 6px 26px rgba(0,0,0,.06);transform:translateY(-1px)}
-    .card .eyebrow{font-size:11px}
-    .card h3{font-size:20px;margin:6px 0 8px}
-    .card p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
-    .card a{display:inline-block;margin-top:12px;color:var(--accent);text-decoration:none;font-weight:600}
-    .list{margin-top:30px}
-    .list .item{border-top:1px solid var(--border);padding:16px 0}
-    .list .item:first-child{border-top:none}
-    .item a{color:var(--accent);text-decoration:none;font-weight:600;font-size:18px}
-    .item p{color:var(--muted);margin:6px 0 0;font-size:14px}
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px; /* matches your earlier spacing */
-      align-items: start; /* prevents stretching if one card is taller */
+    :root{
+      --pcai-blue:#3a71b0;
+      --pcai-accent:#007bff;
+      --pcai-bg:#fff;
+      --pcai-text:#333;
+    }
+
+    body{
+      font-family:'Poppins',sans-serif;
+      margin:0;
+      background:#fff;
+      color:var(--pcai-text);
+    }
+
+    /* HEADER */
+    header{
+      background:#fff;
+      color:#000;
+      padding:10px 20px;
+      border-bottom:1px solid #eaeaea;
+    }
+    .header-container{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      max-width:1200px;
+      margin:0 auto;
+    }
+    .site-title{
+      font-size:24px;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    nav .nav-links{
+      display:flex;
+      align-items:center;
+      gap:0px;
+    }
+    .nav-item a{
+      color:#000;
+      text-decoration:none;
+      font-weight:400;
+      padding:10px 16px;
+      font-size:14.5px;
+      letter-spacing:.25px;
+    }
+
+    /* PAGE WRAPPER */
+    .insights-wrapper{
+      max-width:1200px;
+      margin:40px auto;
+      padding:0 20px 60px;
+    }
+
+    h1{
+      font-size:32px;
+      margin:0 0 10px 0;
+      font-weight:700;
+    }
+
+    .lede{
+      font-size:16px;
+      color:#444;
+      line-height:1.6;
+      max-width:800px;
+      margin-bottom:30px;
+    }
+
+    /* GRID */
+    .insights-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
+      gap:30px 40px;
+      margin-top:30px;
+    }
+
+    .insight-item a{
+      color:var(--pcai-accent);
+      font-size:18px;
+      font-weight:600;
+      text-decoration:none;
+    }
+
+    .insight-item p{
+      margin:6px 0 0;
+      font-size:14px;
+      color:#555;
+      line-height:1.5;
+      max-width:90%;
+    }
+
+    /* FOOTER */
+    footer{
+      background:var(--pcai-blue);
+      padding:40px 20px;
+      margin-top:60px;
+      color:#fff;
     }
   </style>
 </head>
+
 <body>
-  <main class="container">
-    <header class="hero">
-      <div class="eyebrow">Knowledge Hub</div>
-      <h1>Insights</h1>
-      <p class="lede">
-        Weekly commentary on private credit markets — spreads, fundraising, CLO issuance, LP flows, 
-        and how AI is reshaping credit strategies.
-      </p>
-      <div class="searchbar">
-        <input type="search" placeholder="Search insights…" aria-label="Search Insights">
-        <button type="button">Search</button>
-      </div>
-      <div class="tags">
-        <span class="tag">Private Credit</span>
-        <span class="tag">CLOs</span>
-        <span class="tag">Direct Lending</span>
-        <span class="tag">AI in Credit</span>
-        <span class="tag">Spreads</span>
-      </div>
-    </header>
 
-    <!-- Featured Insights -->
-    <section class="grid">
-      <div class="card">
-        <div class="eyebrow">Featured Insight</div>
-        <h3><a href="/knowledge/insights/clos-in-the-age-of-ai.html">CLOs in the Age of AI: The Next Frontier</a></h3>
-        <p class="meta">Published Sep 9, 2025 • 6–8 min read</p>
-        <p>AI is moving CLOs into a new era — compressing analysis timelines, strengthening structure, and elevating LP reporting.</p>
-        <a href="/knowledge/insights/clos-in-the-age-of-ai.html">Read More →</a>
+<!-- HEADER -->
+<header>
+  <div class="header-container">
+    <a href="https://private-credit.ai" style="text-decoration:none;color:inherit;">
+      <div class="site-title">
+        <img src="/img/favicon.png" alt="Private Credit AI logo" style="height:28px">
+        <span>Private Credit AI</span>
       </div>
-    </section>
+    </a>
+    <nav>
+      <div class="nav-links">
+        <div class="nav-item"><a href="/index.html">Home</a></div>
+        <div class="nav-item"><a href="/about.html">About</a></div>
+        <div class="nav-item"><a href="/contact.html">Contact</a></div>
+      </div>
+    </nav>
+  </div>
+</header>
 
-    <!-- Latest Insights List -->
-    <section class="list">
-      <div class="item">
-        <a href="/knowledge/insights/private-credit-market-q3-2025.html">Private Credit Market: Q3 2025</a></h3>
-        <p>4 min read • Spreads, issuance, and CLO pricing trends — what shifted this quarter and what it means for managers and allocators.</p>
-      </div>
-      <div class="item">
-        <a href="/knowledge/insights/fed-move-private-credit.html">Fed Move: What It Means for Private Credit Spreads</a>
-        <p>4 min read • Analysis of how the latest Fed decision ripples through private credit markets.</p>
-      </div>
-      <div class="item">
-        <a href="/knowledge/insights/ai-in-underwriting-2025.html">AI in Underwriting: Early Proof Points in 2025</a>
-        <p>5 min read • How AI tools are being applied to covenant tracking, monitoring, and deal screening.</p>
-      </div>
-      <div class="item">
-        <a href="/knowledge/insights/direct-lending-deal-spotlight.html">Direct Lending Deal Spotlight: Sponsor-Backed Transaction</a>
-        <p>3 min read • Breakdown of a middle-market deal structure and pricing trends.</p>
-      </div>
-    </section>
-  </main>
+<!-- BODY -->
+<div class="insights-wrapper">
+  <h1>Insights</h1>
+  <p class="lede">
+    Research, analysis, and explainers on private credit, AI underwriting, covenant automation,
+    CLO analytics, portfolio intelligence, and the evolving credit technology stack.
+  </p>
+
+  <div class="insights-grid">
+
+    <!-- AUTO-GENERATED: ALL ARTICLES IN FOLDER -->
+    <div class="insight-item"><a href="/knowledge/insights/ai-credit-agreement-reader.html">AI Credit Agreement Reader</a><p>How AI converts credit agreements into structured data instantly.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-driven-credit-analyst.html">The AI-Driven Credit Analyst</a><p>How next-gen analysts outperform with automation.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-driven-due-diligence.html">AI-Driven Due Diligence</a><p>The new workflow for accelerated and deeper diligence.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-enabled-clo.html">AI-Enabled CLOs</a><p>How CLO platforms use automation, modeling, and real-time data.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-in-private-credit.html">AI in Private Credit</a><p>The transformation of a $5T private markets ecosystem.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-in-underwriting-2025.html">AI in Underwriting 2025</a><p>Proof points on underwriting automation across the market.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ai-vs-ocr-credit-documents.html">AI vs OCR for Credit Docs</a><p>Why OCR fails and why AI wins in legal document parsing.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/automate-covenant-compliance-certificates.html">Automate Covenant Certificates</a><p>Generating borrower covenants automatically.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/automated-covenant-monitoring.html">Automated Covenant Monitoring</a><p>Real-time covenant tracking with AI.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/best-private-credit-analytics-platforms-2025.html">Best Private Credit Analytics Platforms 2025</a><p>Market scanners, data engines, and tech stacks.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/clo-ai-portfolio-optimization.html">CLO Portfolio Optimization with AI</a><p>How CLO managers use scenario engines and modeling.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/clos-in-the-age-of-ai.html">CLOs in the Age of AI</a><p>The new generation of credit operations.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/direct-lending-deal-spotlight.html">Direct Lending Deal Spotlight</a><p>Real-world deal breakdowns and trends.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/fed-move-private-credit.html">Fed Move & Private Credit</a><p>How macro shifts affect spreads.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/lp-transparency-real-time-reporting.html">LP Transparency & Real-Time Reporting</a><p>What LPs expect from credit managers today.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/nearshore-credit-operations-ai.html">Nearshore Credit Ops + AI</a><p>Scaling credit ops efficiently.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-3-0.html">Private Credit 3.0</a><p>The next evolution of private market infrastructure.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-dashboard.html">The Private Credit Dashboard</a><p>What modern portfolio surveillance looks like.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-data-stack.html">The Private Credit Data Stack</a><p>The backbone of scalable credit platforms.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-market-q3-2025.html">Private Credit Market Q3 2025</a><p>Issuance, spreads, flows, pricing.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-portfolio-surveillance.html">Private Credit Portfolio Surveillance</a><p>How to monitor risk across portfolios.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/private-credit-workflow-automation.html">Workflow Automation in Private Credit</a><p>The operating system for modern funds.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/ratings-drift-credit-migration.html">Ratings Drift & Credit Migration</a><p>Early-warning signals with AI.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/shadow-ratings-ai.html">Shadow Ratings Explained</a><p>How AI generates private credit credit ratings.</p></div>
+
+    <div class="insight-item"><a href="/knowledge/insights/tech-enabled-direct-lending.html">Tech-Enabled Direct Lending</a><p>The tech stack behind modern lenders.</p></div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;text-align:center;gap:20px;">
+    <div style="flex:1;min-width:250px;">
+      <strong style="font-size:16px;">Private Credit AI</strong><br/>
+      <span style="font-size:14px;">© 2025 All rights reserved.</span>
+    </div>
+    <div style="flex:1;min-width:250px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+      <a href="/about.html" style="color:#fff;text-decoration:none;">About</a>
+      <a href="#" style="color:#fff;text-decoration:none;">Terms</a>
+      <a href="https://www.linkedin.com/company/private-credit-ai" target="_blank" style="color:#fff;text-decoration:none;">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
