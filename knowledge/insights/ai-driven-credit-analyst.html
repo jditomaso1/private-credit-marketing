@@ -5,9 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Rise of the AI-Driven Credit Analyst | Private Credit AI</title>
   <meta name="description" content="The Rise of the AI-Driven Credit Analyst. How automation, AI underwriting tools, predictive analytics, and workflow automation are redefining the credit analyst role in private credit." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
+
+  <!-- Placeholder for injected styles -->
+  <style id="style-placeholder"></style>
+
+  <!-- Load styles -->
+  <script>
+    async function loadStyles() {
+      const res = await fetch('/_includes/styles.html');
+      const html = await res.text();
+      document.getElementById('style-placeholder').innerHTML = html;
+    }
+
+    // Hide page until styles apply
+    document.write('<style>body{opacity:0;}</style>');
+    loadStyles().then(() => {
+      document.body.style.opacity = 1;
+    });
+  </script>
+
+  <!-- Header + footer injection -->
+  <script>
+    async function inject(partial, elementId) {
+      const res = await fetch(partial);
+      const html = await res.text();
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    window.onload = () => {
+      inject('/_includes/header.html', 'header-placeholder');
+      inject('/_includes/footer.html', 'footer-placeholder');
+    };
+  </script>
 </head>
 <body>
-
+<div id="header-placeholder"></div>
 <article>
 
 <h1>The Rise of the AI-Driven Credit Analyst</h1>
@@ -579,6 +614,6 @@ It’s eliminating the inefficiencies that kept analysts buried in grunt work.</
 <p><strong>“Which analysts will embrace AI soon enough to lead — and which ones will get left behind?”</strong></p>
 
 </article>
-
+<div id="footer-placeholder"></div>
 </body>
 </html>
