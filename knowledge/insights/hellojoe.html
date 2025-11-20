@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hello Joe</title>
+
+  <!-- hide body until includes are injected -->
+  <style>
+    body { visibility: hidden; }
+  </style>
+
+  <!-- styles placeholder -->
+  <style id="styles-placeholder"></style>
+</head>
+
+<body>
+
+<script>
+async function inject(path, id) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error("Failed: " + path);
+    document.getElementById(id).innerHTML = await res.text();
+  } catch (e) {
+    console.error("Inject error:", e);
+  }
+}
+
+(async () => {
+  await inject('/includes/styles.html', 'styles-placeholder');
+  await inject('/includes/header.html', 'header-placeholder');
+  await inject('/includes/footer2.html', 'footer-placeholder');
+  document.body.style.visibility = 'visible';
+})();
+</script>
+
+<!-- header -->
+<div id="header-placeholder"></div>
+
+<!-- PAGE CONTENT -->
+<article>
+  <div class="article-wrapper">
+    <h1>Hello Joe!</h1>
+  </div>
+</article>
+
+<!-- footer -->
+<div id="footer-placeholder"></div>
+
+</body>
+</html>
