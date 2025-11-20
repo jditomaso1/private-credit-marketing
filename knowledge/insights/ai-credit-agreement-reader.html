@@ -6,86 +6,14 @@
   <title>AI Credit Agreement Reader: Turning Legal Documents Into Deal Intelligence</title>
   <meta name="description" content="AI Credit Agreement Reader: Transform dense legal credit agreements into structured, analyzable deal intelligence. Learn how AI accelerates underwriting, monitoring, and portfolio surveillance." />
 
-<style>
-  :root{
-    --pcai-blue:#3a71b0;
-    --pcai-accent:#007bff;
-    --pcai-bg:#fff;
-    --pcai-text:#333;
-  }
-
-  body{
-    margin:0;
-    background:#fff;
-    font-family:'Poppins',sans-serif;
-    color:var(--pcai-text);
-    line-height:1.65;
-  }
-
-  header{
-    background:#fff;
-    padding:10px 20px;
-    border-bottom:1px solid #eaeaea;
-    color:#000;
-  }
-
-  .header-container{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    max-width:1200px;
-    margin:0 auto;
-    flex-wrap:wrap;
-  }
-
-  .site-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:24px;
-    font-weight:700;
-    color:#000;
-  }
-
-  nav .nav-links{
-    display:flex;
-    gap:0px;
-  }
-
-  nav .nav-item a{
-    color:#000;
-    text-decoration:none;
-    padding:10px 16px;
-    font-size:14.5px;
-    letter-spacing:.25px;
-    font-weight:400;
-  }
-
-  .article-wrapper{
-    max-width:900px;
-    margin:50px auto;
-    padding:0 20px 60px;
-  }
-
-  article h1{
-    font-size:32px;
-    font-weight:700;
-    margin-bottom:20px;
-    line-height:1.25;
-  }
-
-  footer{
-    background:var(--pcai-blue);
-    padding:40px 20px;
-    margin-top:60px;
-    color:#fff;
-  }
-
-  footer a{
-    color:#fff !important;
-    text-decoration:none !important;
-  }
-</style>
+  <script>
+    async function injectStyle() {
+      const res = await fetch('/_includes/styles.html');
+      const html = await res.text();
+      document.getElementById('style-placeholder').innerHTML = html;
+    }
+    injectStyle();
+  </script>
 
 
   <script>
@@ -102,7 +30,7 @@
   
 </head>
 <body>
-
+<div id="style-placeholder"></div>
 <div id="header-placeholder"></div>
 <article>
 <div class="article-wrapper">
