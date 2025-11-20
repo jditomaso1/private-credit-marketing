@@ -8,14 +8,8 @@
     <!-- ADD THIS LINE -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
   <div id="style-placeholder"></div>
-  <script>
-    async function injectStyle() {
-      const res = await fetch('/_includes/styles.html');
-      const html = await res.text();
-      document.getElementById('style-placeholder').innerHTML = html;
-    }
-    injectStyle();
-  </script>
+  <link rel="stylesheet" href="/_includes/styles.html">
+
 
   <script>
     async function inject(partial, elementId) {
