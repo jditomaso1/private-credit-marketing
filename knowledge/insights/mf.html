@@ -24,21 +24,24 @@
 </head>
 <body>
 
-  <script>
-  async function inject(path, id) {
+<script>
+async function inject(path, id) {
+  try {
     const res = await fetch(path);
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = await res.text();
+    if (!res.ok) throw new Error(path + " failed");
+    document.getElementById(id).innerHTML = await res.text();
+  } catch (err) {
+    console.error("INJECT ERROR:", err);
   }
-  
-  Promise.all([
-    inject('/includes/styles.html', 'styles-placeholder'),
-    inject('/includes/header.html', 'header-placeholder'),
-    inject('/includes/footer2.html', 'footer-placeholder')
-  ]).then(() => {
-    document.body.style.visibility = 'visible';
-  });
-  </script>
+}
+
+(async () => {
+  await inject('/includes/styles.html', 'styles-placeholder');
+  await inject('/includes/header.html', 'header-placeholder');
+  await inject('/includes/footer2.html', 'footer-placeholder');
+  document.body.style.visibility = 'visible';
+})();
+</script>
 
   
   <div id="header-placeholder"></div>
