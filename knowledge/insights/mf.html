@@ -17,27 +17,26 @@
   <!-- styles.html will be injected into this -->
   <style id="styles-placeholder"></style>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      async function inject(path, id) {
-        const res = await fetch(path);
-        const el = document.getElementById(id);
-        if (el) {
-          el.innerHTML = await res.text();
-        }
-      }
-
-      Promise.all([
-        inject('/includes/styles.html', 'styles-placeholder'),
-        inject('/includes/header.html', 'header-placeholder'),
-        inject('/includes/footer2.html', 'footer-placeholder')
-      ]).then(() => {
-        document.body.style.visibility = 'visible';
-      });
-    });
-  </script>
 </head>
 <body>
+
+  <script>
+  async function inject(path, id) {
+    const res = await fetch(path);
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = await res.text();
+  }
+  
+  Promise.all([
+    inject('/includes/styles.html', 'styles-placeholder'),
+    inject('/includes/header.html', 'header-placeholder'),
+    inject('/includes/footer2.html', 'footer-placeholder')
+  ]).then(() => {
+    document.body.style.visibility = 'visible';
+  });
+  </script>
+
+  
   <div id="header-placeholder"></div>
 
   <article>
