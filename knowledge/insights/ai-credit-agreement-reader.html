@@ -7,7 +7,7 @@
   <meta name="description" content="AI Credit Agreement Reader: Transform dense legal credit agreements into structured, analyzable deal intelligence. Learn how AI accelerates underwriting, monitoring, and portfolio surveillance." />
     <!-- ADD THIS LINE -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
-  <link rel="stylesheet" href="/_includes/styles.html">
+  <div id="styles-placeholder"></div>
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8">
 
 </head>
@@ -531,13 +531,16 @@ it’s the new foundation of private credit operations.</p>
 </article>
 <div id="footer-placeholder"></div>
 </body>
+  
 <script>
-  async function inject(p, id) {
-    const r = await fetch(p);
-    document.getElementById(id).innerHTML = await r.text();
+  async function inject(path, id) {
+    const res = await fetch(path);
+    document.getElementById(id).innerHTML = await res.text();
   }
-  inject('/_includes/header.html','header-placeholder');
-  inject('/_includes/footer.html','footer-placeholder');
+
+  inject('/_includes/styles.html', 'styles-placeholder');
+  inject('/_includes/header.html', 'header-placeholder');
+  inject('/_includes/footer.html', 'footer-placeholder');
 </script>
 
 </html>
