@@ -5,9 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Credit Agreement Reader: Turning Legal Documents Into Deal Intelligence</title>
   <meta name="description" content="AI Credit Agreement Reader: Transform dense legal credit agreements into structured, analyzable deal intelligence. Learn how AI accelerates underwriting, monitoring, and portfolio surveillance." />
+
+  <script>
+    async function inject(partial, elementId) {
+      const res = await fetch(partial);
+      const html = await res.text();
+      document.getElementById(elementId).innerHTML = html;
+    }
+    window.onload = () => {
+      inject('/_includes/header.html', 'header-placeholder');
+      inject('/_includes/footer.html', 'footer-placeholder');
+    };
+  </script>
+  
 </head>
 <body>
-{% include header.html %}
+<div id="header-placeholder"></div>
 <article>
 
 <h1>AI Credit Agreement Reader:<br>Turning Legal Documents Into Deal Intelligence</h1>
@@ -524,6 +537,6 @@ it’s the new foundation of private credit operations.</p>
 <p><strong>“How much risk are we taking by NOT doing it?”</strong></p>
 
 </article>
-{% include footer.html %}
+<div id="footer-placeholder"></div>
 </body>
 </html>
