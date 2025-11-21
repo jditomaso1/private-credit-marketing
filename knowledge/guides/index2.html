@@ -11,124 +11,191 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Hide page until header/footer/styles load -->
-  <style>
-    body { visibility: hidden; }
-  </style>
+  <!-- Hide until header/footer/styles load -->
+  <style> body { visibility: hidden; } </style>
 
   <!-- Styles placeholder -->
   <style id="styles-placeholder"></style>
+
+  <style>
+    :root {
+      --pcai-blue:#3a71b0;
+      --pcai-accent:#007bff;
+      --pcai-text:#333;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #fff;
+      color: var(--pcai-text);
+    }
+
+    /* WRAPPER */
+    .guides-wrapper {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+
+    .lede {
+      font-size: 16px;
+      color: #444;
+      line-height: 1.6;
+      max-width: 800px;
+      margin-bottom: 30px;
+    }
+
+    /* TAGS */
+    .tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .tag {
+      background: #eef3f8;
+      color: #3a71b0;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 20px;
+      border: 1px solid #dbe6f0;
+    }
+
+    /* SEARCH */
+    .searchbar {
+      margin: 25px 0 15px;
+      display: flex;
+      gap: 10px;
+      max-width: 500px;
+    }
+    .searchbar input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+    }
+    .searchbar button {
+      padding: 12px 18px;
+      background: var(--pcai-accent);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* LIST LAYOUT (INSIGHTS STYLE) */
+    .guides-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 30px 40px;
+      margin-top: 30px;
+    }
+
+    .guide-item a {
+      color: var(--pcai-accent);
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .guide-item p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+      max-width: 90%;
+    }
+
+  </style>
 </head>
 
 <body>
 
-<!-- HEADER INJECTION -->
+<!-- HEADER INCLUDE -->
 <div id="header-placeholder"></div>
 
-<main class="container">
-  <header class="hero">
-    <div class="eyebrow">Knowledge Hub</div>
-    <h1>Guides</h1>
-    <p class="lede">
-      Evergreen, long-form guides (2,000–3,000 words) covering the <strong>fundamentals of private credit</strong> — from
-      market structure and risk to <strong>CLOs</strong>, <strong>BDCs</strong>, <strong>mezzanine</strong>, and <strong>AI-enabled underwriting</strong>.
-    </p>
-    <div class="searchbar">
-      <input type="search" placeholder="Search guides…" aria-label="Search Guides">
-      <button type="button">Search</button>
+<div class="guides-wrapper">
+
+  <h1>Guides</h1>
+
+  <p class="lede">
+    Evergreen, long-form guides (2,000–3,000 words) covering the <strong>fundamentals of private credit</strong> — from
+    market structure and risk to <strong>CLOs</strong>, <strong>BDCs</strong>, <strong>mezzanine</strong>, and <strong>AI-enabled underwriting</strong>.
+  </p>
+
+  <!-- SEARCH -->
+  <div class="searchbar">
+    <input type="search" placeholder="Search guides…" aria-label="Search Guides">
+    <button type="button">Search</button>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">Private Credit</span>
+    <span class="tag">Direct Lending</span>
+    <span class="tag">CLOs</span>
+    <span class="tag">Risk</span>
+    <span class="tag">Compliance</span>
+    <span class="tag">AI</span>
+  </div>
+
+  <!-- LIST -->
+  <div class="guides-list">
+
+    <div class="guide-item">
+      <a href="/knowledge/guides/what-is-private-credit.html">What Is Private Credit? A Complete Guide to the $2T+ Market</a>
+      <p>Definitions, market size, key strategies (direct lending, CLOs, mezzanine), risks, and the future of the market.</p>
     </div>
-    <div class="tags">
-      <span class="tag">Private Credit</span>
-      <span class="tag">Direct Lending</span>
-      <span class="tag">CLOs</span>
-      <span class="tag">Risk</span>
-      <span class="tag">Compliance</span>
-      <span class="tag">AI</span>
+
+    <div class="guide-item">
+      <a href="/knowledge/guides/clo-explained.html">CLOs Explained Simply</a>
+      <p>How CLOs work, tranche structures, managers, and what drives pricing and performance.</p>
     </div>
-  </header>
 
-  <!-- Featured Guide -->
-  <section class="grid">
-    <article class="card">
-      <img class="thumb" src="/img/guides/what-is-private-credit.jpg" alt="What is Private Credit thumbnail" width="600" height="280" loading="lazy" />
-      <div class="eyebrow">Featured Guide</div>
-      <h3><a href="/knowledge/guides/what-is-private-credit.html">What Is Private Credit? A Complete Guide to the $2T+ Market</a></h3>
-      <p>Definitions, market size, key strategies (direct lending, CLOs, mezzanine), risks, and a 2030 outlook.</p>
-      <a href="/knowledge/guides/what-is-private-credit.html">Open →</a>
-      <a class="card-link" href="/knowledge/guides/what-is-private-credit.html" aria-label="Open: What Is Private Credit?"></a>
-    </article>
-  </section>
-
-  <!-- Guides Grid -->
-  <section class="section">
-    <h2>All Guides</h2>
-    <div class="grid">
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/clo-explined.jpg" alt="CLOs Explained Simply thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">CLOs</div>
-        <h3><a href="/knowledge/guides/clo-explained.html">CLOs Explained Simply</a></h3>
-        <p>How CLOs work, tranche structure, managers, and what drives pricing and performance.</p>
-        <a href="/knowledge/guides/clo-explained.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/clo-explained.html" aria-label="Open: CLOs Explained Simply"></a>
-      </article>
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/direct-lending.jpg" alt="Direct Lending Guide thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">Direct Lending</div>
-        <h3><a href="/knowledge/guides/direct-lending-guide.html">Direct Lending: A Practitioner’s Guide</a></h3>
-        <p>Market landscape, underwriting checklists, leverage norms, and sponsor dynamics.</p>
-        <a href="/knowledge/guides/direct-lending-guide.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/direct-lending-guide.html" aria-label="Open: Direct Lending: A Practitioner’s Guide"></a>
-      </article>
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/bdc-basics.jpg" alt="BDC Basics thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">BDCs</div>
-        <h3><a href="/knowledge/guides/bdc-basics.html">BDC Basics</a></h3>
-        <p>Structure, regulatory framework, dividend mechanics, and portfolio construction.</p>
-        <a href="/knowledge/guides/bdc-basics.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/bdc-basics.html" aria-label="Open: BDC Basics"></a>
-      </article>
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/risk-management.jpg" alt="Credit Risk Management thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">Risk</div>
-        <h3><a href="/knowledge/guides/credit-risk-management-101.html">Credit Risk Management 101</a></h3>
-        <p>Covenants, defaults, recoveries, and practical monitoring playbooks.</p>
-        <a href="/knowledge/guides/credit-risk-management-101.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/credit-risk-management-101.html" aria-label="Open: Credit Risk Management 101"></a>
-      </article>
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/portfolio-monitoring.jpg" alt="Portfolio Monitoring thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">Monitoring</div>
-        <h3><a href="/knowledge/guides/portfolio-monitoring.html">Portfolio Monitoring in Private Credit</a></h3>
-        <p>Dashboards, KPIs, borrower reporting, and early-warning systems.</p>
-        <a href="/knowledge/guides/portfolio-monitoring.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/portfolio-monitoring.html" aria-label="Open: Portfolio Monitoring in Private Credit"></a>
-      </article>
-
-      <article class="card">
-        <img class="thumb" src="/img/guides/ai-in-underwriting.jpg" alt="AI in Credit Underwriting thumbnail" width="600" height="280" loading="lazy" />
-        <div class="eyebrow">AI</div>
-        <h3><a href="/knowledge/guides/ai-in-credit-underwriting.html">AI in Credit Underwriting</a></h3>
-        <p>Where AI adds real edge: document ingestion, covenant extraction, anomaly detection.</p>
-        <a href="/knowledge/guides/ai-in-credit-underwriting.html">Open →</a>
-        <a class="card-link" href="/knowledge/guides/ai-in-credit-underwriting.html" aria-label="Open: AI in Credit Underwriting"></a>
-      </article>
-
+    <div class="guide-item">
+      <a href="/knowledge/guides/direct-lending-guide.html">Direct Lending: A Practitioner’s Guide</a>
+      <p>Market landscape, underwriting checklists, leverage norms, and sponsor dynamics.</p>
     </div>
-  </section>
-</main>
 
-<!-- FOOTER INJECTION -->
+    <div class="guide-item">
+      <a href="/knowledge/guides/bdc-basics.html">BDC Basics</a>
+      <p>Structure, regulatory framework, dividend mechanics, and portfolio construction.</p>
+    </div>
+
+    <div class="guide-item">
+      <a href="/knowledge/guides/credit-risk-management-101.html">Credit Risk Management 101</a>
+      <p>Covenants, defaults, recoveries, and practical monitoring playbooks.</p>
+    </div>
+
+    <div class="guide-item">
+      <a href="/knowledge/guides/portfolio-monitoring.html">Portfolio Monitoring in Private Credit</a>
+      <p>Dashboards, KPIs, borrower reporting, and early-warning systems.</p>
+    </div>
+
+    <div class="guide-item">
+      <a href="/knowledge/guides/ai-in-credit-underwriting.html">AI in Credit Underwriting</a>
+      <p>Where AI adds real edge: document ingestion, covenant extraction, and anomaly detection.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER INCLUDE -->
 <div id="footer-placeholder"></div>
 
-<!-- INJECT INCLUDES -->
+<!-- Inject includes -->
 <script>
 async function inject(path, targetId) {
   try {
@@ -144,22 +211,20 @@ async function inject(path, targetId) {
   await inject('/includes/styles.html', 'styles-placeholder');
   await inject('/includes/header.html', 'header-placeholder');
   await inject('/includes/footer2.html', 'footer-placeholder');
-
-  // Reveal page
   document.body.style.visibility = 'visible';
 })();
 </script>
 
 <!-- Search Filter -->
 <script>
-const q = document.querySelector('.searchbar input');
-const cards = [...document.querySelectorAll('.grid .card')];
+const searchInput = document.querySelector('.searchbar input');
+const items = document.querySelectorAll('.guide-item');
 
-q?.addEventListener('input', e => {
+searchInput?.addEventListener('input', e => {
   const v = e.target.value.toLowerCase();
-  cards.forEach(c => {
-    const t = c.innerText.toLowerCase();
-    c.style.display = t.includes(v) ? '' : 'none';
+  items.forEach(i => {
+    const text = i.innerText.toLowerCase();
+    i.style.display = text.includes(v) ? '' : 'none';
   });
 });
 </script>
@@ -169,6 +234,7 @@ q?.addEventListener('input', e => {
 {
   "@context":"https://schema.org",
   "@type":"CollectionPage",
+  "@id":"https://private-credit.ai/knowledge/guides",
   "name":"Guides | Private Credit AI Knowledge Hub",
   "description":"Evergreen private credit guides.",
   "url":"https://private-credit.ai/knowledge/guides"
