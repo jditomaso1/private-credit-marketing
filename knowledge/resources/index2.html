@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Resources | Private Credit AI Knowledge Hub</title>
+  <meta name="description" content="Download playbooks, toolkits, templates, and whitepapers for private credit: strategy decks, covenant checklists, monitoring templates, and AI adoption guides." />
+  <link rel="canonical" href="https://private-credit.ai/knowledge/resources" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Hide page until includes load -->
+  <style> body { visibility: hidden; } </style>
+
+  <!-- Styles placeholder -->
+  <style id="styles-placeholder"></style>
+
+  <style>
+    :root {
+      --pcai-blue:#3a71b0;
+      --pcai-accent:#007bff;
+      --pcai-text:#333;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #fff;
+      color: var(--pcai-text);
+    }
+
+    /* WRAPPER */
+    .resources-wrapper {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+
+    .lede {
+      font-size: 16px;
+      color: #444;
+      line-height: 1.6;
+      max-width: 800px;
+      margin-bottom: 30px;
+    }
+
+    /* TAGS */
+    .tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .tag {
+      background: #eef3f8;
+      color: #3a71b0;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 20px;
+      border: 1px solid #dbe6f0;
+    }
+
+    /* SEARCH */
+    .searchbar {
+      margin: 25px 0 15px;
+      display: flex;
+      gap: 10px;
+      max-width: 500px;
+    }
+    .searchbar input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+    }
+    .searchbar button {
+      padding: 12px 18px;
+      background: var(--pcai-accent);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* LIST LAYOUT */
+    .resources-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 30px 40px;
+      margin-top: 30px;
+    }
+
+    .resource-item a {
+      color: var(--pcai-accent);
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .resource-item p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+      max-width: 90%;
+    }
+
+    /* Notice Box */
+    .notice {
+      border: 1px dashed #d5d5d5;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: #fafafa;
+      margin-top: 20px;
+      max-width: 700px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER INCLUDE -->
+<div id="header-placeholder"></div>
+
+<div class="resources-wrapper">
+
+  <h1>Resources</h1>
+
+  <p class="lede">
+    Downloadable <strong>playbooks</strong>, <strong>toolkits</strong>, <strong>templates</strong>, and <strong>whitepapers</strong>
+    for private credit teams — from strategy decks and covenant checklists to monitoring templates and AI adoption guides.
+  </p>
+
+  <!-- SEARCH -->
+  <div class="searchbar">
+    <input type="search" placeholder="Search resources…" aria-label="Search Resources">
+    <button type="button">Search</button>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">Playbooks</span>
+    <span class="tag">Toolkits</span>
+    <span class="tag">Templates</span>
+    <span class="tag">Whitepapers</span>
+    <span class="tag">Compliance</span>
+    <span class="tag">AI</span>
+  </div>
+
+  <div class="notice">
+    <strong>Note:</strong> These links point directly to files under <code>/resources/</code>.  
+    If you later add gated downloads, link to a form page first (e.g., <code>/resources/private-credit-playbook.html</code>).
+  </div>
+
+  <!-- LIST -->
+  <div class="resources-list">
+
+    <div class="resource-item">
+      <a href="/resources/private-credit-playbook.pdf">The Private Credit Playbook</a>
+      <p>Comprehensive strategy guide for LPs, managers, and platform builders. Structures, pricing, covenants, and portfolio design.</p>
+    </div>
+
+    <div class="resource-item">
+      <a href="/resources/ai-in-private-credit-whitepaper.pdf">AI in Private Credit</a>
+      <p>Underwriting, monitoring, and compliance automation — frameworks, case studies, and build-vs-buy checklists.</p>
+    </div>
+
+    <div class="resource-item">
+      <a href="/resources/private-credit-deal-toolkit.zip">Private Credit Deal Toolkit</a>
+      <p>Term sheet template, covenant checklist, reporting pack, and monitoring KPIs — ready to customize.</p>
+    </div>
+
+    <div class="resource-item">
+      <a href="/resources/non-traditional-credit-opportunity.pdf">$3T–$5T Non-Traditional Credit Opportunity</a>
+      <p>Litigation finance, royalties, and other emerging niches — risk/return, sourcing, and portfolio fit.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER INCLUDE -->
+<div id="footer-placeholder"></div>
+
+<!-- Inject includes -->
+<script>
+async function inject(path, targetId) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error("Failed loading: " + path);
+    document.getElementById(targetId).innerHTML = await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+(async () => {
+  await inject('/includes/styles.html', 'styles-placeholder');
+  await inject('/includes/header.html', 'header-placeholder');
+  await inject('/includes/footer2.html', 'footer-placeholder');
+  document.body.style.visibility = 'visible';
+})();
+</script>
+
+<!-- Search Filter -->
+<script>
+const resInput = document.querySelector('.searchbar input');
+const resItems = document.querySelectorAll('.resource-item');
+
+resInput?.addEventListener('input', e => {
+  const v = e.target.value.toLowerCase();
+  resItems.forEach(i => {
+    const text = i.innerText.toLowerCase();
+    i.style.display = text.includes(v) ? '' : 'none';
+  });
+});
+</script>
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"CollectionPage",
+  "@id":"https://private-credit.ai/knowledge/resources",
+  "name":"Resources | Private Credit AI Knowledge Hub",
+  "description":"Downloadable private-credit playbooks, toolkits, templates, and whitepapers.",
+  "url":"https://private-credit.ai/knowledge/resources"
+}
+</script>
+
+</body>
+</html>
