@@ -49,14 +49,16 @@ nav {
 }
 
 /* Article container layout */
+/* Article container layout */
 .article-wrapper {
   max-width: 900px;
-  margin: 40px auto;        /* tight, modern, matches your other pages */
-  padding: 0 20px 40px 20px;
+  margin: 40px auto;
+  padding: 20px 20px 40px 20px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
+
 
 /* Headline */
 .article-wrapper h1 {
