@@ -51,8 +51,8 @@ nav {
 /* Article container layout */
 .article-wrapper {
   max-width: 900px;
-  margin: 40px auto;
-  padding: 20px 20px 40px 20px;
+  margin: 100px auto 80px auto; /* TOP | LEFT/RIGHT | BOTTOM */
+  padding: 0 28px 40px 28px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);
