@@ -790,32 +790,6 @@
         });
       }
     </script>
-    <!-- Custom GA4 Event Tracking -->
-    <script>
-      function fireGA(eventName, params) {
-        if (typeof gtag === 'function') {
-          gtag('event', eventName, params || {});
-        }
-      }
-  
-      // Track Try Orion button
-      const tryOrion = document.querySelector('a[href*="orion.private-credit.ai"]');
-      if (tryOrion) {
-        tryOrion.addEventListener('click', function() {
-          fireGA('try_orion_click', {
-            location: 'nav',
-            destination: 'orion.private-credit.ai'
-          });
-        });
-      }
-  
-      // Track Contact link
-      const contact = document.querySelector('a[href*="contact"], a[href$="contact.html"]');
-      if (contact) {
-        contact.addEventListener('click', function() {
-          fireGA('contact_click', { location: 'nav' });
-        });
-      }
     </script>
     <!-- Chatbot code for crisp.js -->
     <script src="/lib/crisp.js"></script>
