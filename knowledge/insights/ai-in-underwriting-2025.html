@@ -3,30 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI in Underwriting: Early Proof Points in 2025 | Private Credit AI</title>
-  <meta name="description" content="How AI tools are being applied to covenant tracking, monitoring, and deal screening—what’s working, what’s not, and how to implement without blowing up ops." />
+  <title>AI in Underwriting: 2025 Proof Points and Lessons</title>
+  <link rel="canonical" href="https://private-credit.ai/knowledge/insights/ai-in-underwriting-2025.html" />
+  <meta name="description" content="A 2025 snapshot of AI underwriting applications, implementation lessons, governance controls, and early evidence from credit workflows." />
   <link rel="icon" type="image/png" href="/img/favicon.png?v=8" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/includes/global.css" />
-  <meta property="og:title" content="AI in Underwriting: Early Proof Points in 2025" />
-  <meta property="og:description" content="Where AI is landing in credit workflows now—covenants, monitoring, and screening—and a 90-day implementation playbook." />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://private-credit.ai/insights/ai-in-underwriting-proof-points-2025.html" />
-  <meta property="og:image" content="https://private-credit.ai/img/og/ai-underwriting-2025.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Article",
-    "headline":"AI in Underwriting: Early Proof Points in 2025",
-    "description":"How AI tools are being applied to covenant tracking, monitoring, and deal screening.",
-    "author":{"@type":"Person","name":"Joseph DiTomaso"},
-    "publisher":{"@type":"Organization","name":"Private Credit AI","logo":{"@type":"ImageObject","url":"https://private-credit.ai/img/logo.png"}},
-    "datePublished":"2025-09-06",
-    "dateModified":"2025-09-06",
-    "mainEntityOfPage":{"@type":"WebPage","@id":"https://private-credit.ai/insights/ai-in-underwriting-proof-points-2025.html"}
-  }
-  </script>
   <style>
     .article-wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
     .eyebrow { text-transform: uppercase; font-size: 12px; opacity:.7; letter-spacing:.08em; }
@@ -39,6 +21,28 @@
     .backlink { display:inline-block; margin-top:36px; font-weight:500; text-decoration:none; }
     .backlink:hover { text-decoration:underline; }
   </style>
+
+  <meta property="og:title" content="AI in Underwriting: 2025 Proof Points and Lessons" />
+  <meta property="og:description" content="A 2025 snapshot of AI underwriting applications, implementation lessons, governance controls, and early evidence from credit workflows." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://private-credit.ai/knowledge/insights/ai-in-underwriting-2025.html" />
+  <meta property="og:site_name" content="Private Credit AI" />
+  <meta property="og:image" content="https://private-credit.ai/img/og-default.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI in Underwriting: 2025 Proof Points and Lessons" />
+  <meta name="twitter:description" content="A 2025 snapshot of AI underwriting applications, implementation lessons, governance controls, and early evidence from credit workflows." />
+  <meta name="twitter:image" content="https://private-credit.ai/img/og-default.png" />
+  <style>
+    .insight-meta{color:#667085;font-size:14px;margin:8px 0 24px}
+    .pcai-editorial-upgrade{margin-top:42px}
+    .insight-notice{background:#f5f8fc;border-left:4px solid #3a71b0;border-radius:6px;margin:24px 0;padding:16px 18px;line-height:1.6}
+    .related-reading{background:#f8fafc;border:1px solid #e5eaf0;border-radius:10px;margin:32px 0;padding:20px 24px}
+    .related-reading h2{margin-top:0}
+    .article-cta{background:#eef5fc;border:1px solid #cbdced;border-radius:12px;margin:32px 0;padding:24px}
+    .article-cta h3{margin-top:0}
+    .article-cta a{display:inline-block;background:#3a71b0;border-radius:6px;color:#fff;font-weight:600;padding:11px 17px;text-decoration:none}
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"AI in Underwriting: 2025 Proof Points and Lessons","description":"A 2025 snapshot of AI underwriting applications, implementation lessons, governance controls, and early evidence from credit workflows.","dateModified":"2026-07-17","mainEntityOfPage":{"@type":"WebPage","@id":"https://private-credit.ai/knowledge/insights/ai-in-underwriting-2025.html"},"image":"https://private-credit.ai/img/og-default.png","articleSection":"Private Credit Insights","about":["AI in underwriting","private credit","credit technology"],"author":{"@type":"Organization","name":"Private Credit AI","url":"https://private-credit.ai/"},"publisher":{"@type":"Organization","name":"Private Credit AI","url":"https://private-credit.ai/","logo":{"@type":"ImageObject","url":"https://private-credit.ai/img/logo.png"}},"url":"https://private-credit.ai/knowledge/insights/ai-in-underwriting-2025.html"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What did early AI underwriting implementations show?","acceptedAnswer":{"@type":"Answer","text":"They showed the most immediate value in bounded, reviewable tasks such as extraction, screening, and monitoring support. Reliability, integration, and change management remained as important as model capability."}},{"@type":"Question","name":"What controls should an institutional implementation include?","acceptedAnswer":{"@type":"Answer","text":"Source citations, role-based access, version history, exception flags, reviewer approvals, retention rules, validation testing, and escalation procedures."}},{"@type":"Question","name":"How should a firm measure success?","acceptedAnswer":{"@type":"Answer","text":"Track accuracy, reviewer corrections, exception resolution, coverage, cycle time, adoption, auditability, and decision quality—not speed alone."}}]}]}</script>
 </head>
 <body>
   <!--#include virtual="/includes/header.html" -->
@@ -46,6 +50,7 @@
   <main class="article-wrap">
     <div class="eyebrow">Playbook</div>
     <h1 class="article-title">AI in Underwriting: Early Proof Points in 2025</h1>
+<p class="insight-meta">Updated July 17, 2026 · Private Credit AI</p>
     <p class="dek">How AI tools are being applied to covenant tracking, monitoring, and deal screening.</p>
     <div class="meta">Published Sep 6, 2025 • 5 min read</div>
 
@@ -107,7 +112,42 @@
     </div>
 
     <a class="backlink" href="/knowledge/insights/index.html">← Back to Insights</a>
-  </main>
+  
+<section class="pcai-editorial-upgrade" aria-labelledby="practical-considerations">
+  <div class="insight-notice"><strong>Historical snapshot:</strong> This article discusses 2025 conditions. It is preserved for context and should not be treated as current market data, pricing, or investment advice.</div>
+  <h2 id="practical-considerations">Practical Considerations and Controls</h2>
+  <p>For AI in underwriting, the central implementation questions are what early implementations demonstrated, what remained difficult, and which controls mattered in production. A credible workflow should make source data, assumptions, exceptions, and reviewer actions visible rather than presenting automation as infallible.</p>
+  <p>Before relying on a system or process, teams should confirm:</p>
+  <ul>
+    <li>which source documents and data fields govern the output;</li>
+    <li>how amendments, exceptions, missing data, and conflicting information are handled;</li>
+    <li>whether material conclusions can be traced to their source;</li>
+    <li>who reviews, approves, overrides, and monitors the result;</li>
+    <li>how permissions, retention, confidentiality, and audit history are controlled; and</li>
+    <li>which accuracy, timeliness, exception, and adoption metrics define success.</li>
+  </ul>
+  <div class="insight-notice"><strong>Important:</strong> AI and analytical tools can support credit work, but they do not replace legal advice, investment judgment, or accountable human review. Outputs should be validated before they affect underwriting, trading, compliance, valuation, or portfolio decisions.</div>
+
+  <h2>Frequently Asked Questions</h2>
+  <h3>What did early AI underwriting implementations show?</h3>
+  <p>They showed the most immediate value in bounded, reviewable tasks such as extraction, screening, and monitoring support. Reliability, integration, and change management remained as important as model capability.</p>
+  <h3>What controls should an institutional implementation include?</h3>
+  <p>At minimum: source citations, role-based access, version history, exception flags, reviewer approvals, data-retention rules, validation testing, and a clear escalation path for uncertain or material results.</p>
+  <h3>How should a firm measure success?</h3>
+  <p>Measure more than speed. Track accuracy, reviewer corrections, exception resolution, coverage, cycle time, user adoption, auditability, and whether the workflow improves the quality and consistency of decisions.</p>
+
+  <div class="related-reading">
+    <h2>Related Private Credit AI Insights</h2>
+    <ul><li><a href="/knowledge/insights/ai-driven-due-diligence.html">AI-Driven Due Diligence</a></li><li><a href="/knowledge/insights/ai-driven-credit-analyst.html">AI-Driven Credit Analyst</a></li><li><a href="/knowledge/insights/private-credit-workflow-automation.html">Workflow Automation</a></li></ul>
+  </div>
+
+  <div class="article-cta">
+    <h3>See Credit Intelligence in Action</h3>
+    <p>Explore how Orion organizes real credit agreement information into a structured, reviewable analytical experience.</p>
+    <a href="https://orion.private-credit.ai/dnb/index.html?utm_source=private-credit-ai&amp;utm_medium=seo&amp;utm_campaign=insights_library&amp;utm_content=ai-in-underwriting-2025">Explore Orion →</a>
+  </div>
+</section>
+</main>
 
   <!--#include virtual="/includes/footer.html" -->
 </body>
